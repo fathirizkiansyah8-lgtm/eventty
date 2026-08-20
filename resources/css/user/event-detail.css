@@ -1,0 +1,6 @@
+/* Event Detail Content */
+.event-detail-content {
+    padding: var(--spacing-xl);
+}
+
+/* This CSS file will be expanded when full event detail page is implemented */

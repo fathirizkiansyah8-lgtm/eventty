@@ -1,0 +1,155 @@
+/* Attendance Content */
+.attendance-content {
+    padding: var(--spacing-xl);
+}
+
+/* Search and Filter Bar */
+.search-filter-bar {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 250px;
+}
+
+.filter-box {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.filter-box .input-field {
+    width: 150px;
+}
+
+/* Attendance Actions */
+.attendance-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.attendance-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.6875rem;
+}
+
+.attendance-btn.btn-success {
+    background: var(--success);
+    color: white;
+    border: none;
+}
+
+.attendance-btn.btn-success:hover {
+    background: #059669;
+}
+
+.attendance-btn.btn-danger {
+    background: var(--danger);
+    color: white;
+    border: none;
+}
+
+.attendance-btn.btn-danger:hover {
+    background: #dc2626;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+}
+
+.pagination-btn {
+    min-width: 40px;
+}
+
+.pagination-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.5;
+}
+
+.empty-state-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.empty-state-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .attendance-content {
+        padding: var(--spacing-md);
+    }
+    
+    .search-filter-bar {
+        flex-direction: column;
+    }
+    
+    .search-box {
+        width: 100%;
+    }
+    
+    .filter-box {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .filter-box .input-field {
+        width: 100%;
+    }
+    
+    .attendance-actions {
+        flex-direction: column;
+    }
+    
+    .attendance-btn {
+        width: 100%;
+    }
+    
+    .pagination {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    .table {
+        min-width: 600px;
+    }
+}

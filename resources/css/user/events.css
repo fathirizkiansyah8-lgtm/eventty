@@ -1,0 +1,7 @@
+/* Events Content */
+.events-content {
+    padding: var(--spacing-xl);
+}
+
+/* This CSS file will be expanded when full events page is implemented */
+/* Currently using dashboard.css as fallback */
