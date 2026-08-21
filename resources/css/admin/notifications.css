@@ -1,0 +1,6 @@
+/* Notifications Content */
+.notifications-content {
+    padding: var(--spacing-xl);
+}
+
+/* This CSS file will be expanded when full notifications page is implemented */

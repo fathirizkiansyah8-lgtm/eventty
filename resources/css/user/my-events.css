@@ -1,0 +1,223 @@
+/* My Events Content */
+.my-events-content {
+    padding: var(--spacing-xl);
+}
+
+/* Events List */
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.event-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    transition: all var(--transition-base);
+    backdrop-filter: blur(10px);
+}
+
+.event-item:hover {
+    border-color: var(--border-color-hover);
+    box-shadow: var(--shadow-lg);
+}
+
+.event-item-banner {
+    flex-shrink: 0;
+}
+
+.event-item-date {
+    width: 64px;
+    height: 64px;
+    background: var(--primary);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.event-item-day {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.event-item-month {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+}
+
+.event-item-content {
+    flex: 1;
+}
+
+.event-item-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.event-item-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.event-item-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.event-item-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.event-item-attendance {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.attendance-label {
+    color: var(--text-muted);
+}
+
+.attendance-value {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.attendance-present {
+    color: var(--success);
+}
+
+.attendance-absent {
+    color: var(--danger);
+}
+
+.event-item-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+/* Filter Section */
+.section-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.section-actions .input-field {
+    width: 200px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-md);
+    opacity: 0.5;
+}
+
+.empty-state-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.empty-state-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .my-events-content {
+        padding: var(--spacing-md);
+    }
+    
+    .event-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: var(--spacing-md);
+    }
+    
+    .event-item-banner {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .event-item-date {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .event-item-day {
+        font-size: 1.25rem;
+    }
+    
+    .event-item-details {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .event-item-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .event-item-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .event-item-actions .btn {
+        width: 100%;
+    }
+    
+    .section-actions {
+        width: 100%;
+    }
+    
+    .section-actions .input-field {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-item-title {
+        font-size: 1rem;
+    }
+    
+    .event-item-detail {
+        font-size: 0.8125rem;
+    }
+}
