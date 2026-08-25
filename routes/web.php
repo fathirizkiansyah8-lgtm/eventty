@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/events/public', function () {
+    return view('event-public');
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -90,6 +94,10 @@ Route::prefix('user')->group(function () {
     Route::get('/settings', function () {
         return view('user.settings');
     });
+
+    Route::get('/messages', function () {
+        return view('user.messages');
+    });
 });
 
 // Admin Dashboard Routes
@@ -136,5 +144,9 @@ Route::prefix('admin')->group(function () {
     
     Route::get('/settings', function () {
         return view('admin.settings');
+    });
+
+    Route::get('/messages', function () {
+        return view('admin.messages');
     });
 });

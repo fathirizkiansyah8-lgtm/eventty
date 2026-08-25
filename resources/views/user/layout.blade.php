@@ -92,12 +92,10 @@
                             <line x1="16" y1="2" x2="16" y2="6"></line>
                             <line x1="8" y1="2" x2="8" y2="6"></line>
                             <line x1="3" y1="10" x2="21" y2="10"></line>
-                            <line x1="8" y1="14" x2="8" y2="14"></line>
-                            <line x1="12" y1="14" x2="12" y2="14"></line>
-                            <line x1="16" y1="14" x2="16" y2="14"></line>
+                            <polyline points="9 16 11 18 15 14"></polyline>
                         </svg>
                     </span>
-                    <span>Calendar</span>
+                    <span>My Events</span>
                 </a>
 
                 <a href="{{ url('/user/certificates') }}" class="sidebar-link @if(request()->is('user/certificates')) active @endif">
@@ -110,13 +108,14 @@
                     <span>Certificates</span>
                 </a>
 
-                <a href="{{ url('/user/profile') }}" class="sidebar-link @if(request()->is('user/profile')) active @endif">
+                <a href="{{ url('/user/messages') }}" class="sidebar-link @if(request()->is('user/messages*')) active @endif">
                     <span class="sidebar-link-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>
                     </span>
                     <span>Messages</span>
+                    <span class="sidebar-badge" id="sidebarMsgBadge">2</span>
                 </a>
 
                 <a href="{{ url('/user/settings') }}" class="sidebar-link @if(request()->is('user/settings')) active @endif">
@@ -191,6 +190,12 @@
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
                             <span>Profil Saya</span>
+                        </a>
+                        <a href="{{ url('/user/messages') }}" class="profile-dropdown-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span>Messages</span>
                         </a>
                         <a href="{{ url('/user/settings') }}" class="profile-dropdown-item">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

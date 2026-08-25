@@ -82,6 +82,18 @@
                                 <div class="stat-label">Kehadiran</div>
                             </div>
                         </div>
+                        <div class="stat-card">
+                            <div class="stat-icon stat-icon-orange">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="8" r="6"></circle>
+                                    <path d="M9 14.5 7 22l5-3 5 3-2-7.5"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value">100</div>
+                                <div class="stat-label">Poin Saya</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

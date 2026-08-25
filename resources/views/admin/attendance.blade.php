@@ -5,34 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kehadiran - Eventty</title>
     
-    <!-- Logout Confirmation Modal -->
-    <div class="modal-overlay" id="logoutModal" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle">
-        <div class="logout-modal">
-            <div class="logout-modal-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-            </div>
-            <div class="modal-header">
-                <h3 class="modal-title" id="logoutModalTitle">Konfirmasi Keluar</h3>
-            </div>
-            <div class="modal-body">
-                <p>
-                    Apakah Anda yakin ingin keluar dari akun Admin? Anda akan diarahkan kembali ke halaman login.
-                </p>
-            </div>
-            <div class="modal-footer logout-modal-actions">
-                <button type="button" class="btn-logout-cancel" id="cancelLogoutBtn">Batal</button>
-                <form action="{{ url('/logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn-logout-confirm">Ya, Keluar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -102,6 +74,11 @@
                 <a href="{{ url('/admin/students') }}" class="sidebar-link">
                     <span class="sidebar-link-icon">🎓</span>
                     <span>Data Siswa</span>
+                </a>
+                
+                <a href="{{ url('/admin/settings') }}" class="sidebar-link">
+                    <span class="sidebar-link-icon">⚙️</span>
+                    <span>Pengaturan</span>
                 </a>
             </div>
 
