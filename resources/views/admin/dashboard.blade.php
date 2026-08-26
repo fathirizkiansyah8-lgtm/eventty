@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="">
     <title>Dashboard Admin - Eventty</title>
-    
+
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -36,27 +37,27 @@
         <nav class="sidebar-nav">
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Menu Utama</div>
-                
+
                 <a href="{{ url('/admin/dashboard') }}" class="sidebar-link active">
                     <span class="sidebar-link-icon">📊</span>
                     <span>Dashboard</span>
                 </a>
-                
+
                 <a href="{{ url('/admin/events') }}" class="sidebar-link">
                     <span class="sidebar-link-icon">🎉</span>
                     <span>Kelola Event</span>
                 </a>
-                
+
                 <a href="{{ url('/admin/participants') }}" class="sidebar-link">
                     <span class="sidebar-link-icon">👥</span>
                     <span>Peserta</span>
                 </a>
-                
+
                 <a href="{{ url('/admin/attendance') }}" class="sidebar-link">
                     <span class="sidebar-link-icon">✅</span>
                     <span>Kehadiran</span>
                 </a>
-                
+
                 <a href="{{ url('/admin/certificates') }}" class="sidebar-link">
                     <span class="sidebar-link-icon">🏆</span>
                     <span>Sertifikat</span>
@@ -65,19 +66,19 @@
 
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Pengelolaan</div>
-                
+
                 <a href="{{ url('/admin/announcements') }}" class="sidebar-link">
                     <span class="sidebar-link-icon">📢</span>
                     <span>Pengumuman</span>
                 </a>
-                
+
                 <a href="{{ url('/admin/students') }}" class="sidebar-link">
                     <span class="sidebar-link-icon">🎓</span>
                     <span>Data Siswa</span>
                 </a>
             </div>
 
-            
+
         </nav>
 
         </aside>

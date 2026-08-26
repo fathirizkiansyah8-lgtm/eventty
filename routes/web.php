@@ -18,7 +18,7 @@ Route::post('/login', function (\Illuminate\Http\Request $request) {
     $role = $request->input('role');
     $name = strtolower($request->input('name', ''));
     $nis = strtolower($request->input('nis', ''));
-    
+
     if ($role === 'admin' || $name === 'admin' || $nis === 'admin') {
         return redirect('/admin/dashboard');
     }
@@ -97,43 +97,43 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     });
-    
+
     Route::get('/events', function () {
         return view('admin.events');
     });
-    
+
     Route::get('/events/create', function () {
         return view('admin.create-event');
     });
-    
+
     Route::get('/events/edit/{id}', function ($id) {
         return view('admin.edit-event');
     });
-    
+
     Route::get('/participants', function () {
         return view('admin.participants');
     });
-    
+
     Route::get('/attendance', function () {
         return view('admin.attendance');
     });
-    
+
     Route::get('/certificates', function () {
         return view('admin.certificates');
     });
-    
+
     Route::get('/announcements', function () {
         return view('admin.announcements');
     });
-    
+
     Route::get('/students', function () {
         return view('admin.students');
     });
-    
+
     Route::get('/notifications', function () {
         return view('admin.notifications');
     });
-    
+
     Route::get('/settings', function () {
         return view('admin.settings');
     });
