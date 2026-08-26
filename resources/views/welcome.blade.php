@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Eventty</title>
     <link rel="icon" href="logo.jpeg">
 </head>
 <body>
@@ -924,4 +924,3 @@
 
 </body>
 </html>
->>>>>>> 8d161b57d7d562a17b0bc64ab5b3a2ef31220bce
