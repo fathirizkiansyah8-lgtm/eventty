@@ -10,6 +10,8 @@
     justify-content: space-between;
     align-items: center;
     backdrop-filter: blur(10px);
+    /* Needed so absolute dropdowns are positioned relative to header */
+    overflow: visible;
 }
 
 .header-left {
@@ -39,6 +41,7 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
+    position: relative; /* anchor for dropdowns */
 }
 
 .header-actions {
@@ -130,7 +133,8 @@
     visibility: hidden;
     transform: translateY(-10px);
     transition: all var(--transition-fast);
-    z-index: 100;
+    z-index: 200;
+    box-shadow: var(--shadow-xl);
 }
 
 .notification-dropdown.active {
@@ -246,7 +250,8 @@
     visibility: hidden;
     transform: translateY(-10px);
     transition: all var(--transition-fast);
-    z-index: 100;
+    z-index: 200;
+    box-shadow: var(--shadow-xl);
 }
 
 .profile-dropdown.active {

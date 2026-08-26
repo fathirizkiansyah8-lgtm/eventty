@@ -250,3 +250,21 @@
 .sidebar.admin-sidebar .sidebar-link-icon {
     display: none !important;
 }
+
+/* ── Sidebar unread badge ── */
+.sidebar-badge {
+    margin-left: auto;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--danger);
+    color: #ffffff;
+    font-size: 0.62rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+}
