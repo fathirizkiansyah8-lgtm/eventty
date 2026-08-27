@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +11,6 @@
 
 </body>
 </html>
-=======
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -143,10 +141,10 @@
                             <div class="preview-heading">
                                 <div>
                                     <span class="preview-small-text">
-                                        Selamat datang kembali,
+                                        Selamat datang,
                                     </span>
 
-                                    <strong>Fathi 👋</strong>
+                                    <strong>unknown user 👋</strong>
                                 </div>
 
                                 <div class="notification-dot"></div>

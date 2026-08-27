@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
     <link rel="icon" href="">
-    <title>Dashboard Admin - Eventty</title>
-=======
     <title>Dashboard Admin - Eventy</title>
->>>>>>> 8d161b57d7d562a17b0bc64ab5b3a2ef31220bce
 
     @vite([
         'resources/css/components/design-system.css',
@@ -375,7 +371,7 @@
         </div>
     </div>
 
-    <nav class="sidebar-nav">
+    {{-- <nav class="sidebar-nav">
         <div class="sidebar-section">
             <div class="sidebar-section-title">Menu Utama</div>
 
@@ -403,9 +399,8 @@
                 <span class="sidebar-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span>
                 <span>Sertifikat</span>
             </a>
-        </div>
+        </div> --}}
 
-<<<<<<< HEAD
         <nav class="sidebar-nav">
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Menu Utama</div>
@@ -437,7 +432,7 @@
             </div>
 
             <div class="sidebar-section">
-                <div class="sidebar-section-title">Pengelolaan</div>
+                {{-- <div class="sidebar-section-title">Pengelolaan</div> --}}
 
                 <a href="{{ url('/admin/announcements') }}" class="sidebar-link">
                     <span class="sidebar-link-icon">📢</span>
@@ -447,9 +442,8 @@
                 <a href="{{ url('/admin/students') }}" class="sidebar-link">
                     <span class="sidebar-link-icon">🎓</span>
                     <span>Data Siswa</span>
-=======
         <div class="sidebar-section">
-            <div class="sidebar-section-title">Pengelolaan</div>
+            {{-- <div class="sidebar-section-title">Pengelolaan</div> --}}
 
             <a href="{{ url('/admin/announcements') }}" class="sidebar-link">
                 <span class="sidebar-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
@@ -517,7 +511,6 @@
                 <a href="{{ url('/admin/settings') }}" class="profile-dropdown-item">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     <span>Pengaturan</span>
->>>>>>> 8d161b57d7d562a17b0bc64ab5b3a2ef31220bce
                 </a>
                 <div class="profile-dropdown-divider"></div>
                 <button type="button" id="headerLogoutBtn" class="profile-dropdown-item danger" style="display:flex;align-items:center;gap:.75rem;width:100%;border:none;background:none;">
@@ -528,13 +521,10 @@
         </div>
     </header>
 
-<<<<<<< HEAD
 
         </nav>
-=======
     <!-- ══ DASHBOARD CONTENT ══ -->
     <div class="adm-content">
->>>>>>> 8d161b57d7d562a17b0bc64ab5b3a2ef31220bce
 
         <!-- STAT CARDS -->
         <div class="adm-stats">
