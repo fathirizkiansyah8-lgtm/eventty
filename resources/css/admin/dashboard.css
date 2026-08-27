@@ -143,7 +143,11 @@
 .chart-bar {
     flex: 1;
     max-width: 40px;
-    background: linear-gradient(180deg, var(--primary) 0%, var(--primary-hover) 100%);
+    background: linear-gradient(
+        180deg,
+        var(--primary) 0%,
+        var(--primary-hover) 100%
+    );
     border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     position: relative;
     transition: height var(--transition-slow);
@@ -230,7 +234,7 @@
     .statistics-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .analytics-grid {
         grid-template-columns: 1fr;
     }
@@ -240,54 +244,54 @@
     .dashboard-content {
         padding: var(--spacing-md);
     }
-    
+
     .statistics-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .analytics-header {
         flex-direction: column;
         align-items: flex-start;
         gap: var(--spacing-sm);
     }
-    
+
     .analytics-filter {
         width: 100%;
     }
-    
+
     .chart-bars {
         height: 150px;
     }
-    
+
     .chart-bar {
         max-width: 30px;
     }
-    
+
     .chart-label {
         font-size: 0.625rem;
     }
-    
+
     .pie-chart {
         width: 140px;
         height: 140px;
     }
-    
+
     .pie-legend {
         margin-left: var(--spacing-lg);
     }
-    
+
     .action-buttons {
         flex-direction: column;
     }
-    
+
     .action-btn {
         width: 100%;
     }
-    
+
     .section-actions {
         width: 100%;
     }
-    
+
     .section-actions .btn {
         width: 100%;
     }
@@ -297,26 +301,26 @@
     .stat-card {
         padding: var(--spacing-md);
     }
-    
+
     .stat-icon {
         width: 48px;
         height: 48px;
         font-size: 1.25rem;
     }
-    
+
     .stat-number {
         font-size: 1.5rem;
     }
-    
+
     .analytics-card {
         padding: var(--spacing-md);
     }
-    
+
     .pie-chart {
         width: 120px;
         height: 120px;
     }
-    
+
     .pie-legend {
         margin-left: var(--spacing-md);
     }

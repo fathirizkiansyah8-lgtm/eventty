@@ -74,7 +74,7 @@
              LOGIN FORM
         ====================================== -->
 
-        <form
+        <form autocomplete="off"
             id="loginForm"
             method="POST"
             action="{{ url('/login') }}"
@@ -122,7 +122,7 @@
                     id="nis"
                     name="nis"
                     placeholder="Masukkan NIS"
-                    autocomplete="username"
+                    autocomplete="off"
                     inputmode="numeric"
                 >
 
