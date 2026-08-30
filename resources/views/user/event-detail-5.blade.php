@@ -1,4 +1,4 @@
-@extends('user.layout')
+kjhbgfwsedfghdsfedf©˙vb fdewefnmb nr4fmn jk..,.,,,@extends('user.layout')
 
 @section('title', 'Detail Event - Turnamen Basket')
 
@@ -128,3 +128,4 @@
         </div>
     </div>
 @endsection
+.,,juk÷.  

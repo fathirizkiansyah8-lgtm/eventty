@@ -10,8 +10,10 @@
     justify-content: space-between;
     align-items: center;
     backdrop-filter: blur(10px);
-    /* Needed so absolute dropdowns are positioned relative to header */
     overflow: visible;
+    /* Pastikan tinggi dan padding konsisten di semua halaman */
+    min-height: 73px;
+    box-sizing: border-box;
 }
 
 .header-left {

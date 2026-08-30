@@ -7,8 +7,12 @@ Route::get('/events/public', function () {
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/landing');
 });
+
+Route::get('/landing', function () {
+    return view('auth.landing');
+})->name('landing');
 
 Route::get('/login', function () {
     return view('auth.login');

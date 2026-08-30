@@ -14,7 +14,7 @@
     @stack('css')
 </head>
 
-<body>
+<body class="@yield('body-class')">
 <script>
     // Apply saved theme immediately to prevent flash
     (function(){

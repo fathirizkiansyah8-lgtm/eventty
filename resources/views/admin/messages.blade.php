@@ -7,79 +7,25 @@
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
-        'resources/css/components/header.css',
+        'resources/css/admin/admin-shared.css',
         'resources/css/admin/messages.css',
     ])
 </head>
 <body>
+<script>(function(){ var t=localStorage.getItem('theme')||'light'; document.body.setAttribute('data-theme',t); })();</script>
 
 <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
 </button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<aside class="sidebar admin-sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <img src="{{ asset('images/logo.jpeg') }}" alt="Eventty" class="sidebar-logo">
-        <div>
-            <div class="sidebar-brand">Eventty</div>
-            <div class="admin-sidebar-sub">Admin Panel</div>
-        </div>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="sidebar-section">
-            <div class="sidebar-section-title">Menu Utama</div>
-            <a href="{{ url('/admin/dashboard') }}"    class="sidebar-link"><span class="sidebar-link-icon">📊</span><span>Dashboard</span></a>
-            <a href="{{ url('/admin/events') }}"       class="sidebar-link"><span class="sidebar-link-icon">🎉</span><span>Kelola Event</span></a>
-            <a href="{{ url('/admin/participants') }}"  class="sidebar-link"><span class="sidebar-link-icon">👥</span><span>Peserta</span></a>
-            <a href="{{ url('/admin/attendance') }}"   class="sidebar-link"><span class="sidebar-link-icon">✅</span><span>Kehadiran</span></a>
-            <a href="{{ url('/admin/certificates') }}" class="sidebar-link"><span class="sidebar-link-icon">🏆</span><span>Sertifikat</span></a>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-section-title">Pengelolaan</div>
-            <a href="{{ url('/admin/announcements') }}" class="sidebar-link"><span class="sidebar-link-icon">📢</span><span>Pengumuman</span></a>
-            <a href="{{ url('/admin/students') }}"      class="sidebar-link"><span class="sidebar-link-icon">🎓</span><span>Data Siswa</span></a>
-            <a href="{{ url('/admin/messages') }}"      class="sidebar-link active"><span class="sidebar-link-icon">💬</span><span>Messages</span><span class="admin-badge-pill">3</span></a>
-        </div>
-    </nav>
-</aside>
+@include('admin.partials.sidebar', ['activePage' => 'messages'])
 
-<main class="main-content">
-    <header class="header">
-        <div class="header-left">
-            <div class="header-greeting">
-                <span class="header-greeting-text">Selamat datang,</span>
-                <span class="header-user-name">Admin OSIS 👋</span>
-            </div>
-        </div>
-        <div class="header-right">
-            <div class="header-actions">
-                <button class="header-action-btn" id="notificationBtn" aria-label="Notifikasi">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                    <span class="notification-badge">3</span>
-                </button>
-                <div class="header-profile" id="profileBtn">
-                    <div class="avatar avatar-sm"><span>A</span></div>
-                    <div class="header-profile-info">
-                        <span class="header-profile-name">Admin</span>
-                        <span class="header-profile-role">OSIS</span>
-                    </div>
-                </div>
-            </div>
-            <div class="profile-dropdown" id="profileDropdown">
-                <a href="{{ url('/admin/settings') }}" class="profile-dropdown-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                    <span>Pengaturan</span>
-                </a>
-                <div class="profile-dropdown-divider"></div>
-                <button type="button" id="headerLogoutBtn" class="profile-dropdown-item danger" style="display:flex;align-items:center;gap:.75rem;width:100%;border:none;background:none;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                    <span>Keluar</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
+<div class="admin-main">
+    @include('admin.partials.header')
+    
     <!-- ── Messages Content ── -->
     <div class="adm-msg-page">
 
@@ -260,25 +206,12 @@
 
         </div>
     </div>
-</main>
-
-<!-- Logout Modal -->
-<div class="modal-overlay" id="logoutModal">
-    <div class="logout-modal">
-        <div class="logout-modal-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
-        <div class="modal-header"><h3 class="modal-title">Konfirmasi Keluar</h3></div>
-        <div class="modal-body"><p>Yakin ingin keluar dari akun Admin?</p></div>
-        <div class="modal-footer logout-modal-actions">
-            <button type="button" class="btn-logout-cancel" id="cancelLogoutBtn">Batal</button>
-            <form action="{{ url('/logout') }}" method="POST">@csrf<button type="submit" class="btn-logout-confirm">Ya, Keluar</button></form>
-        </div>
-    </div>
 </div>
 
-@vite([
-    'resources/js/components/sidebar.js',
-    'resources/js/components/header.js',
-])
+@include('admin.partials.logout-modal')
+
+@vite(['resources/js/components/sidebar.js', 'resources/js/admin/admin-shared.js'])
+@vite(['resources/js/admin/messages.js'])
 
 <script>
 // ── Conversation data (dummy)
@@ -397,6 +330,5 @@ function insertReply(text){ var i = document.getElementById('admInput'); i.value
     feed.scrollTo({top:feed.scrollHeight,behavior:'instant'});
 })();
 </script>
-
 </body>
 </html>
