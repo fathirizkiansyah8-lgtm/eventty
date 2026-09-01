@@ -1,7 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\User\EventController as UserEventController;
+use App\Http\Controllers\User\CertificateController as UserCertificateController;
+use App\Http\Controllers\User\NotificationController as UserNotificationController;
+use App\Http\Controllers\User\ProfileController as UserProfileController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\EventController as AdminEventController;
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\FileController as AdminFileController;
 
+// Public routes
 Route::get('/events/public', function () {
     return view('event-public');
 });
@@ -14,143 +25,143 @@ Route::get('/landing', function () {
     return view('auth.landing');
 })->name('landing');
 
-Route::get('/login', function () {
-    return view('auth.login');
-});
+// Authentication routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgot-password');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail']);
+Route::get('/reset-password', [AuthController::class, 'showResetPasswordForm'])->name('reset-password');
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Admin redirect
 Route::get('/admin', function () {
     return redirect('/admin/dashboard');
 });
 
-Route::post('/login', function (\Illuminate\Http\Request $request) {
-    $role = $request->input('role');
-    $name = strtolower($request->input('name', ''));
-    $nis = strtolower($request->input('nis', ''));
+// User Dashboard Routes - Protected by auth and role:student middleware
+Route::prefix('user')->middleware(['auth', 'role:student'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 
-    if ($role === 'admin' || $name === 'admin' || $nis === 'admin') {
-        return redirect('/admin/dashboard');
-    }
-    return redirect('/user/dashboard');
-});
+    // Events
+    Route::get('/events', [UserEventController::class, 'index'])->name('user.events');
+    Route::get('/events/{id}', [UserEventController::class, 'show'])->name('user.event-detail');
+    Route::get('/my-events', [UserEventController::class, 'myEvents'])->name('user.my-events');
+    Route::post('/events/register', [UserEventController::class, 'register'])->name('user.event-register');
+    Route::post('/events/cancel', [UserEventController::class, 'cancelRegistration'])->name('user.event-cancel');
 
-Route::post('/logout', function () {
-    return redirect('/login');
-});
+    // Certificates
+    Route::get('/certificates', [UserCertificateController::class, 'index'])->name('user.certificates');
+    Route::get('/certificates/{id}/download', [UserCertificateController::class, 'download'])->name('user.certificates.download');
+    Route::get('/certificates/{id}/view', [UserCertificateController::class, 'view'])->name('user.certificates.view');
 
-Route::get('/register', function () {
-    return view('auth.register');
-});
+    // Notifications
+    Route::get('/notifications', [UserNotificationController::class, 'index'])->name('user.notifications');
+    Route::post('/notifications/{id}/read', [UserNotificationController::class, 'markAsRead'])->name('user.notifications.read');
+    Route::post('/notifications/read-all', [UserNotificationController::class, 'markAllAsRead'])->name('user.notifications.read-all');
+    Route::delete('/notifications/{id}', [UserNotificationController::class, 'delete'])->name('user.notifications.delete');
+    Route::delete('/notifications', [UserNotificationController::class, 'deleteAll'])->name('user.notifications.delete-all');
 
-Route::get('/forgot-password', function () {
-    return view('auth.forgot-password');
-});
-
-Route::get('/reset-password', function () {
-    return view('auth.reset-password');
-});
-
-// User Dashboard Routes
-Route::prefix('user')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('user.dashboard');
-    });
-
-    Route::get('/events', function () {
-        return view('user.events');
-    });
-
-    Route::get('/events/{id}', function ($id) {
-        $views = [
-            '1' => 'user.event-detail',
-            '2' => 'user.event-detail-2',
-            '3' => 'user.event-detail-3',
-            '4' => 'user.event-detail-4',
-            '5' => 'user.event-detail-5',
-        ];
-        return view($views[$id] ?? 'user.event-detail');
-    });
-
-    Route::post('/events/register', function (\Illuminate\Http\Request $request) {
-        $eventName = $request->input('event_name', 'Event');
-        return redirect('/user/my-events')->with('success', 'Selamat! Anda berhasil mendaftar pada ' . $eventName . '.');
-    });
-
-    Route::get('/event-detail/{id}', function ($id) {
-        return view('user.event-detail');
-    });
-
-    Route::get('/my-events', function () {
-        return view('user.my-events');
-    });
-
-    Route::get('/certificates', function () {
-        return view('user.certificates');
-    });
-
-    Route::get('/notifications', function () {
-        return view('user.notifications');
-    });
-
-    Route::get('/profile', function () {
-        return view('user.profile');
-    });
+    // Profile & Settings
+    Route::get('/profile', [UserProfileController::class, 'index'])->name('user.profile');
+    Route::post('/profile/update', [UserProfileController::class, 'updateProfile'])->name('user.profile.update');
+    Route::post('/profile/avatar', [UserProfileController::class, 'uploadAvatar'])->name('user.profile.avatar');
+    Route::delete('/profile/avatar', [UserProfileController::class, 'deleteAvatar'])->name('user.profile.avatar.delete');
+    Route::post('/profile/password', [UserProfileController::class, 'changePassword'])->name('user.profile.password');
 
     Route::get('/settings', function () {
         return view('user.settings');
-    });
+    })->name('user.settings');
 
     Route::get('/messages', function () {
         return view('user.messages');
-    });
+    })->name('user.messages');
 });
 
-// Admin Dashboard Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
+// Admin Dashboard Routes - Protected by auth and role:admin middleware
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Events
+    Route::resource('/events', AdminEventController::class, ['as' => 'admin']);
+
+    // File Management
+    Route::prefix('files')->group(function () {
+        Route::post('/upload', [AdminFileController::class, 'uploadTemp'])->name('admin.files.upload');
+        Route::delete('/delete', [AdminFileController::class, 'delete'])->name('admin.files.delete');
+        Route::get('/info', [AdminFileController::class, 'info'])->name('admin.files.info');
+        Route::get('/list', [AdminFileController::class, 'listFiles'])->name('admin.files.list');
     });
 
-    Route::get('/events', function () {
-        return view('admin.events');
-    });
-
-    Route::get('/events/create', function () {
-        return view('admin.create-event');
-    });
-
-    Route::get('/events/edit/{id}', function ($id) {
-        return view('admin.edit-event');
-    });
-
+    // Other admin pages (placeholder for now)
     Route::get('/participants', function () {
         return view('admin.participants');
-    });
+    })->name('admin.participants');
 
-    Route::get('/attendance', function () {
-        return view('admin.attendance');
-    });
+    Route::get('/attendance', [AdminAttendanceController::class, 'index'])->name('admin.attendance');
 
     Route::get('/certificates', function () {
         return view('admin.certificates');
-    });
+    })->name('admin.certificates');
 
     Route::get('/announcements', function () {
         return view('admin.announcements');
-    });
+    })->name('admin.announcements');
 
     Route::get('/students', function () {
         return view('admin.students');
-    });
+    })->name('admin.students');
 
     Route::get('/notifications', function () {
         return view('admin.notifications');
-    });
+    })->name('admin.notifications');
 
     Route::get('/settings', function () {
         return view('admin.settings');
+    })->name('admin.settings');
+});
+
+// API Routes for AJAX calls
+Route::prefix('api')->middleware(['auth'])->group(function () {
+    // User API routes
+    Route::middleware('role:student')->group(function () {
+        Route::get('/user/stats', [UserDashboardController::class, 'getStats']);
+        Route::get('/user/nearest-event', [UserDashboardController::class, 'getNearestEvent']);
+        Route::get('/user/upcoming-events', [UserDashboardController::class, 'getUpcomingEvents']);
+        Route::get('/user/notifications-count', [UserDashboardController::class, 'getNotificationsCount']);
+
+        Route::get('/user/events', [UserEventController::class, 'getEvents']);
+        Route::get('/user/events/{id}', [UserEventController::class, 'getEvent']);
+        Route::get('/user/my-events', [UserEventController::class, 'getMyEvents']);
+
+        Route::get('/user/certificates', [UserCertificateController::class, 'getCertificates']);
+
+        Route::get('/user/notifications', [UserNotificationController::class, 'getNotifications']);
+        Route::get('/user/notifications/unread-count', [UserNotificationController::class, 'getUnreadCount']);
+
+        Route::get('/user/profile', [UserProfileController::class, 'getProfile']);
     });
 
-    Route::get('/messages', function () {
-        return view('admin.messages');
+    // Admin API routes
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/stats', [AdminDashboardController::class, 'getStats']);
+        Route::get('/admin/participation-analytics', [AdminDashboardController::class, 'getParticipationAnalytics']);
+        Route::get('/admin/attendance-analytics', [AdminDashboardController::class, 'getAttendanceAnalytics']);
+        Route::get('/admin/recent-events', [AdminDashboardController::class, 'getRecentEvents']);
+        Route::get('/admin/events-overview', [AdminDashboardController::class, 'getEventsOverview']);
+        Route::get('/admin/popular-events', [AdminDashboardController::class, 'getPopularEvents']);
+
+        Route::get('/admin/events', [AdminEventController::class, 'getEvents']);
+        Route::get('/admin/categories', [AdminEventController::class, 'getCategories']);
+
+        // Attendance API
+        Route::get('/admin/attendance', [AdminAttendanceController::class, 'getAttendance']);
+        Route::get('/admin/attendance/events', [AdminAttendanceController::class, 'getEvents']);
+        Route::post('/admin/attendance/mark', [AdminAttendanceController::class, 'mark']);
+        Route::post('/admin/attendance/mark-bulk', [AdminAttendanceController::class, 'markBulk']);
     });
 });
