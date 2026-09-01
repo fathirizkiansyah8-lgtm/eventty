@@ -1,197 +1,144 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // TODO: Replace mock data with backend data
-    
-    // Mock data for attendance
-    const attendanceData = [
-        {
-            id: 1,
-            name: "Fathi",
-            nis: "12345",
-            class: "XII IPA 1",
-            event: "Career Day",
-            status: "Belum Dicek"
-        },
-        {
-            id: 2,
-            name: "Ahmad",
-            nis: "12346",
-            class: "XII IPA 2",
-            event: "Workshop Programming",
-            status: "Hadir"
-        },
-        {
-            id: 3,
-            name: "Budi",
-            nis: "12347",
-            class: "XI IPS 1",
-            event: "Lomba Design",
-            status: "Tidak Hadir"
-        },
-        {
-            id: 4,
-            name: "Citra",
-            nis: "12348",
-            class: "X IPA 1",
-            event: "Seminar Pendidikan",
-            status: "Hadir"
-        },
-        {
-            id: 5,
-            name: "Dewi",
-            nis: "12349",
-            class: "XII IPS 1",
-            event: "Workshop Leadership",
-            status: "Belum Dicek"
+document.addEventListener('DOMContentLoaded', function () {
+    let currentFilters = { event_id: '', status: 'all', search: '' };
+
+    initializeAttendance();
+
+    async function initializeAttendance() {
+        await loadEventsForFilter();
+        await loadAttendance();
+        initializeFilters();
+    }
+
+    // ── Load events for filter ──
+    async function loadEventsForFilter() {
+        try {
+            const events = await api.get('/api/admin/attendance/events');
+            const select = document.getElementById('eventFilter');
+            if (!select) return;
+            select.innerHTML = '<option value="">Semua Event</option>';
+            events.forEach(event => {
+                const opt = document.createElement('option');
+                opt.value = event.id;
+                opt.textContent = `${event.name} (${event.date})`;
+                select.appendChild(opt);
+            });
+        } catch (e) { /* silent */ }
+    }
+
+    // ── Load attendance list ──
+    async function loadAttendance(page = 1) {
+        const tbody = document.getElementById('attendanceTableBody') || document.querySelector('.attendance-table tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;">Memuat data kehadiran...</td></tr>`;
+
+        try {
+            const params = { page, ...currentFilters };
+            Object.keys(params).forEach(k => { if (!params[k] || params[k] === 'all') delete params[k]; });
+
+            const response = await api.get('/api/admin/attendance', params);
+            const list = response.data || [];
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;">
+                    <div>📋</div><p>Tidak ada data kehadiran${currentFilters.event_id ? ' untuk event ini' : ''}.</p>
+                </td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = list.map(item => `
+                <tr data-participant-id="${item.id}">
+                    <td>
+                        <div style="display:flex;align-items:center;gap:.5rem;">
+                            <img src="${item.student_avatar}" alt="" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
+                            <div>
+                                <div style="font-weight:600;">${item.student_name}</div>
+                                <div style="font-size:.7rem;color:#64748b;">${item.student_nis || '-'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${item.student_class || '-'}</td>
+                    <td>${item.event_name}</td>
+                    <td>${item.event_date}</td>
+                    <td>${item.registration_date}</td>
+                    <td>
+                        <span class="abadge ${getAttendanceBadge(item.attendance_status)}">
+                            ${getAttendanceLabel(item.attendance_status)}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display:flex;gap:.35rem;">
+                            <button class="abtn abtn-sm ${item.attendance_status === 'present' ? 'abtn-primary' : 'abtn-outline'} mark-present-btn"
+                                    data-participant-id="${item.id}" ${item.attendance_status === 'present' ? 'disabled' : ''}>
+                                ✓ Hadir
+                            </button>
+                            <button class="abtn abtn-sm ${item.attendance_status === 'absent' ? 'abtn-danger' : 'abtn-outline'} mark-absent-btn"
+                                    data-participant-id="${item.id}" ${item.attendance_status === 'absent' ? 'disabled' : ''}>
+                                ✗ Absen
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+        } catch (error) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;">Gagal memuat data.</td></tr>`;
+            handleApiError(error);
         }
-    ];
-
-    // Handle search
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const tableRows = document.querySelectorAll('.table tbody tr');
-            
-            tableRows.forEach(row => {
-                const name = row.cells[0].textContent.toLowerCase();
-                const nis = row.cells[1].textContent.toLowerCase();
-                const eventClass = row.cells[2].textContent.toLowerCase();
-                const event = row.cells[3].textContent.toLowerCase();
-                
-                if (name.includes(searchTerm) || nis.includes(searchTerm) || eventClass.includes(searchTerm) || event.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
     }
 
-    // Handle event filter
-    const eventFilter = document.getElementById('eventFilter');
-    if (eventFilter) {
-        eventFilter.addEventListener('change', function() {
-            const selectedEvent = this.value.toLowerCase();
-            const tableRows = document.querySelectorAll('.table tbody tr');
-            
-            tableRows.forEach(row => {
-                const event = row.cells[3].textContent.toLowerCase();
-                
-                if (selectedEvent === '' || event.includes(selectedEvent)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+    function getAttendanceBadge(s) { return { present: 'abadge-green', absent: 'abadge-red', registered: 'abadge-blue', cancelled: 'abadge-gray' }[s] || 'abadge-gray'; }
+    function getAttendanceLabel(s) { return { present: 'Hadir', absent: 'Tidak Hadir', registered: 'Terdaftar', cancelled: 'Dibatalkan' }[s] || s; }
+
+    // ── Initialize filters ──
+    function initializeFilters() {
+        const eventFilter = document.getElementById('eventFilter');
+        if (eventFilter) eventFilter.addEventListener('change', function () { currentFilters.event_id = this.value; loadAttendance(1); });
+
+        const statusFilter = document.getElementById('statusFilter');
+        if (statusFilter) statusFilter.addEventListener('change', function () { currentFilters.status = this.value; loadAttendance(1); });
+
+        const searchInput = document.getElementById('searchAttendance');
+        if (searchInput) {
+            let debounce;
+            searchInput.addEventListener('input', function () { clearTimeout(debounce); debounce = setTimeout(() => { currentFilters.search = this.value; loadAttendance(1); }, 400); });
+        }
+
+        // Attendance mark buttons (delegated)
+        document.addEventListener('click', async function (e) {
+            const presentBtn = e.target.closest('.mark-present-btn');
+            const absentBtn = e.target.closest('.mark-absent-btn');
+            const btn = presentBtn || absentBtn;
+            if (!btn) return;
+
+            const participantId = btn.dataset.participantId;
+            const status = presentBtn ? 'present' : 'absent';
+
+            try {
+                setLoadingState(btn, true, '...');
+                const response = await api.post('/api/admin/attendance/mark', { participant_id: participantId, status });
+                if (response.success) {
+                    showNotification(response.message, 'success');
+                    // Update row
+                    const row = btn.closest('tr');
+                    if (row) {
+                        const statusCell = row.querySelector('.abadge');
+                        if (statusCell) { statusCell.className = `abadge ${getAttendanceBadge(status)}`; statusCell.textContent = getAttendanceLabel(status); }
+
+                        row.querySelectorAll('.mark-present-btn, .mark-absent-btn').forEach(b => {
+                            b.className = b.classList.contains('mark-present-btn')
+                                ? `abtn abtn-sm ${status === 'present' ? 'abtn-primary' : 'abtn-outline'} mark-present-btn`
+                                : `abtn abtn-sm ${status === 'absent' ? 'abtn-danger' : 'abtn-outline'} mark-absent-btn`;
+                            b.disabled = (status === 'present' && b.classList.contains('mark-present-btn')) ||
+                                         (status === 'absent' && b.classList.contains('mark-absent-btn'));
+                        });
+                    }
                 }
-            });
-        });
-    }
-
-    // Handle attendance filter
-    const attendanceFilter = document.getElementById('attendanceFilter');
-    if (attendanceFilter) {
-        attendanceFilter.addEventListener('change', function() {
-            const selectedStatus = this.value.toLowerCase();
-            const tableRows = document.querySelectorAll('.table tbody tr');
-            
-            tableRows.forEach(row => {
-                const statusBadge = row.cells[4].querySelector('.badge');
-                const status = statusBadge.textContent.toLowerCase();
-                
-                if (selectedStatus === '' || status === selectedStatus || 
-                    (selectedStatus === 'pending' && status === 'belum dicek') ||
-                    (selectedStatus === 'present' && status === 'hadir') ||
-                    (selectedStatus === 'absent' && status === 'tidak hadir')) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-    }
-
-    // Handle attendance buttons
-    const attendanceBtns = document.querySelectorAll('.attendance-btn');
-    attendanceBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (this.disabled) return;
-
-            const status = this.dataset.status;
-            const row = this.closest('tr');
-            const participantName = row.cells[0].textContent;
-            const statusBadge = row.cells[4].querySelector('.badge');
-            const attendanceActions = row.querySelector('.attendance-actions');
-
-            // Confirm attendance change
-            const actionText = status === 'present' ? 'hadir' : 'tidak hadir';
-            if (confirm(`Tandai ${participantName} sebagai ${actionText}?`)) {
-                // TODO: Update attendance status in backend
-                console.log(`Marking ${participantName} as ${status}`);
-
-                // Update UI
-                if (status === 'present') {
-                    statusBadge.className = 'badge badge-success';
-                    statusBadge.textContent = 'Hadir';
-                } else {
-                    statusBadge.className = 'badge badge-danger';
-                    statusBadge.textContent = 'Tidak Hadir';
-                }
-
-                // Disable buttons and show "Sudah Dicek"
-                attendanceActions.innerHTML = `
-                    <button class="btn btn-outline btn-sm attendance-btn" disabled>Sudah Dicek</button>
-                `;
+            } catch (error) {
+                handleApiError(error);
+            } finally {
+                setLoadingState(btn, false);
             }
         });
-    });
-
-    // Handle pagination
-    const paginationBtns = document.querySelectorAll('.pagination-btn');
-    paginationBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (this.disabled) return;
-            
-            // Remove active class from all buttons
-            paginationBtns.forEach(b => b.classList.remove('active'));
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            // TODO: Load page data
-            console.log('Page:', this.textContent);
-        });
-    });
-
-    // Check empty state
-    function checkEmptyState() {
-        const tableRows = document.querySelectorAll('.table tbody tr');
-        let visibleCount = 0;
-        
-        tableRows.forEach(row => {
-            if (row.style.display !== 'none') {
-                visibleCount++;
-            }
-        });
-
-        const tableContainer = document.querySelector('.table-container');
-        const existingEmptyState = tableContainer.querySelector('.empty-state');
-        if (existingEmptyState) {
-            existingEmptyState.remove();
-        }
-
-        if (visibleCount === 0) {
-            const emptyState = document.createElement('div');
-            emptyState.className = 'empty-state';
-            emptyState.innerHTML = `
-                <div class="empty-state-icon">✅</div>
-                <div class="empty-state-title">Tidak ada data kehadiran ditemukan</div>
-                <div class="empty-state-description">Coba ubah filter atau cari peserta lain</div>
-            `;
-            tableContainer.innerHTML = '';
-            tableContainer.appendChild(emptyState);
-        }
     }
-
-    // Check empty state on filter change
-    if (searchInput) searchInput.addEventListener('input', checkEmptyState);
-    if (eventFilter) eventFilter.addEventListener('change', checkEmptyState);
-    if (attendanceFilter) attendanceFilter.addEventListener('change', checkEmptyState);
 });

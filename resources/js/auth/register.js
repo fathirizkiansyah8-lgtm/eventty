@@ -267,10 +267,10 @@ document.addEventListener("DOMContentLoaded", function () {
                         firstErrorField = passwordInput;
                     }
 
-                } else if (password.length < 8) {
+                } else if (password.length < 6) {
 
                     passwordError.textContent =
-                        "Password minimal 8 karakter.";
+                        "Password minimal 6 karakter.";
 
                     valid = false;
 
@@ -331,20 +331,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 // =========================
-                // PENDAFTARAN BERHASIL
+                // SUBMIT KE SERVER
                 // =========================
 
-                confirmPasswordInput.style.borderColor =
-                    "#22c55e";
+                // Loading state pada tombol
+                const submitBtn = registerForm.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Memproses...';
+                }
 
-
-                /*
-                 * Untuk sementara karena backend belum
-                 * disambungkan, setelah semua valid:
-                 * langsung kembali ke halaman login.
-                 */
-
-                window.location.href = "/login";
+                // Submit form ke /register → data tersimpan di DB → redirect ke /login
+                registerForm.submit();
 
             }
         );

@@ -1,212 +1,176 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // TODO: Replace mock data with backend data
-    
-    // Mock data for notifications
-    const notifications = [
-        {
-            id: 1,
-            message: "Pendaftaran Career Day berhasil! Anda sekarang terdaftar untuk event ini.",
-            time: "2 menit yang lalu",
-            icon: "🎉",
-            type: "success",
-            read: false,
-            action: "Lihat Event"
-        },
-        {
-            id: 2,
-            message: "Event Career Day akan dimulai besok pada pukul 08:00 di Aula Sekolah. Jangan lupa hadir!",
-            time: "1 jam yang lalu",
-            icon: "📢",
-            type: "info",
-            read: false,
-            action: "Lihat Detail"
-        },
-        {
-            id: 3,
-            message: "Jadwal event Workshop Programming berubah. Event baru akan diadakan pada 25 August 2026.",
-            time: "3 jam yang lalu",
-            icon: "⚠️",
-            type: "warning",
-            read: false,
-            action: "Lihat Perubahan"
-        },
-        {
-            id: 4,
-            message: "Sertifikat Workshop Leadership telah tersedia. Anda dapat mengunduh sertifikat sekarang.",
-            time: "Kemarin",
-            icon: "🏆",
-            type: "success",
-            read: true,
-            action: "Lihat Sertifikat"
-        },
-        {
-            id: 5,
-            message: "Pengumuman baru dari OSIS: Ada event baru yang akan segera dibuka. Stay tuned!",
-            time: "2 hari yang lalu",
-            icon: "📢",
-            type: "info",
-            read: true,
-            action: "Lihat Pengumuman"
-        },
-        {
-            id: 6,
-            message: "Kehadiran Anda untuk Seminar Pendidikan telah dicatat. Terima kasih telah hadir!",
-            time: "3 hari yang lalu",
-            icon: "✅",
-            type: "success",
-            read: true,
-            action: "Lihat Detail"
-        },
-        {
-            id: 7,
-            message: "Selamat ulang tahun! Semoga hari Anda menyenangkan dan penuh kebahagiaan.",
-            time: "1 minggu yang lalu",
-            icon: "🎂",
-            type: "info",
-            read: true,
-            action: "Terima Kasih"
-        }
-    ];
+document.addEventListener('DOMContentLoaded', function () {
+    let currentFilter = 'all';
+    let currentPage = 1;
+    initializeNotifications();
 
-    // Filter buttons
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const notificationItems = document.querySelectorAll('.notification-item');
-
-    // Handle filter button clicks
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Remove active class from all buttons
-            filterBtns.forEach(b => b.classList.remove('active'));
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            const filter = this.dataset.filter;
-            filterNotifications(filter);
-        });
-    });
-
-    // Function to filter notifications
-    function filterNotifications(filter) {
-        notificationItems.forEach(item => {
-            const isRead = item.dataset.read === 'true';
-            
-            if (filter === 'all') {
-                item.style.display = 'flex';
-            } else if (filter === 'unread' && !isRead) {
-                item.style.display = 'flex';
-            } else if (filter === 'read' && isRead) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-
-        checkEmptyState();
+    async function initializeNotifications() {
+        await loadNotifications();
+        initializeFilterTabs();
+        initializeActions();
     }
 
-    // Handle notification item clicks (mark as read)
-    notificationItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            // Don't mark as read if action button was clicked
-            if (e.target.closest('.notification-action-btn')) {
+    // ── Load notifications from API ──
+    async function loadNotifications(filter = 'all', page = 1) {
+        const container = document.getElementById('notificationsList') || document.querySelector('.notifications-list');
+        if (!container) return;
+
+        container.innerHTML = `<div class="loading-state" style="text-align:center;padding:2rem;"><p>Memuat notifikasi...</p></div>`;
+
+        try {
+            const params = { page };
+            if (filter !== 'all') params.filter = filter;
+
+            const response = await api.get('/api/user/notifications', params);
+            const notifications = response.data || [];
+
+            // Update unread count badge
+            updateUnreadBadge();
+
+            if (notifications.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="text-align:center;padding:3rem;">
+                        <div style="font-size:3rem;margin-bottom:1rem;">🔔</div>
+                        <h3>Tidak ada notifikasi</h3>
+                        <p>${filter === 'unread' ? 'Semua notifikasi sudah dibaca.' : 'Belum ada notifikasi.'}</p>
+                    </div>`;
                 return;
             }
 
-            if (this.classList.contains('unread')) {
-                this.classList.remove('unread');
-                this.dataset.read = 'true';
-                updateNotificationBadge();
-                // TODO: Update backend to mark as read
-            }
+            container.innerHTML = notifications.map(notif => `
+                <div class="notification-item ${notif.is_read ? '' : 'unread'}" data-notif-id="${notif.id}">
+                    <div class="notif-icon-wrap notif-type-${notif.type}">
+                        <i class="${notif.icon}"></i>
+                    </div>
+                    <div class="notif-content">
+                        <div class="notif-title">${notif.title}</div>
+                        <div class="notif-message">${notif.message}</div>
+                        <div class="notif-time">${notif.formatted_time}</div>
+                    </div>
+                    <div class="notif-actions">
+                        ${!notif.is_read
+                            ? `<button class="btn-icon mark-read-btn" data-notif-id="${notif.id}" title="Tandai sudah dibaca">
+                                   <i class="fas fa-check"></i>
+                               </button>`
+                            : ''
+                        }
+                        <button class="btn-icon delete-notif-btn" data-notif-id="${notif.id}" title="Hapus">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+            container.innerHTML = `
+                <div class="error-state" style="text-align:center;padding:2rem;">
+                    <h3>Gagal memuat notifikasi</h3>
+                    <button class="btn btn-primary" onclick="location.reload()">Coba Lagi</button>
+                </div>`;
+            handleApiError(error);
+        }
+    }
+
+    // ── Update unread count badge ──
+    async function updateUnreadBadge() {
+        try {
+            const data = await api.get('/api/user/notifications/unread-count');
+            const badges = document.querySelectorAll('.notif-unread-count, .notification-badge');
+            badges.forEach(badge => {
+                badge.textContent = data.count;
+                badge.style.display = data.count > 0 ? 'flex' : 'none';
+            });
+        } catch (error) {
+            // silently fail
+        }
+    }
+
+    // ── Initialize filter tabs ──
+    function initializeFilterTabs() {
+        const tabs = document.querySelectorAll('[data-notif-filter]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.notifFilter;
+                loadNotifications(currentFilter);
+            });
         });
+    }
 
-        // Handle action button clicks
-        const actionBtn = item.querySelector('.notification-action-btn');
-        if (actionBtn) {
-            actionBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const action = this.textContent.trim();
-                
-                // Mark notification as read when action is taken
-                if (item.classList.contains('unread')) {
-                    item.classList.remove('unread');
-                    item.dataset.read = 'true';
-                    updateNotificationBadge();
+    // ── Initialize action buttons ──
+    function initializeActions() {
+        // Mark all as read
+        const markAllBtn = document.getElementById('markAllReadBtn');
+        if (markAllBtn) {
+            markAllBtn.addEventListener('click', async function () {
+                try {
+                    setLoadingState(this, true, 'Menandai...');
+                    const response = await api.post('/user/notifications/read-all');
+                    if (response.success) {
+                        showNotification(response.message, 'success');
+                        loadNotifications(currentFilter);
+                    }
+                } catch (error) {
+                    handleApiError(error);
+                } finally {
+                    setLoadingState(this, false);
                 }
-
-                // TODO: Handle different actions based on notification type
-                console.log('Action:', action);
             });
         }
-    });
 
-    // Mark all as read
-    const markAllReadBtn = document.getElementById('markAllReadBtn');
-    if (markAllReadBtn) {
-        markAllReadBtn.addEventListener('click', function() {
-            notificationItems.forEach(item => {
-                if (item.classList.contains('unread')) {
-                    item.classList.remove('unread');
-                    item.dataset.read = 'true';
+        // Delete all
+        const deleteAllBtn = document.getElementById('deleteAllNotifBtn');
+        if (deleteAllBtn) {
+            deleteAllBtn.addEventListener('click', async function () {
+                if (!confirm('Hapus semua notifikasi?')) return;
+                try {
+                    setLoadingState(this, true, 'Menghapus...');
+                    const response = await api.delete('/user/notifications');
+                    if (response.success) {
+                        showNotification(response.message, 'success');
+                        loadNotifications(currentFilter);
+                    }
+                } catch (error) {
+                    handleApiError(error);
+                } finally {
+                    setLoadingState(this, false);
                 }
             });
-            updateNotificationBadge();
-            // TODO: Update backend to mark all as read
-        });
-    }
+        }
 
-    // Clear all notifications
-    const clearAllBtn = document.getElementById('clearAllBtn');
-    if (clearAllBtn) {
-        clearAllBtn.addEventListener('click', function() {
-            if (confirm('Apakah Anda yakin ingin menghapus semua notifikasi?')) {
-                notificationItems.forEach(item => {
-                    item.style.display = 'none';
-                });
-                checkEmptyState();
-                // TODO: Update backend to clear all notifications
+        // Delegated events for per-notification actions
+        document.addEventListener('click', async function (e) {
+            // Mark single as read
+            if (e.target.closest('.mark-read-btn')) {
+                const btn = e.target.closest('.mark-read-btn');
+                const notifId = btn.dataset.notifId;
+                try {
+                    await api.post(`/user/notifications/${notifId}/read`);
+                    const item = document.querySelector(`.notification-item[data-notif-id="${notifId}"]`);
+                    if (item) {
+                        item.classList.remove('unread');
+                        btn.remove();
+                    }
+                    updateUnreadBadge();
+                } catch (error) {
+                    handleApiError(error);
+                }
+            }
+
+            // Delete single notification
+            if (e.target.closest('.delete-notif-btn')) {
+                const btn = e.target.closest('.delete-notif-btn');
+                const notifId = btn.dataset.notifId;
+                try {
+                    await api.delete(`/user/notifications/${notifId}`);
+                    const item = document.querySelector(`.notification-item[data-notif-id="${notifId}"]`);
+                    if (item) item.remove();
+                    updateUnreadBadge();
+                } catch (error) {
+                    handleApiError(error);
+                }
             }
         });
     }
-
-    // Update notification badge count
-    function updateNotificationBadge() {
-        const badge = document.querySelector('.notification-badge');
-        if (badge) {
-            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
-            badge.textContent = unreadCount;
-            
-            if (unreadCount === 0) {
-                badge.style.display = 'none';
-            } else {
-                badge.style.display = 'flex';
-            }
-        }
-    }
-
-    // Check empty state
-    function checkEmptyState() {
-        const visibleItems = Array.from(notificationItems).filter(item => item.style.display !== 'none');
-        const notificationsList = document.querySelector('.notifications-list');
-        
-        // Remove existing empty state
-        const existingEmptyState = notificationsList.querySelector('.empty-state');
-        if (existingEmptyState) {
-            existingEmptyState.remove();
-        }
-
-        if (visibleItems.length === 0) {
-            const emptyState = document.createElement('div');
-            emptyState.className = 'empty-state';
-            emptyState.innerHTML = `
-                <div class="empty-state-icon">🔔</div>
-                <div class="empty-state-title">Tidak ada notifikasi</div>
-                <div class="empty-state-description">Tidak ada notifikasi yang sesuai dengan filter yang dipilih</div>
-            `;
-            notificationsList.appendChild(emptyState);
-        }
-    }
-
-    // Initialize notification badge
-    updateNotificationBadge();
 });

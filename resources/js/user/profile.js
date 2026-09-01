@@ -1,127 +1,177 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // TODO: Replace mock data with backend data
-    
-    // Mock data for user profile
-    const userProfile = {
-        name: "Fathi",
-        nis: "12345",
-        class: "XII IPA 1",
-        email: "fathi@sekolah.sch.id",
-        phone: "+62 812 3456 7890",
-        role: "Siswa",
-        eventsJoined: 12,
-        certificates: 6,
-        attendance: "85%"
-    };
+document.addEventListener('DOMContentLoaded', function () {
+    initializeProfile();
 
-    // Edit profile modal
-    const editProfileBtn = document.getElementById('editProfileBtn');
-    const editProfileModal = document.getElementById('editProfileModal');
-    const closeEditModal = document.getElementById('closeEditModal');
-    const cancelEditBtn = document.getElementById('cancelEditBtn');
-    const saveProfileBtn = document.getElementById('saveProfileBtn');
-    const editProfileForm = document.getElementById('editProfileForm');
-
-    // Open edit profile modal
-    if (editProfileBtn && editProfileModal) {
-        editProfileBtn.addEventListener('click', function() {
-            editProfileModal.classList.add('active');
-        });
+    async function initializeProfile() {
+        await loadProfileData();
+        initializeFormHandlers();
+        initializeAvatarUpload();
     }
 
-    // Close edit profile modal
-    function closeEditModalFunc() {
-        if (editProfileModal) {
-            editProfileModal.classList.remove('active');
-        }
-    }
+    // ── Load profile data from API ──
+    async function loadProfileData() {
+        try {
+            const profile = await api.get('/api/user/profile');
 
-    if (closeEditModal) {
-        closeEditModal.addEventListener('click', closeEditModalFunc);
-    }
-
-    if (cancelEditBtn) {
-        cancelEditBtn.addEventListener('click', closeEditModalFunc);
-    }
-
-    // Close modal when clicking outside
-    if (editProfileModal) {
-        editProfileModal.addEventListener('click', function(e) {
-            if (e.target === editProfileModal) {
-                closeEditModalFunc();
-            }
-        });
-    }
-
-    // Save profile changes
-    if (saveProfileBtn && editProfileForm) {
-        saveProfileBtn.addEventListener('click', function() {
-            const name = document.getElementById('editName').value.trim();
-            const email = document.getElementById('editEmail').value.trim();
-            const phone = document.getElementById('editPhone').value.trim();
-
-            // Basic validation
-            if (name === '' || email === '' || phone === '') {
-                alert('Semua field harus diisi');
-                return;
-            }
-
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Email tidak valid');
-                return;
-            }
-
-            // TODO: Update profile data to backend
-            console.log('Saving profile:', { name, email, phone });
-
-            // Update UI with new data
-            const profileName = document.querySelector('.profile-name');
-            const emailValue = document.querySelector('.info-item:nth-child(4) .info-value');
-            const phoneValue = document.querySelector('.info-item:nth-child(5) .info-value');
-
-            if (profileName) profileName.textContent = name;
-            if (emailValue) emailValue.textContent = email;
-            if (phoneValue) phoneValue.textContent = phone;
-
-            // Close modal
-            closeEditModalFunc();
-
-            // Show success message
-            alert('Profil berhasil diperbarui');
-        });
-    }
-
-    // Change avatar button
-    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
-    if (changeAvatarBtn) {
-        changeAvatarBtn.addEventListener('click', function() {
-            // Create file input
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = 'image/*';
-            fileInput.style.display = 'none';
-
-            fileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    // TODO: Upload avatar to backend
-                    console.log('Avatar file selected:', file.name);
-                    alert('Fitur upload avatar akan segera tersedia');
-                }
+            // Fill profile fields
+            const fieldMap = {
+                'profileName': profile.name,
+                'profileEmail': profile.email,
+                'profileNIS': profile.nis,
+                'profileClass': profile.class,
+                'profilePhone': profile.phone || '-',
+                'profileAddress': profile.address || '-',
+            };
+            Object.entries(fieldMap).forEach(([id, val]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
             });
 
-            document.body.appendChild(fileInput);
-            fileInput.click();
-            document.body.removeChild(fileInput);
+            // Fill stats
+            const statsMap = {
+                'statEventsJoined': profile.statistics.events_joined,
+                'statCertificates': profile.statistics.certificates_earned,
+                'statAttendanceRate': profile.statistics.attendance_rate + '%',
+            };
+            Object.entries(statsMap).forEach(([id, val]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
+            });
+
+            // Update avatar
+            const avatar = document.getElementById('profileAvatar');
+            if (avatar && profile.avatar_url) avatar.src = profile.avatar_url;
+
+            // Pre-fill edit form
+            const editFieldMap = {
+                'editName': profile.name,
+                'editEmail': profile.email,
+                'editPhone': profile.phone,
+                'editAddress': profile.address,
+            };
+            Object.entries(editFieldMap).forEach(([id, val]) => {
+                const el = document.getElementById(id);
+                if (el) el.value = val || '';
+            });
+
+        } catch (error) {
+            console.error('Error loading profile:', error);
+            handleApiError(error);
+        }
+    }
+
+    // ── Initialize form handlers ──
+    function initializeFormHandlers() {
+        // Open edit modal
+        const editBtn = document.getElementById('editProfileBtn');
+        const editModal = document.getElementById('editProfileModal');
+        const closeModalBtn = document.getElementById('closeEditModal') || document.querySelector('.modal-close');
+
+        if (editBtn && editModal) {
+            editBtn.addEventListener('click', () => editModal.classList.add('active'));
+        }
+        if (closeModalBtn && editModal) {
+            closeModalBtn.addEventListener('click', () => editModal.classList.remove('active'));
+        }
+        if (editModal) {
+            editModal.addEventListener('click', function (e) {
+                if (e.target === editModal) editModal.classList.remove('active');
+            });
+        }
+
+        // Edit profile form submission
+        const editForm = document.getElementById('editProfileForm');
+        if (editForm) {
+            editForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const submitBtn = this.querySelector('button[type="submit"]');
+                try {
+                    setLoadingState(submitBtn, true, 'Menyimpan...');
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData.entries());
+                    const response = await api.post('/user/profile/update', data);
+                    if (response.success) {
+                        showNotification(response.message, 'success');
+                        editModal?.classList.remove('active');
+                        loadProfileData();
+                    }
+                } catch (error) {
+                    if (error.isValidationError()) {
+                        displayFormErrors(error.getValidationErrors(), editForm);
+                    } else {
+                        handleApiError(error);
+                    }
+                } finally {
+                    setLoadingState(submitBtn, false);
+                }
+            });
+        }
+
+        // Change password form
+        const passwordForm = document.getElementById('changePasswordForm');
+        if (passwordForm) {
+            passwordForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const submitBtn = this.querySelector('button[type="submit"]');
+                try {
+                    setLoadingState(submitBtn, true, 'Memperbarui...');
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData.entries());
+                    const response = await api.post('/user/profile/password', data);
+                    if (response.success) {
+                        showNotification(response.message, 'success');
+                        this.reset();
+                    }
+                } catch (error) {
+                    if (error.isValidationError()) {
+                        displayFormErrors(error.getValidationErrors(), passwordForm);
+                    } else {
+                        handleApiError(error);
+                    }
+                } finally {
+                    setLoadingState(submitBtn, false);
+                }
+            });
+        }
+    }
+
+    // ── Avatar upload ──
+    function initializeAvatarUpload() {
+        const avatarInput = document.getElementById('avatarInput');
+        if (!avatarInput) return;
+
+        avatarInput.addEventListener('change', async function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                showNotification('Ukuran file maksimal 2MB', 'error');
+                this.value = '';
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('avatar', file);
+                const response = await api.post('/user/profile/avatar', formData);
+                if (response.success) {
+                    showNotification(response.message, 'success');
+                    const avatar = document.getElementById('profileAvatar');
+                    if (avatar) avatar.src = response.avatar_url;
+                }
+            } catch (error) {
+                handleApiError(error);
+            }
         });
     }
 
-    // Keyboard shortcuts for modal
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && editProfileModal && editProfileModal.classList.contains('active')) {
-            closeEditModalFunc();
-        }
-    });
+    // ── Display form validation errors ──
+    function displayFormErrors(errors, form) {
+        Object.keys(errors).forEach(fieldName => {
+            const field = form.querySelector(`[name="${fieldName}"]`);
+            const errorEl = form.querySelector(`#${fieldName}Error`) ||
+                            form.querySelector(`.${fieldName}-error`);
+            if (errorEl) errorEl.textContent = errors[fieldName][0];
+            if (field) field.classList.add('error');
+        });
+    }
 });

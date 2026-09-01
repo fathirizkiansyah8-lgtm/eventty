@@ -216,10 +216,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     hasError = true;
 
-                } else if (!/^\d{5}$/.test(nis)) {
+                } else if (!/^\d{4,10}$/.test(nis)) {
 
                     nisError.textContent =
-                        "NIS harus terdiri dari 5 angka.";
+                        "NIS harus berupa angka (4-10 digit).";
 
                     hasError = true;
 

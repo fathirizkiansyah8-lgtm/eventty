@@ -1,205 +1,187 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // TODO: Replace mock data with backend data
-    
-    // Mock data for existing event (would be loaded from backend)
-    const existingEventData = {
-        name: "Career Day",
-        category: "school-event",
-        description: "Event career day untuk membantu siswa mempersiapkan masa depan mereka.",
-        date: "2026-08-20",
-        time: "08:00",
-        startTime: "08:00",
-        endTime: "12:00",
-        location: "Aula Sekolah",
-        quota: 50,
-        organizer: "OSIS",
-        status: "open"
-    };
+document.addEventListener('DOMContentLoaded', function () {
+    // Get event ID from the page
+    const eventId = document.getElementById('editEventForm')?.dataset?.eventId
+                  || window.location.pathname.split('/').slice(-2, -1)[0];
 
-    // Form elements
-    const editEventForm = document.getElementById('editEventForm');
-    const cancelBtn = document.getElementById('cancelBtn');
-    
-    // Form fields
-    const eventName = document.getElementById('eventName');
-    const eventCategory = document.getElementById('eventCategory');
-    const eventDescription = document.getElementById('eventDescription');
-    const eventDate = document.getElementById('eventDate');
-    const eventTime = document.getElementById('eventTime');
-    const eventStartTime = document.getElementById('eventStartTime');
-    const eventEndTime = document.getElementById('eventEndTime');
-    const eventLocation = document.getElementById('eventLocation');
-    const eventQuota = document.getElementById('eventQuota');
-    const eventOrganizer = document.getElementById('eventOrganizer');
-    const eventBanner = document.getElementById('eventBanner');
-    const eventStatus = document.getElementById('eventStatus');
+    initializeEditEvent();
 
-    // Error elements
-    const eventNameError = document.getElementById('eventNameError');
-    const eventCategoryError = document.getElementById('eventCategoryError');
-    const eventDateError = document.getElementById('eventDateError');
-    const eventTimeError = document.getElementById('eventTimeError');
-    const eventLocationError = document.getElementById('eventLocationError');
-    const eventQuotaError = document.getElementById('eventQuotaError');
-    const eventOrganizerError = document.getElementById('eventOrganizerError');
-
-    // Set minimum date to today
-    if (eventDate) {
-        const today = new Date().toISOString().split('T')[0];
-        eventDate.setAttribute('min', today);
+    async function initializeEditEvent() {
+        try {
+            await loadCategories();
+            if (eventId) await loadEventData(eventId);
+            initializeFormHandlers();
+            setupFormValidation();
+        } catch (error) {
+            console.error('Error initializing edit event:', error);
+            handleApiError(error);
+        }
     }
 
-    // Handle cancel button
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', function() {
-            if (confirm('Apakah Anda yakin ingin membatalkan? Perubahan yang belum disimpan akan hilang.')) {
-                window.location.href = '/admin/events';
-            }
-        });
+    // ── Load categories ──
+    async function loadCategories() {
+        try {
+            const categories = await api.get('/api/admin/categories');
+            const select = document.getElementById('eventCategory');
+            if (!select) return;
+            select.innerHTML = '<option value="">Pilih Kategori</option>';
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = cat.name;
+                select.appendChild(opt);
+            });
+        } catch (e) { /* silent */ }
     }
 
-    // Form validation
-    function validateForm() {
-        let hasError = false;
+    // ── Load event data to pre-fill form ──
+    async function loadEventData(id) {
+        try {
+            const event = await api.get(`/admin/events/${id}`);
 
-        // Clear all errors
-        const errorElements = document.querySelectorAll('.field-error');
-        errorElements.forEach(el => el.textContent = '');
-
-        // Validate event name
-        if (eventName && eventName.value.trim() === '') {
-            if (eventNameError) eventNameError.textContent = 'Nama event wajib diisi';
-            hasError = true;
-        }
-
-        // Validate category
-        if (eventCategory && eventCategory.value === '') {
-            if (eventCategoryError) eventCategoryError.textContent = 'Kategori wajib dipilih';
-            hasError = true;
-        }
-
-        // Validate date
-        if (eventDate && eventDate.value === '') {
-            if (eventDateError) eventDateError.textContent = 'Tanggal wajib diisi';
-            hasError = true;
-        }
-
-        // Validate time
-        if (eventTime && eventTime.value === '') {
-            if (eventTimeError) eventTimeError.textContent = 'Waktu wajib diisi';
-            hasError = true;
-        }
-
-        // Validate location
-        if (eventLocation && eventLocation.value.trim() === '') {
-            if (eventLocationError) eventLocationError.textContent = 'Lokasi wajib diisi';
-            hasError = true;
-        }
-
-        // Validate quota
-        if (eventQuota) {
-            if (eventQuota.value === '') {
-                if (eventQuotaError) eventQuotaError.textContent = 'Kuota wajib diisi';
-                hasError = true;
-            } else if (parseInt(eventQuota.value) < 1) {
-                if (eventQuotaError) eventQuotaError.textContent = 'Kuota minimal 1';
-                hasError = true;
-            }
-        }
-
-        // Validate organizer
-        if (eventOrganizer && eventOrganizer.value.trim() === '') {
-            if (eventOrganizerError) eventOrganizerError.textContent = 'Penyelenggara wajib diisi';
-            hasError = true;
-        }
-
-        return !hasError;
-    }
-
-    // Handle form submission
-    if (editEventForm) {
-        editEventForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            if (!validateForm()) {
-                return;
-            }
-
-            // Collect form data
-            const formData = {
-                name: eventName?.value.trim(),
-                category: eventCategory?.value,
-                description: eventDescription?.value.trim(),
-                date: eventDate?.value,
-                time: eventTime?.value,
-                startTime: eventStartTime?.value,
-                endTime: eventEndTime?.value,
-                location: eventLocation?.value.trim(),
-                quota: eventQuota?.value,
-                organizer: eventOrganizer?.value.trim(),
-                status: eventStatus?.value
+            // Fill form fields
+            const fieldMap = {
+                'eventName': event.name,
+                'eventDescription': event.description,
+                'eventDate': event.date,
+                'eventStartTime': event.start_time,
+                'eventEndTime': event.end_time,
+                'eventLocation': event.location,
+                'eventOrganizer': event.organizer,
+                'eventQuota': event.quota,
+                'eventStatus': event.status,
+                'eventCategory': event.category_id,
             };
 
-            // TODO: Update event data to backend
-            console.log('Updating event:', formData);
+            Object.entries(fieldMap).forEach(([id, val]) => {
+                const el = document.getElementById(id);
+                if (el) el.value = val || '';
+            });
 
-            // Show success message
-            alert('Event berhasil diperbarui!');
+            // Show current banner
+            if (event.banner_url) {
+                const previewContainer = document.querySelector('.current-banner');
+                if (previewContainer) {
+                    previewContainer.innerHTML = `
+                        <img src="${event.banner_url}" alt="Current Banner"
+                             style="max-width:200px;max-height:120px;border-radius:8px;object-fit:cover;">
+                        <p style="font-size:.75rem;color:#64748b;margin-top:.25rem;">Banner saat ini</p>`;
+                    previewContainer.style.display = 'block';
+                }
+            }
 
-            // Redirect to events page
-            window.location.href = '/admin/events';
-        });
+        } catch (error) {
+            console.error('Error loading event data:', error);
+            showNotification('Gagal memuat data event', 'error');
+        }
     }
 
-    // Real-time validation
-    const requiredFields = [eventName, eventCategory, eventDate, eventTime, eventLocation, eventQuota, eventOrganizer];
-    requiredFields.forEach(field => {
-        if (field) {
-            field.addEventListener('input', function() {
-                const errorElement = document.getElementById(this.id + 'Error');
-                if (errorElement) {
-                    errorElement.textContent = '';
+    // ── Initialize form handlers ──
+    function initializeFormHandlers() {
+        const form = document.getElementById('editEventForm');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const bannerInput = document.getElementById('eventBanner');
+
+        if (form) form.addEventListener('submit', handleFormSubmit);
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (confirm('Batalkan perubahan? Data yang belum disimpan akan hilang.')) {
+                    window.location.href = '/admin/events';
                 }
             });
         }
-    });
 
-    // Handle file upload preview
-    if (eventBanner) {
-        eventBanner.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                // Validate file size (max 2MB)
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('Ukuran file terlalu besar. Maksimal 2MB.');
-                    this.value = '';
-                    return;
-                }
+        if (bannerInput) bannerInput.addEventListener('change', handleBannerPreview);
+    }
 
-                // Validate file type
-                const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-                if (!validTypes.includes(file.type)) {
-                    alert('Format file tidak valid. Gunakan JPG atau PNG.');
-                    this.value = '';
-                    return;
-                }
+    // ── Handle form submission ──
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        if (!validateForm()) return;
 
-                console.log('File selected:', file.name);
+        const form = e.target;
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        try {
+            setLoadingState(submitBtn, true, 'Menyimpan...');
+
+            const formData = new FormData(form);
+            // Method spoofing for PUT
+            formData.append('_method', 'PUT');
+
+            const response = await api.post(`/admin/events/${eventId}`, formData);
+
+            if (response.success) {
+                showNotification(response.message, 'success');
+                setTimeout(() => { window.location.href = '/admin/events'; }, 1500);
+            }
+        } catch (error) {
+            if (error.isValidationError()) {
+                displayValidationErrors(error.getValidationErrors());
+            } else {
+                handleApiError(error);
+            }
+        } finally {
+            setLoadingState(submitBtn, false);
+        }
+    }
+
+    // ── Banner preview ──
+    function handleBannerPreview(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) { showNotification('File max 2MB', 'error'); e.target.value = ''; return; }
+
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+            let preview = document.querySelector('.banner-preview');
+            if (!preview) {
+                preview = document.createElement('div');
+                preview.className = 'banner-preview';
+                e.target.parentNode.appendChild(preview);
+            }
+            preview.innerHTML = `<img src="${ev.target.result}" style="max-width:200px;max-height:120px;border-radius:8px;object-fit:cover;" alt="Preview">`;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // ── Form validation ──
+    function setupFormValidation() {
+        ['eventName', 'eventCategory', 'eventDate', 'eventStartTime', 'eventEndTime', 'eventLocation', 'eventQuota', 'eventOrganizer'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('blur', () => validateField(el));
+                el.addEventListener('input', () => clearFieldError(el));
             }
         });
     }
 
-    // Auto-fill end time based on start time
-    if (eventStartTime && eventEndTime) {
-        eventStartTime.addEventListener('change', function() {
-            if (this.value && !eventEndTime.value) {
-                // Set end time to 2 hours after start time
-                const [hours, minutes] = this.value.split(':').map(Number);
-                let endHours = hours + 2;
-                if (endHours >= 24) endHours = endHours - 24;
-                const endTime = `${String(endHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-                eventEndTime.value = endTime;
-            }
+    function validateForm() {
+        let isValid = true;
+        clearAllErrors();
+
+        [{ id: 'eventName', msg: 'Nama event harus diisi' }, { id: 'eventCategory', msg: 'Kategori harus dipilih' },
+         { id: 'eventDate', msg: 'Tanggal harus diisi' }, { id: 'eventStartTime', msg: 'Waktu mulai harus diisi' },
+         { id: 'eventEndTime', msg: 'Waktu selesai harus diisi' }, { id: 'eventLocation', msg: 'Lokasi harus diisi' },
+         { id: 'eventQuota', msg: 'Kuota harus diisi' }, { id: 'eventOrganizer', msg: 'Penyelenggara harus diisi' }
+        ].forEach(({ id, msg }) => {
+            const el = document.getElementById(id);
+            if (el && !el.value.trim()) { showFieldError(el, msg); isValid = false; }
         });
+
+        const start = document.getElementById('eventStartTime')?.value;
+        const end = document.getElementById('eventEndTime')?.value;
+        if (start && end && start >= end) {
+            showFieldError(document.getElementById('eventEndTime'), 'Waktu selesai harus setelah waktu mulai');
+            isValid = false;
+        }
+        return isValid;
     }
+
+    function validateField(field) { if (!field.value.trim()) { showFieldError(field, 'Field ini harus diisi'); return false; } clearFieldError(field); return true; }
+    function showFieldError(field, msg) { const err = document.getElementById(field.id + 'Error'); if (err) { err.textContent = msg; err.style.display = 'block'; } field.classList.add('error'); }
+    function clearFieldError(field) { const err = document.getElementById(field.id + 'Error'); if (err) { err.textContent = ''; err.style.display = 'none'; } field.classList.remove('error'); }
+    function clearAllErrors() { document.querySelectorAll('.field-error').forEach(e => { e.textContent = ''; e.style.display = 'none'; }); document.querySelectorAll('.error').forEach(e => e.classList.remove('error')); }
+    function displayValidationErrors(errors) { Object.keys(errors).forEach(key => { const el = document.getElementById(`event${key.charAt(0).toUpperCase() + key.slice(1)}`); if (el && errors[key][0]) showFieldError(el, errors[key][0]); }); }
 });
