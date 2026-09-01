@@ -1,4 +1,4 @@
-@extends('user.layout')
+﻿@extends('user.layout')
 
 @section('title', 'Profil')
 
@@ -17,10 +17,10 @@
             <div class="event-content">
                 <div class="profile-header">
                     <div class="avatar avatar-lg">
-                        <span>F</span>
+                        <span>{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                     </div>
                     <div class="profile-info">
-                        <h2 class="event-title">Fathi</h2>
+                        <h2 class="event-title">{{ Auth::user()->name }}</h2>
                         <p class="profile-role">Siswa</p>
                     </div>
                 </div>
@@ -30,15 +30,27 @@
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">Nama Lengkap</div>
-                            <div class="info-value">Fathi</div>
+                            <div class="info-value" id="profileName">{{ Auth::user()->name }}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">NIS</div>
-                            <div class="info-value">12345</div>
+                            <div class="info-value">{{ Auth::user()->nis ?? '-' }}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Kelas</div>
-                            <div class="info-value">XII RPL 1</div>
+                            <div class="info-value">{{ Auth::user()->class ?? 'Belum diisi' }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">{{ Auth::user()->email }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">No. HP</div>
+                            <div class="info-value" id="profilePhone">{{ Auth::user()->phone ?? '-' }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Alamat</div>
+                            <div class="info-value" id="profileAddress">{{ Auth::user()->address ?? '-' }}</div>
                         </div>
                     </div>
 
@@ -46,52 +58,29 @@
                     <div class="statistics-grid">
                         <div class="stat-card">
                             <div class="stat-icon stat-icon-blue">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                </svg>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                             </div>
                             <div class="stat-content">
-                                <div class="stat-value">2</div>
+                                <div class="stat-value" id="statEventsJoined">-</div>
                                 <div class="stat-label">Event Diikuti</div>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon stat-icon-green">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="8" r="7"></circle>
-                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                                </svg>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
                             </div>
                             <div class="stat-content">
-                                <div class="stat-value">2</div>
+                                <div class="stat-value" id="statCertificates">-</div>
                                 <div class="stat-label">Sertifikat</div>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon stat-icon-purple">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                </svg>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                             </div>
                             <div class="stat-content">
-                                <div class="stat-value">100%</div>
+                                <div class="stat-value" id="statAttendance">-</div>
                                 <div class="stat-label">Kehadiran</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon stat-icon-orange">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="8" r="6"></circle>
-                                    <path d="M9 14.5 7 22l5-3 5 3-2-7.5"></path>
-                                </svg>
-                            </div>
-                            <div class="stat-content">
-                                <div class="stat-value">100</div>
-                                <div class="stat-label">Poin Saya</div>
                             </div>
                         </div>
                     </div>
@@ -109,14 +98,31 @@
             </div>
             <div class="modal-body">
                 <form id="editProfileForm">
+                    @csrf
                     <div class="input-group" style="margin-bottom: var(--spacing-md);">
                         <label class="input-label" for="editName">Nama Lengkap</label>
-                        <input type="text" id="editName" class="input-field" value="Fathi" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                        <input type="text" id="editName" name="name" class="input-field"
+                               value="{{ Auth::user()->name }}"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
                     </div>
                     <div class="input-group" style="margin-bottom: var(--spacing-md);">
-                        <label class="input-label" for="editClass">Kelas</label>
-                        <input type="text" id="editClass" class="input-field" value="XII RPL 1" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                        <label class="input-label" for="editEmail">Email</label>
+                        <input type="email" id="editEmail" name="email" class="input-field"
+                               value="{{ Auth::user()->email }}"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
                     </div>
+                    <div class="input-group" style="margin-bottom: var(--spacing-md);">
+                        <label class="input-label" for="editPhone">No. HP</label>
+                        <input type="text" id="editPhone" name="phone" class="input-field"
+                               value="{{ Auth::user()->phone }}"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                    </div>
+                    <div class="input-group" style="margin-bottom: var(--spacing-md);">
+                        <label class="input-label" for="editAddress">Alamat</label>
+                        <textarea id="editAddress" name="address" class="input-field" rows="2"
+                                  style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-md);">{{ Auth::user()->address }}</textarea>
+                    </div>
+                    <div id="profileUpdateMsg" style="display:none;padding:.5rem;border-radius:.5rem;font-size:.82rem;margin-top:.5rem;"></div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -126,3 +132,7 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+@vite(['resources/js/utils/api.js', 'resources/js/user/profile.js'])
+@endpush

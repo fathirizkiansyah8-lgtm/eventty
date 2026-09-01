@@ -1,12 +1,12 @@
-@extends('user.layout')
+﻿@extends('user.layout')
 
 @section('title', 'News & Updates')
 
 @push('css')
 <style>
-/* ══════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    NEWS PAGE
-══════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .news-page { padding: 1.5rem 1.75rem; font-family: 'Plus Jakarta Sans','Inter',sans-serif; }
 
 .news-top {
@@ -83,7 +83,7 @@
 .cat-announcement{ background:#ede9fe; color:#7c3aed; }
 .cat-competition { background:#fce7f3; color:#be185d; }
 
-/* ── Competition Result Card thumbnail ── */
+/* â”€â”€ Competition Result Card thumbnail â”€â”€ */
 .news-thumb-comp {
     width:100%; height:150px; flex-shrink:0;
     display:flex; flex-direction:column; justify-content:space-between;
@@ -144,7 +144,7 @@
 .news-read-time { font-size:.68rem; color:var(--text-muted); background:var(--bg-tertiary);
     padding:.15rem .5rem; border-radius:.3rem; }
 
-/* ══ MODAL ══ */
+/* â•â• MODAL â•â• */
 .modal-overlay {
     position:fixed; inset:0; background:rgba(0,0,0,.55);
     display:flex; align-items:center; justify-content:center;
@@ -186,7 +186,7 @@
     font-size:.875rem; color:var(--text-secondary); padding:.3rem 0;
     display:flex; align-items:flex-start; gap:.6rem; line-height:1.5;
 }
-.nm-list li::before { content:'•'; color:#0f1f4e; font-weight:900; flex-shrink:0; margin-top:.05rem; }
+.nm-list li::before { content:'â€¢'; color:#0f1f4e; font-weight:900; flex-shrink:0; margin-top:.05rem; }
 
 .nm-highlight {
     background:linear-gradient(135deg,#eff6ff,#dbeafe); border:1px solid #bfdbfe;
@@ -221,8 +221,8 @@
 
     {{-- TOP --}}
     <div class="news-top">
-        <h1 class="news-page-title">📰 News & Updates</h1>
-        <span class="news-count-badge" id="newsCount">12 Berita</span>
+        <h1 class="news-page-title">ðŸ“° News & Updates</h1>
+        <span class="news-count-badge" id="newsCount">Berita</span>
     </div>
 
     {{-- FILTERS --}}
@@ -244,13 +244,13 @@
             <div class="news-body">
                 <div class="news-meta-top">
                     <span class="cat-badge cat-achievement">Achievement</span>
-                    <span class="imp-badge">⚡ Important</span>
+                    <span class="imp-badge">âš¡ Important</span>
                 </div>
-                <div class="news-title">🏆 SMKN 20 Jakarta Wins National Programming Competition</div>
+                <div class="news-title">ðŸ† SMKN 20 Jakarta Wins National Programming Competition</div>
                 <div class="news-excerpt">Tim programming sekolah berhasil meraih juara pertama di kompetisi nasional. Tiga siswa membawa pulang trofi bergengsi dari ajang bergengsi ini.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 234</span>
+                        <span class="news-stat">ðŸ‘ 234</span>
                         <span class="news-time">2 hours ago</span>
                     </div>
                     <span class="news-read-time">3 min read</span>
@@ -264,13 +264,13 @@
             <div class="news-body">
                 <div class="news-meta-top">
                     <span class="cat-badge cat-achievement">Achievement</span>
-                    <span class="imp-badge">⚡ Important</span>
+                    <span class="imp-badge">âš¡ Important</span>
                 </div>
-                <div class="news-title">🏀 Basketball Team Advances to Regional Finals</div>
+                <div class="news-title">ðŸ€ Basketball Team Advances to Regional Finals</div>
                 <div class="news-excerpt">Tim basket SMKN 20 Jakarta melaju ke final regional setelah mengalahkan lawan dengan skor 78-72 dalam pertandingan yang sangat seru.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 187</span>
+                        <span class="news-stat">ðŸ‘ 187</span>
                         <span class="news-time">5 hours ago</span>
                     </div>
                     <span class="news-read-time">2 min read</span>
@@ -280,17 +280,17 @@
 
         {{-- 3. Final Exam --}}
         <div class="news-card" data-cat="academic" data-id="3" onclick="openModal(3)">
-            <div class="news-thumb-placeholder news-thumb-gradient-3">📚</div>
+            <div class="news-thumb-placeholder news-thumb-gradient-3">ðŸ“š</div>
             <div class="news-body">
                 <div class="news-meta-top">
                     <span class="cat-badge cat-academic">Academic</span>
-                    <span class="imp-badge">⚡ Important</span>
+                    <span class="imp-badge">âš¡ Important</span>
                 </div>
-                <div class="news-title">📚 Important: Final Exam Schedule Released</div>
+                <div class="news-title">ðŸ“š Important: Final Exam Schedule Released</div>
                 <div class="news-excerpt">Jadwal ujian akhir semester telah resmi dirilis. Perhatikan tanggal penting dan panduan yang wajib diikuti semua siswa.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 456</span>
+                        <span class="news-stat">ðŸ‘ 456</span>
                         <span class="news-time">1 day ago</span>
                     </div>
                     <span class="news-read-time">4 min read</span>
@@ -305,11 +305,11 @@
                 <div class="news-meta-top">
                     <span class="cat-badge cat-event">Event</span>
                 </div>
-                <div class="news-title">💼 Career Day 2027 Registration Now Open</div>
+                <div class="news-title">ðŸ’¼ Career Day 2027 Registration Now Open</div>
                 <div class="news-excerpt">Pendaftaran Career Day 2027 resmi dibuka! Temui speaker dari Google, Gojek, Tokopedia dan ikuti berbagai workshop seru.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 312</span>
+                        <span class="news-stat">ðŸ‘ 312</span>
                         <span class="news-time">1 day ago</span>
                     </div>
                     <span class="news-read-time">3 min read</span>
@@ -319,16 +319,16 @@
 
         {{-- 5. Library --}}
         <div class="news-card" data-cat="academic" data-id="5" onclick="openModal(5)">
-            <div class="news-thumb-placeholder news-thumb-gradient-2">📖</div>
+            <div class="news-thumb-placeholder news-thumb-gradient-2">ðŸ“–</div>
             <div class="news-body">
                 <div class="news-meta-top">
                     <span class="cat-badge cat-academic">Academic</span>
                 </div>
-                <div class="news-title">📖 New Library Digital Resources Available</div>
+                <div class="news-title">ðŸ“– New Library Digital Resources Available</div>
                 <div class="news-excerpt">Perpustakaan sekolah kini menambahkan 500+ e-book dan jurnal online dari berbagai subjek. Akses gratis dengan student ID.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 145</span>
+                        <span class="news-stat">ðŸ‘ 145</span>
                         <span class="news-time">2 days ago</span>
                     </div>
                     <span class="news-read-time">2 min read</span>
@@ -343,11 +343,11 @@
                 <div class="news-meta-top">
                     <span class="cat-badge cat-event">Event</span>
                 </div>
-                <div class="news-title">🎉 Class Meeting 2027 Spectacular Success</div>
+                <div class="news-title">ðŸŽ‰ Class Meeting 2027 Spectacular Success</div>
                 <div class="news-excerpt">Class Meeting 2027 resmi berakhir dengan gemilang! 500+ peserta, 15 kompetisi, dan momen tak terlupakan dari seluruh kelas.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 523</span>
+                        <span class="news-stat">ðŸ‘ 523</span>
                         <span class="news-time">3 days ago</span>
                     </div>
                     <span class="news-read-time">4 min read</span>
@@ -357,17 +357,17 @@
 
         {{-- 7. Student Council --}}
         <div class="news-card" data-cat="announcement" data-id="7" onclick="openModal(7)">
-            <div class="news-thumb-placeholder news-thumb-gradient-1">🗳️</div>
+            <div class="news-thumb-placeholder news-thumb-gradient-1">ðŸ—³ï¸</div>
             <div class="news-body">
                 <div class="news-meta-top">
                     <span class="cat-badge cat-announcement">Announcement</span>
-                    <span class="imp-badge">⚡ Important</span>
+                    <span class="imp-badge">âš¡ Important</span>
                 </div>
-                <div class="news-title">🗳️ Student Council Elections Announcement</div>
+                <div class="news-title">ðŸ—³ï¸ Student Council Elections Announcement</div>
                 <div class="news-excerpt">Pemilihan pengurus OSIS tahunan segera dilaksanakan. Daftarkan dirimu atau gunakan hak pilihmu untuk masa depan sekolah yang lebih baik!</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 278</span>
+                        <span class="news-stat">ðŸ‘ 278</span>
                         <span class="news-time">4 days ago</span>
                     </div>
                     <span class="news-read-time">3 min read</span>
@@ -377,16 +377,16 @@
 
         {{-- 8. Art Exhibition --}}
         <div class="news-card" data-cat="event" data-id="8" onclick="openModal(8)">
-            <div class="news-thumb-placeholder news-thumb-gradient-1" style="background:linear-gradient(135deg,#4c1d95,#7c3aed);">🎨</div>
+            <div class="news-thumb-placeholder news-thumb-gradient-1" style="background:linear-gradient(135deg,#4c1d95,#7c3aed);">ðŸŽ¨</div>
             <div class="news-body">
                 <div class="news-meta-top">
                     <span class="cat-badge cat-event">Event</span>
                 </div>
-                <div class="news-title">🎨 Art Exhibition Features Student Masterpieces</div>
+                <div class="news-title">ðŸŽ¨ Art Exhibition Features Student Masterpieces</div>
                 <div class="news-excerpt">Pameran seni karya siswa SMKN 20 Jakarta digelar di galeri sekolah. Lukisan, patung, seni digital, dan masih banyak lagi karya luar biasa.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 167</span>
+                        <span class="news-stat">ðŸ‘ 167</span>
                         <span class="news-time">5 days ago</span>
                     </div>
                     <span class="news-read-time">3 min read</span>
@@ -398,25 +398,25 @@
         <div class="news-card" data-cat="competition-result" data-id="9" onclick="openModal(9)">
             <div class="news-thumb-comp" style="background:linear-gradient(135deg,#0f1f4e 0%,#1a3a7c 100%);">
                 <div class="comp-result-banner">
-                    <span class="comp-trophy">🏆</span>
+                    <span class="comp-trophy">ðŸ†</span>
                     <div class="comp-banner-info">
-                        <span class="comp-banner-event">Class Meeting — Basket</span>
+                        <span class="comp-banner-event">Class Meeting â€” Basket</span>
                         <span class="comp-banner-label">Hasil Pertandingan</span>
                     </div>
                 </div>
                 <div class="comp-podium-row">
                     <div class="comp-podium-item silver">
-                        <span class="comp-podium-medal">🥈</span>
+                        <span class="comp-podium-medal">ðŸ¥ˆ</span>
                         <span class="comp-podium-class">XI TKJ 2</span>
                         <span class="comp-podium-rank">Juara 2</span>
                     </div>
                     <div class="comp-podium-item gold">
-                        <span class="comp-podium-medal">🥇</span>
+                        <span class="comp-podium-medal">ðŸ¥‡</span>
                         <span class="comp-podium-class">XI RPL 1</span>
                         <span class="comp-podium-rank">Juara 1</span>
                     </div>
                     <div class="comp-podium-item bronze">
-                        <span class="comp-podium-medal">🥉</span>
+                        <span class="comp-podium-medal">ðŸ¥‰</span>
                         <span class="comp-podium-class">XII AK 1</span>
                         <span class="comp-podium-rank">Juara 3</span>
                     </div>
@@ -425,13 +425,13 @@
             <div class="news-body">
                 <div class="news-meta-top">
                     <span class="cat-badge cat-competition">Hasil Kompetisi</span>
-                    <span class="imp-badge">⚡ Resmi</span>
+                    <span class="imp-badge">âš¡ Resmi</span>
                 </div>
-                <div class="news-title">🏀 Hasil Lomba Basket — Class Meeting 2026</div>
+                <div class="news-title">ðŸ€ Hasil Lomba Basket â€” Class Meeting 2026</div>
                 <div class="news-excerpt">XI RPL 1 keluar sebagai juara basket putra Class Meeting 2026 setelah mengalahkan XI TKJ 2 dengan skor 54-48 di babak final.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 341</span>
+                        <span class="news-stat">ðŸ‘ 341</span>
                         <span class="news-time">1 day ago</span>
                     </div>
                     <span class="news-read-time">2 min read</span>
@@ -443,25 +443,25 @@
         <div class="news-card" data-cat="competition-result" data-id="10" onclick="openModal(10)">
             <div class="news-thumb-comp" style="background:linear-gradient(135deg,#064e3b 0%,#065f46 100%);">
                 <div class="comp-result-banner">
-                    <span class="comp-trophy">⚽</span>
+                    <span class="comp-trophy">âš½</span>
                     <div class="comp-banner-info">
-                        <span class="comp-banner-event">Class Meeting — Futsal</span>
+                        <span class="comp-banner-event">Class Meeting â€” Futsal</span>
                         <span class="comp-banner-label">Hasil Pertandingan</span>
                     </div>
                 </div>
                 <div class="comp-podium-row">
                     <div class="comp-podium-item silver">
-                        <span class="comp-podium-medal">🥈</span>
+                        <span class="comp-podium-medal">ðŸ¥ˆ</span>
                         <span class="comp-podium-class">X BD 1</span>
                         <span class="comp-podium-rank">Juara 2</span>
                     </div>
                     <div class="comp-podium-item gold">
-                        <span class="comp-podium-medal">🥇</span>
+                        <span class="comp-podium-medal">ðŸ¥‡</span>
                         <span class="comp-podium-class">XI RPL 2</span>
                         <span class="comp-podium-rank">Juara 1</span>
                     </div>
                     <div class="comp-podium-item bronze">
-                        <span class="comp-podium-medal">🥉</span>
+                        <span class="comp-podium-medal">ðŸ¥‰</span>
                         <span class="comp-podium-class">XII MP 1</span>
                         <span class="comp-podium-rank">Juara 3</span>
                     </div>
@@ -471,11 +471,11 @@
                 <div class="news-meta-top">
                     <span class="cat-badge cat-competition">Hasil Kompetisi</span>
                 </div>
-                <div class="news-title">⚽ Hasil Lomba Futsal — Class Meeting 2026</div>
+                <div class="news-title">âš½ Hasil Lomba Futsal â€” Class Meeting 2026</div>
                 <div class="news-excerpt">XI RPL 2 meraih gelar juara futsal putra setelah drama adu penalti melawan X BD 1 dalam final yang menegangkan.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 298</span>
+                        <span class="news-stat">ðŸ‘ 298</span>
                         <span class="news-time">1 day ago</span>
                     </div>
                     <span class="news-read-time">2 min read</span>
@@ -487,25 +487,25 @@
         <div class="news-card" data-cat="competition-result" data-id="11" onclick="openModal(11)">
             <div class="news-thumb-comp" style="background:linear-gradient(135deg,#4c1d95 0%,#6d28d9 100%);">
                 <div class="comp-result-banner">
-                    <span class="comp-trophy">🎤</span>
+                    <span class="comp-trophy">ðŸŽ¤</span>
                     <div class="comp-banner-info">
-                        <span class="comp-banner-event">Class Meeting — Vocal Group</span>
+                        <span class="comp-banner-event">Class Meeting â€” Vocal Group</span>
                         <span class="comp-banner-label">Hasil Kompetisi</span>
                     </div>
                 </div>
                 <div class="comp-podium-row">
                     <div class="comp-podium-item silver">
-                        <span class="comp-podium-medal">🥈</span>
+                        <span class="comp-podium-medal">ðŸ¥ˆ</span>
                         <span class="comp-podium-class">XI LPS 1</span>
                         <span class="comp-podium-rank">Juara 2</span>
                     </div>
                     <div class="comp-podium-item gold">
-                        <span class="comp-podium-medal">🥇</span>
+                        <span class="comp-podium-medal">ðŸ¥‡</span>
                         <span class="comp-podium-class">X MP 1</span>
                         <span class="comp-podium-rank">Juara 1</span>
                     </div>
                     <div class="comp-podium-item bronze">
-                        <span class="comp-podium-medal">🥉</span>
+                        <span class="comp-podium-medal">ðŸ¥‰</span>
                         <span class="comp-podium-class">XII BD 2</span>
                         <span class="comp-podium-rank">Juara 3</span>
                     </div>
@@ -515,11 +515,11 @@
                 <div class="news-meta-top">
                     <span class="cat-badge cat-competition">Hasil Kompetisi</span>
                 </div>
-                <div class="news-title">🎤 Hasil Lomba Vocal Group — Class Meeting 2026</div>
+                <div class="news-title">ðŸŽ¤ Hasil Lomba Vocal Group â€” Class Meeting 2026</div>
                 <div class="news-excerpt">X MP 1 tampil memukau dan berhasil meraih juara pertama Vocal Group dengan penampilan yang luar biasa memukau dewan juri.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 214</span>
+                        <span class="news-stat">ðŸ‘ 214</span>
                         <span class="news-time">2 days ago</span>
                     </div>
                     <span class="news-read-time">2 min read</span>
@@ -531,7 +531,7 @@
         <div class="news-card" data-cat="competition-result" data-id="12" onclick="openModal(12)">
             <div class="news-thumb-comp" style="background:linear-gradient(135deg,#b45309 0%,#d97706 100%);">
                 <div class="comp-result-banner">
-                    <span class="comp-trophy">🎨</span>
+                    <span class="comp-trophy">ðŸŽ¨</span>
                     <div class="comp-banner-info">
                         <span class="comp-banner-event">Lomba Desain Grafis</span>
                         <span class="comp-banner-label">Hasil Kompetisi</span>
@@ -539,17 +539,17 @@
                 </div>
                 <div class="comp-podium-row">
                     <div class="comp-podium-item silver">
-                        <span class="comp-podium-medal">🥈</span>
+                        <span class="comp-podium-medal">ðŸ¥ˆ</span>
                         <span class="comp-podium-class">Siti N.</span>
                         <span class="comp-podium-rank">Juara 2</span>
                     </div>
                     <div class="comp-podium-item gold">
-                        <span class="comp-podium-medal">🥇</span>
+                        <span class="comp-podium-medal">ðŸ¥‡</span>
                         <span class="comp-podium-class">Fathi R.</span>
                         <span class="comp-podium-rank">Juara 1</span>
                     </div>
                     <div class="comp-podium-item bronze">
-                        <span class="comp-podium-medal">🥉</span>
+                        <span class="comp-podium-medal">ðŸ¥‰</span>
                         <span class="comp-podium-class">Budi S.</span>
                         <span class="comp-podium-rank">Juara 3</span>
                     </div>
@@ -559,11 +559,11 @@
                 <div class="news-meta-top">
                     <span class="cat-badge cat-competition">Hasil Kompetisi</span>
                 </div>
-                <div class="news-title">🎨 Hasil Lomba Desain Grafis 2026</div>
+                <div class="news-title">ðŸŽ¨ Hasil Lomba Desain Grafis 2026</div>
                 <div class="news-excerpt">Fathi Rizkiansyah (XI RPL 1) berhasil meraih juara pertama Lomba Desain Grafis dengan karya poster digital bertema lingkungan.</div>
                 <div class="news-footer">
                     <div class="news-footer-left">
-                        <span class="news-stat">👁 189</span>
+                        <span class="news-stat">ðŸ‘ 189</span>
                         <span class="news-time">3 days ago</span>
                     </div>
                     <span class="news-read-time">2 min read</span>
@@ -574,7 +574,7 @@
     </div>{{-- /news-grid --}}
 </div>{{-- /news-page --}}
 
-{{-- ══════════════ MODAL ══════════════ --}}
+{{-- â•â•â•â•â•â•â•â•â•â•â•â•â•â• MODAL â•â•â•â•â•â•â•â•â•â•â•â•â•â• --}}
 <div class="modal-overlay" id="newsModal" onclick="closeModalOutside(event)">
     <div class="news-modal" id="newsModalInner"></div>
 </div>
@@ -582,25 +582,25 @@
 
 @push('js')
 <script>
-// ── Modal content data
+// â”€â”€ Modal content data
 const newsData = {
     1: {
         cat: 'achievement', catLabel: 'Achievement', important: true,
-        title: '🏆 SMKN 20 Jakarta Wins National Programming Competition',
+        title: 'ðŸ† SMKN 20 Jakarta Wins National Programming Competition',
         thumb: '{{ asset("images/workshop.png") }}', thumbAlt: 'Programming Competition',
-        byline: 'By Humas SMKN 20 Jakarta · 2 hours ago · 3 min read · 234 views',
+        byline: 'By Humas SMKN 20 Jakarta Â· 2 hours ago Â· 3 min read Â· 234 views',
         sections: [
             { title: 'Selamat kepada Tim Kita!', type: 'text',
               content: 'Tim programming SMKN 20 Jakarta berhasil meraih gelar juara pertama dalam kompetisi pemrograman nasional yang diikuti oleh lebih dari 150 sekolah dari seluruh Indonesia. Ini adalah pencapaian luar biasa yang membanggakan seluruh keluarga besar SMKN 20 Jakarta.' },
             { title: 'Detail Prestasi', type: 'list', items: [
-                '🥇 First Place — Algorithm Design Category',
-                '🏆 Best Mobile App Award — Aplikasi terbaik dari 50+ peserta',
-                '⭐ Special Jury Award — Inovasi terbaik tahun ini',
+                'ðŸ¥‡ First Place â€” Algorithm Design Category',
+                'ðŸ† Best Mobile App Award â€” Aplikasi terbaik dari 50+ peserta',
+                'â­ Special Jury Award â€” Inovasi terbaik tahun ini',
             ]},
             { title: 'Para Pemenang', type: 'list', items: [
-                'Ahmad Rizki Pratama (XI RPL 1) — Team Captain & Algorithm Lead',
-                'Siti Nurhaliza (XI RPL 2) — Mobile Development',
-                'Budi Santoso (XII RPL 1) — UI/UX & Presentation',
+                'Ahmad Rizki Pratama (XI RPL 1) â€” Team Captain & Algorithm Lead',
+                'Siti Nurhaliza (XI RPL 2) â€” Mobile Development',
+                'Budi Santoso (XII RPL 1) â€” UI/UX & Presentation',
             ]},
             { title: 'Ucapan Terima Kasih', type: 'highlight',
               content: 'Terima kasih kepada Bapak/Ibu coach Pak Dani dan Bu Rina yang telah mendampingi tim selama 3 bulan persiapan. Juga kepada seluruh siswa SMKN 20 yang telah memberikan dukungan penuh!' },
@@ -608,54 +608,54 @@ const newsData = {
     },
     2: {
         cat: 'achievement', catLabel: 'Achievement', important: true,
-        title: '🏀 Basketball Team Advances to Regional Finals',
+        title: 'ðŸ€ Basketball Team Advances to Regional Finals',
         thumb: '{{ asset("images/basket.jpeg") }}', thumbAlt: 'Basketball Team',
-        byline: 'By Tim Olahraga SMKN 20 · 5 hours ago · 2 min read · 187 views',
+        byline: 'By Tim Olahraga SMKN 20 Â· 5 hours ago Â· 2 min read Â· 187 views',
         sections: [
             { title: 'Menuju Final Regional!', type: 'text',
               content: 'Tim basket putra SMKN 20 Jakarta resmi melaju ke babak final regional setelah meraih kemenangan gemilang 78-72 atas SMKN 5 Jakarta dalam pertandingan semifinal yang berlangsung sangat ketat di GOR Soemantri Brodjonegoro.' },
             { title: 'Highlight Pertandingan', type: 'list', items: [
-                '🏀 Skor akhir: SMKN 20 Jakarta 78 — SMKN 5 Jakarta 72',
-                '⭐ Top scorer: Fajar Ramadan (XI TKJ 1) — 24 poin',
-                '🛡️ Best defender: Reno Saputra (XII RPL 2) — 8 rebound',
-                '🎯 3-pointer terbaik di kuarter terakhir membalik keadaan',
+                'ðŸ€ Skor akhir: SMKN 20 Jakarta 78 â€” SMKN 5 Jakarta 72',
+                'â­ Top scorer: Fajar Ramadan (XI TKJ 1) â€” 24 poin',
+                'ðŸ›¡ï¸ Best defender: Reno Saputra (XII RPL 2) â€” 8 rebound',
+                'ðŸŽ¯ 3-pointer terbaik di kuarter terakhir membalik keadaan',
             ]},
             { title: 'Detail Final Regional', type: 'list', items: [
-                '📅 Tanggal: 15 September 2026',
-                '⏰ Waktu: 14:00 WIB',
-                '📍 Lokasi: GOR Soemantri Brodjonegoro, Jakarta',
-                '🆚 Lawan: SMA Negeri 8 Jakarta',
+                'ðŸ“… Tanggal: 15 September 2026',
+                'â° Waktu: 14:00 WIB',
+                'ðŸ“ Lokasi: GOR Soemantri Brodjonegoro, Jakarta',
+                'ðŸ†š Lawan: SMA Negeri 8 Jakarta',
             ]},
             { title: 'Yuk Support Tim Kita!', type: 'highlight',
-              content: 'Mari kita ramaikan final regional! Hadir dan berikan semangat kepada tim basket SMKN 20 Jakarta. Panitia akan menyediakan bus bagi siswa yang ingin datang mendukung — daftar ke OSIS sebelum 12 September 2026.' },
+              content: 'Mari kita ramaikan final regional! Hadir dan berikan semangat kepada tim basket SMKN 20 Jakarta. Panitia akan menyediakan bus bagi siswa yang ingin datang mendukung â€” daftar ke OSIS sebelum 12 September 2026.' },
         ]
     },
     3: {
         cat: 'academic', catLabel: 'Academic', important: true,
-        title: '📚 Important: Final Exam Schedule Released',
-        thumb: null, thumbClass: 'news-thumb-gradient-3', thumbEmoji: '📚',
-        byline: 'By Academic Affairs SMKN 20 · 1 day ago · 4 min read · 456 views',
+        title: 'ðŸ“š Important: Final Exam Schedule Released',
+        thumb: null, thumbClass: 'news-thumb-gradient-3', thumbEmoji: 'ðŸ“š',
+        byline: 'By Academic Affairs SMKN 20 Â· 1 day ago Â· 4 min read Â· 456 views',
         sections: [
             { title: 'Informasi Ujian Akhir Semester', type: 'text',
               content: 'Jadwal Ujian Akhir Semester (UAS) telah resmi ditetapkan oleh pihak akademik. Seluruh siswa wajib memperhatikan tanggal dan ketentuan berikut ini.' },
             { title: 'Key Dates', type: 'list', items: [
-                '📅 Review Session: 20–25 September 2026',
-                '📝 Exam Period: 26 September – 10 Oktober 2026',
-                '📊 Result Announcement: 20 Oktober 2026',
-                '🎓 Remedial (jika ada): 22–24 Oktober 2026',
+                'ðŸ“… Review Session: 20â€“25 September 2026',
+                'ðŸ“ Exam Period: 26 September â€“ 10 Oktober 2026',
+                'ðŸ“Š Result Announcement: 20 Oktober 2026',
+                'ðŸŽ“ Remedial (jika ada): 22â€“24 Oktober 2026',
             ]},
             { title: 'Panduan Penting (Wajib Dibaca)', type: 'list', items: [
-                '🪪 Wajib membawa kartu pelajar/ID setiap hari ujian',
-                '📵 Tidak diperbolehkan membawa perangkat elektronik',
-                '👕 Wajib mengenakan seragam lengkap dan rapi',
-                '⏰ Hadir minimal 15 menit sebelum ujian dimulai',
-                '🚫 Keterlambatan lebih dari 30 menit tidak diperbolehkan masuk',
+                'ðŸªª Wajib membawa kartu pelajar/ID setiap hari ujian',
+                'ðŸ“µ Tidak diperbolehkan membawa perangkat elektronik',
+                'ðŸ‘• Wajib mengenakan seragam lengkap dan rapi',
+                'â° Hadir minimal 15 menit sebelum ujian dimulai',
+                'ðŸš« Keterlambatan lebih dari 30 menit tidak diperbolehkan masuk',
             ]},
             { title: 'Tips Persiapan Ujian', type: 'list', items: [
-                '📖 Mulai review materi 2 minggu sebelum ujian',
-                '💤 Tidur cukup malam sebelum ujian — minimal 7-8 jam',
-                '🥗 Sarapan bergizi sebelum berangkat ke sekolah',
-                '📝 Buat rangkuman/mind map untuk setiap mata pelajaran',
+                'ðŸ“– Mulai review materi 2 minggu sebelum ujian',
+                'ðŸ’¤ Tidur cukup malam sebelum ujian â€” minimal 7-8 jam',
+                'ðŸ¥— Sarapan bergizi sebelum berangkat ke sekolah',
+                'ðŸ“ Buat rangkuman/mind map untuk setiap mata pelajaran',
             ]},
             { title: 'Informasi Lebih Lanjut', type: 'highlight',
               content: 'Hubungi Bagian Akademik di ruang TU atau email ke akademik@smkn20jkt.sch.id untuk pertanyaan lebih lanjut mengenai jadwal ujian.' },
@@ -663,87 +663,87 @@ const newsData = {
     },
     4: {
         cat: 'event', catLabel: 'Event', important: false,
-        title: '💼 Career Day 2027 Registration Now Open',
+        title: 'ðŸ’¼ Career Day 2027 Registration Now Open',
         thumb: '{{ asset("images/careerday.jpeg") }}', thumbAlt: 'Career Day',
-        byline: 'By OSIS SMKN 20 Jakarta · 1 day ago · 3 min read · 312 views',
+        byline: 'By OSIS SMKN 20 Jakarta Â· 1 day ago Â· 3 min read Â· 312 views',
         sections: [
             { title: 'Pendaftaran Resmi Dibuka!', type: 'text',
               content: 'Career Day 2027 hadir kembali dengan format yang lebih besar dan lebih seru dari tahun sebelumnya! Temui profesional dari berbagai industri, ikuti workshop eksklusif, dan eksplorasi peluang karirmu.' },
             { title: 'Event Highlights', type: 'list', items: [
-                '🎤 10+ Keynote Speaker dari industri terkemuka',
-                '🛠️ 8 Workshop paralel yang bisa kamu pilih',
-                '🏢 30+ Company Booth dari berbagai sektor',
-                '🤝 Sesi networking dengan HR profesional',
+                'ðŸŽ¤ 10+ Keynote Speaker dari industri terkemuka',
+                'ðŸ› ï¸ 8 Workshop paralel yang bisa kamu pilih',
+                'ðŸ¢ 30+ Company Booth dari berbagai sektor',
+                'ðŸ¤ Sesi networking dengan HR profesional',
             ]},
             { title: 'Confirmed Speakers', type: 'list', items: [
-                '🔵 Rudi Hartono — Senior Engineer, Google Indonesia',
-                '🟢 Sari Dewi — Product Manager, Gojek',
-                '🔴 Bima Arya — CTO, Tokopedia',
-                '🟡 Anisa Rahman — UX Designer, Shopee',
-                '⚫ Hendra Gunawan — CEO, Startup Lokal Unicorn',
+                'ðŸ”µ Rudi Hartono â€” Senior Engineer, Google Indonesia',
+                'ðŸŸ¢ Sari Dewi â€” Product Manager, Gojek',
+                'ðŸ”´ Bima Arya â€” CTO, Tokopedia',
+                'ðŸŸ¡ Anisa Rahman â€” UX Designer, Shopee',
+                'âš« Hendra Gunawan â€” CEO, Startup Lokal Unicorn',
             ]},
             { title: 'Cara Registrasi', type: 'list', items: [
-                '1️⃣ Kunjungi halaman Events di aplikasi ini',
-                '2️⃣ Cari "Career Day 2027" dan klik Daftar',
-                '3️⃣ Isi formulir pendaftaran lengkap',
-                '4️⃣ Konfirmasi akan dikirim ke WhatsApp kamu',
+                '1ï¸âƒ£ Kunjungi halaman Events di aplikasi ini',
+                '2ï¸âƒ£ Cari "Career Day 2027" dan klik Daftar',
+                '3ï¸âƒ£ Isi formulir pendaftaran lengkap',
+                '4ï¸âƒ£ Konfirmasi akan dikirim ke WhatsApp kamu',
             ]},
             { title: 'Info Tambahan', type: 'highlight',
-              content: 'Acara berlangsung pada 20 Agustus 2026 pukul 08:00–15:00 WIB di Aula Sekolah. Gratis untuk seluruh siswa SMKN 20 Jakarta. Kuota terbatas 50 peserta — daftar sekarang!' },
+              content: 'Acara berlangsung pada 20 Agustus 2026 pukul 08:00â€“15:00 WIB di Aula Sekolah. Gratis untuk seluruh siswa SMKN 20 Jakarta. Kuota terbatas 50 peserta â€” daftar sekarang!' },
         ]
     },
     5: {
         cat: 'academic', catLabel: 'Academic', important: false,
-        title: '📖 New Library Digital Resources Available',
-        thumb: null, thumbClass: 'news-thumb-gradient-2', thumbEmoji: '📖',
-        byline: 'By Perpustakaan SMKN 20 · 2 days ago · 2 min read · 145 views',
+        title: 'ðŸ“– New Library Digital Resources Available',
+        thumb: null, thumbClass: 'news-thumb-gradient-2', thumbEmoji: 'ðŸ“–',
+        byline: 'By Perpustakaan SMKN 20 Â· 2 days ago Â· 2 min read Â· 145 views',
         sections: [
             { title: 'Koleksi Digital Terbaru', type: 'text',
               content: 'Perpustakaan SMKN 20 Jakarta dengan bangga mengumumkan penambahan lebih dari 500 e-book dan 200 jurnal ilmiah online yang kini bisa diakses secara gratis oleh seluruh siswa.' },
             { title: '500+ E-Book Tersedia', type: 'list', items: [
-                '💻 Computer Science & Programming (120+ buku)',
-                '📐 Mathematics & Statistics (85+ buku)',
-                '📚 Indonesian & World Literature (90+ buku)',
-                '🔬 Science & Technology (110+ buku)',
-                '💼 Business & Entrepreneurship (75+ buku)',
-                '🎨 Art & Design (45+ buku)',
+                'ðŸ’» Computer Science & Programming (120+ buku)',
+                'ðŸ“ Mathematics & Statistics (85+ buku)',
+                'ðŸ“š Indonesian & World Literature (90+ buku)',
+                'ðŸ”¬ Science & Technology (110+ buku)',
+                'ðŸ’¼ Business & Entrepreneurship (75+ buku)',
+                'ðŸŽ¨ Art & Design (45+ buku)',
             ]},
             { title: 'Cara Akses', type: 'list', items: [
-                '🌐 Buka portal: library.smkn20jkt.sch.id',
-                '🔐 Login dengan Student ID dan password sekolah',
-                '🔍 Gunakan fitur search untuk menemukan buku',
-                '📥 Download PDF atau baca online langsung',
+                'ðŸŒ Buka portal: library.smkn20jkt.sch.id',
+                'ðŸ” Login dengan Student ID dan password sekolah',
+                'ðŸ” Gunakan fitur search untuk menemukan buku',
+                'ðŸ“¥ Download PDF atau baca online langsung',
             ]},
             { title: 'Info Perpustakaan', type: 'highlight',
-              content: 'Untuk bantuan teknis akses e-library, kunjungi ruang perpustakaan di lantai 2 pada hari Senin–Jumat pukul 07:30–15:00 WIB atau hubungi pustakawan di ext. 205.' },
+              content: 'Untuk bantuan teknis akses e-library, kunjungi ruang perpustakaan di lantai 2 pada hari Seninâ€“Jumat pukul 07:30â€“15:00 WIB atau hubungi pustakawan di ext. 205.' },
         ]
     },
     6: {
         cat: 'event', catLabel: 'Event', important: false,
-        title: '🎉 Class Meeting 2027 Spectacular Success',
+        title: 'ðŸŽ‰ Class Meeting 2027 Spectacular Success',
         thumb: '{{ asset("images/classmeeting.jpeg") }}', thumbAlt: 'Class Meeting',
-        byline: 'By Panitia Class Meeting · 3 days ago · 4 min read · 523 views',
+        byline: 'By Panitia Class Meeting Â· 3 days ago Â· 4 min read Â· 523 views',
         sections: [
             { title: 'Momen yang Tak Terlupakan!', type: 'text',
               content: 'Class Meeting 2027 resmi telah berakhir dengan pencapaian luar biasa! Lebih dari 500 siswa dari 24 kelas berpartisipasi dalam 15 kategori kompetisi selama 5 hari penuh penuh keceriaan dan semangat.' },
             { title: 'Competition Results', type: 'list', items: [
-                '⚽ Futsal Putra: Juara — XI RPL 1 | Runner-up — XI TKJ 2',
-                '🏀 Basket Putri: Juara — XII AK 1 | Runner-up — XI BD 1',
-                '🎤 Vocal Group: Juara — X MP 1 | Runner-up — XI LPS 1',
-                '🎨 Mural Competition: Juara — XI RPL 2 | Runner-up — X AK 2',
-                '🧩 Cerdas Cermat: Juara — XII RPL 1 | Runner-up — XI AK 1',
+                'âš½ Futsal Putra: Juara â€” XI RPL 1 | Runner-up â€” XI TKJ 2',
+                'ðŸ€ Basket Putri: Juara â€” XII AK 1 | Runner-up â€” XI BD 1',
+                'ðŸŽ¤ Vocal Group: Juara â€” X MP 1 | Runner-up â€” XI LPS 1',
+                'ðŸŽ¨ Mural Competition: Juara â€” XI RPL 2 | Runner-up â€” X AK 2',
+                'ðŸ§© Cerdas Cermat: Juara â€” XII RPL 1 | Runner-up â€” XI AK 1',
             ]},
             { title: 'Special Awards', type: 'list', items: [
-                '🏆 Best Class Spirit — XI RPL 1',
-                '🌟 Most Creative Class — X BD 1',
-                '🤝 Best Sportsmanship — XII AK 2',
+                'ðŸ† Best Class Spirit â€” XI RPL 1',
+                'ðŸŒŸ Most Creative Class â€” X BD 1',
+                'ðŸ¤ Best Sportsmanship â€” XII AK 2',
             ]},
             { title: 'Statistik Event', type: 'list', items: [
-                '👥 500+ peserta aktif dari 24 kelas',
-                '🏅 15 kategori kompetisi',
-                '🎖️ 45 trofi dan penghargaan dibagikan',
-                '📸 1.200+ foto diabadikan',
-                '⏱️ 5 hari pelaksanaan penuh',
+                'ðŸ‘¥ 500+ peserta aktif dari 24 kelas',
+                'ðŸ… 15 kategori kompetisi',
+                'ðŸŽ–ï¸ 45 trofi dan penghargaan dibagikan',
+                'ðŸ“¸ 1.200+ foto diabadikan',
+                'â±ï¸ 5 hari pelaksanaan penuh',
             ]},
             { title: 'Terima Kasih!', type: 'highlight',
               content: 'Terima kasih kepada seluruh panitia, guru pembimbing, dan siswa yang telah menjadikan Class Meeting 2027 sebagai event terbaik sepanjang sejarah SMKN 20 Jakarta. Sampai jumpa di Class Meeting 2028!' },
@@ -751,32 +751,32 @@ const newsData = {
     },
     7: {
         cat: 'announcement', catLabel: 'Announcement', important: true,
-        title: '🗳️ Student Council Elections Announcement',
-        thumb: null, thumbClass: 'news-thumb-gradient-1', thumbEmoji: '🗳️',
-        byline: 'By Pembina OSIS SMKN 20 · 4 days ago · 3 min read · 278 views',
+        title: 'ðŸ—³ï¸ Student Council Elections Announcement',
+        thumb: null, thumbClass: 'news-thumb-gradient-1', thumbEmoji: 'ðŸ—³ï¸',
+        byline: 'By Pembina OSIS SMKN 20 Â· 4 days ago Â· 3 min read Â· 278 views',
         sections: [
             { title: 'Pemilihan Pengurus OSIS 2026/2027', type: 'text',
               content: 'Pemilihan pengurus OSIS tahunan SMKN 20 Jakarta akan segera dilaksanakan. Ini adalah kesempatan bagi seluruh siswa untuk berpartisipasi dalam proses demokrasi sekolah dan membentuk masa depan organisasi kita.' },
             { title: 'Important Dates', type: 'list', items: [
-                '📋 Pendaftaran Calon: 1–7 September 2026',
-                '📢 Masa Kampanye: 8–14 September 2026',
-                '🗳️ Hari Pemilihan: 15 September 2026',
-                '📊 Pengumuman Hasil: 16 September 2026',
-                '🎓 Pelantikan: 1 Oktober 2026',
+                'ðŸ“‹ Pendaftaran Calon: 1â€“7 September 2026',
+                'ðŸ“¢ Masa Kampanye: 8â€“14 September 2026',
+                'ðŸ—³ï¸ Hari Pemilihan: 15 September 2026',
+                'ðŸ“Š Pengumuman Hasil: 16 September 2026',
+                'ðŸŽ“ Pelantikan: 1 Oktober 2026',
             ]},
             { title: 'Posisi yang Dipilih', type: 'list', items: [
-                '👑 Ketua OSIS',
-                '🤝 Wakil Ketua OSIS',
-                '📝 Sekretaris Umum',
-                '💰 Bendahara Umum',
-                '📂 Ketua Bidang (6 bidang)',
+                'ðŸ‘‘ Ketua OSIS',
+                'ðŸ¤ Wakil Ketua OSIS',
+                'ðŸ“ Sekretaris Umum',
+                'ðŸ’° Bendahara Umum',
+                'ðŸ“‚ Ketua Bidang (6 bidang)',
             ]},
             { title: 'Syarat Pencalonan', type: 'list', items: [
-                '✅ Siswa aktif kelas X atau XI (bukan kelas XII)',
-                '📊 Nilai rata-rata minimal 75',
-                '✅ Tidak sedang menjalani sanksi akademik',
-                '📄 Mendapat persetujuan dari wali kelas',
-                '📝 Mengisi formulir pencalonan resmi',
+                'âœ… Siswa aktif kelas X atau XI (bukan kelas XII)',
+                'ðŸ“Š Nilai rata-rata minimal 75',
+                'âœ… Tidak sedang menjalani sanksi akademik',
+                'ðŸ“„ Mendapat persetujuan dari wali kelas',
+                'ðŸ“ Mengisi formulir pencalonan resmi',
             ]},
             { title: 'Gunakan Hak Pilihmu!', type: 'highlight',
               content: 'Pemilihan dilakukan secara langsung, umum, bebas, rahasia, jujur dan adil (LUBER JURDIL). Seluruh siswa SMKN 20 Jakarta berhak memberikan suara. Partisipasi aktif adalah kunci organisasi yang kuat!' },
@@ -784,30 +784,30 @@ const newsData = {
     },
     8: {
         cat: 'event', catLabel: 'Event', important: false,
-        title: '🎨 Art Exhibition Features Student Masterpieces',
-        thumb: null, thumbClass: '', thumbEmoji: '🎨',
+        title: 'ðŸŽ¨ Art Exhibition Features Student Masterpieces',
+        thumb: null, thumbClass: '', thumbEmoji: 'ðŸŽ¨',
         thumbStyle: 'background:linear-gradient(135deg,#4c1d95,#7c3aed)',
-        byline: 'By Ekstrakurikuler Seni SMKN 20 · 5 days ago · 3 min read · 167 views',
+        byline: 'By Ekstrakurikuler Seni SMKN 20 Â· 5 days ago Â· 3 min read Â· 167 views',
         sections: [
             { title: 'Pameran Seni Tahunan Hadir Lagi!', type: 'text',
               content: 'Pameran Seni Siswa SMKN 20 Jakarta tahun ini menghadirkan lebih dari 120 karya terpilih dari 80 siswa berbakat. Memasuki tahun ke-5, pameran ini semakin berkembang dengan kategori baru dan tema yang lebih berani.' },
             { title: 'Detail Pameran', type: 'list', items: [
-                '📅 Durasi: 5–12 September 2026',
-                '📍 Lokasi: Galeri Seni SMKN 20 (Lantai 3)',
-                '⏰ Jam Buka: Senin–Sabtu, 09:00–16:00 WIB',
-                '🎫 Tiket: Gratis untuk siswa dan guru',
+                'ðŸ“… Durasi: 5â€“12 September 2026',
+                'ðŸ“ Lokasi: Galeri Seni SMKN 20 (Lantai 3)',
+                'â° Jam Buka: Seninâ€“Sabtu, 09:00â€“16:00 WIB',
+                'ðŸŽ« Tiket: Gratis untuk siswa dan guru',
             ]},
             { title: 'Kategori Karya', type: 'list', items: [
-                '🖼️ Lukisan & Sketsa (35 karya)',
-                '🏺 Patung & Instalasi (18 karya)',
-                '💻 Digital Art & Photography (30 karya)',
-                '🎭 Mixed Media (22 karya)',
-                '✏️ Ilustrasi & Komik (15 karya)',
+                'ðŸ–¼ï¸ Lukisan & Sketsa (35 karya)',
+                'ðŸº Patung & Instalasi (18 karya)',
+                'ðŸ’» Digital Art & Photography (30 karya)',
+                'ðŸŽ­ Mixed Media (22 karya)',
+                'âœï¸ Ilustrasi & Komik (15 karya)',
             ]},
             { title: 'Special Events', type: 'list', items: [
-                '🎤 Artist Talk — 6 September 2026 pukul 14:00',
-                '🛠️ Live Painting Workshop — 8 September 2026 pukul 10:00',
-                '🏆 Award Night & Closing — 12 September 2026 pukul 16:00',
+                'ðŸŽ¤ Artist Talk â€” 6 September 2026 pukul 14:00',
+                'ðŸ› ï¸ Live Painting Workshop â€” 8 September 2026 pukul 10:00',
+                'ðŸ† Award Night & Closing â€” 12 September 2026 pukul 16:00',
             ]},
             { title: 'Group Visit', type: 'highlight',
               content: 'Untuk group visit kelas atau komunitas, hubungi koordinator pameran di Ibu Rani (ruang guru seni) atau WhatsApp 0812-xxxx-xxxx minimal 2 hari sebelumnya.' },
@@ -815,28 +815,28 @@ const newsData = {
     },
     9: {
         cat: 'competition-result', catLabel: 'Hasil Kompetisi', important: true,
-        title: '🏀 Hasil Lomba Basket — Class Meeting 2026',
-        thumb: null, thumbClass: '', thumbEmoji: '🏀',
+        title: 'ðŸ€ Hasil Lomba Basket â€” Class Meeting 2026',
+        thumb: null, thumbClass: '', thumbEmoji: 'ðŸ€',
         thumbStyle: 'background:linear-gradient(135deg,#0f1f4e,#1a3a7c)',
-        byline: 'By Panitia Class Meeting · 1 day ago · 2 min read · 341 views',
+        byline: 'By Panitia Class Meeting Â· 1 day ago Â· 2 min read Â· 341 views',
         sections: [
             { title: 'Selamat kepada Para Juara!', type: 'text',
               content: 'Lomba basket putra Class Meeting 2026 telah resmi berakhir. Setelah melewati pertandingan sengit selama 3 hari, berikut hasil akhir yang telah ditetapkan oleh dewan juri.' },
             { title: 'Hasil Akhir Lomba Basket Putra', type: 'list', items: [
-                '🥇 Juara 1 — XI RPL 1 (skor final: 54-48)',
-                '🥈 Juara 2 — XI TKJ 2',
-                '🥉 Juara 3 — XII AK 1',
+                'ðŸ¥‡ Juara 1 â€” XI RPL 1 (skor final: 54-48)',
+                'ðŸ¥ˆ Juara 2 â€” XI TKJ 2',
+                'ðŸ¥‰ Juara 3 â€” XII AK 1',
             ]},
             { title: 'Highlight Pertandingan Final', type: 'list', items: [
-                '🏀 Skor babak pertama: XI RPL 1 (28) — XI TKJ 2 (24)',
-                '⭐ Top scorer: Fathi Rizkiansyah (XI RPL 1) — 18 poin',
-                '🛡️ Best defender: Rizky Pratama (XI RPL 1) — 9 rebound',
-                '⏱️ Pertandingan berlangsung ketat hingga detik terakhir',
+                'ðŸ€ Skor babak pertama: XI RPL 1 (28) â€” XI TKJ 2 (24)',
+                'â­ Top scorer: Fathi Rizkiansyah (XI RPL 1) â€” 18 poin',
+                'ðŸ›¡ï¸ Best defender: Rizky Pratama (XI RPL 1) â€” 9 rebound',
+                'â±ï¸ Pertandingan berlangsung ketat hingga detik terakhir',
             ]},
             { title: 'Penghargaan Tambahan', type: 'list', items: [
-                '⭐ MVP (Most Valuable Player): Fathi Rizkiansyah — XI RPL 1',
-                '🏃 Best Young Player: Ahmad Rizki — X BD 1',
-                '🤝 Best Sportsmanship: XII AK 1',
+                'â­ MVP (Most Valuable Player): Fathi Rizkiansyah â€” XI RPL 1',
+                'ðŸƒ Best Young Player: Ahmad Rizki â€” X BD 1',
+                'ðŸ¤ Best Sportsmanship: XII AK 1',
             ]},
             { title: 'Sertifikat & Hadiah', type: 'highlight',
               content: 'Sertifikat achievement untuk juara 1, 2, dan 3 akan tersedia di akun Eventty masing-masing peserta dalam 1x24 jam. Trofi dan hadiah akan diserahkan pada upacara penutupan Class Meeting.' },
@@ -844,23 +844,23 @@ const newsData = {
     },
     10: {
         cat: 'competition-result', catLabel: 'Hasil Kompetisi', important: false,
-        title: '⚽ Hasil Lomba Futsal — Class Meeting 2026',
-        thumb: null, thumbClass: '', thumbEmoji: '⚽',
+        title: 'âš½ Hasil Lomba Futsal â€” Class Meeting 2026',
+        thumb: null, thumbClass: '', thumbEmoji: 'âš½',
         thumbStyle: 'background:linear-gradient(135deg,#064e3b,#065f46)',
-        byline: 'By Panitia Class Meeting · 1 day ago · 2 min read · 298 views',
+        byline: 'By Panitia Class Meeting Â· 1 day ago Â· 2 min read Â· 298 views',
         sections: [
             { title: 'Juara Futsal Putra Telah Ditentukan!', type: 'text',
               content: 'Setelah drama adu penalti yang menegangkan, XI RPL 2 akhirnya berhasil meraih gelar juara futsal putra Class Meeting 2026 setelah imbang 2-2 di waktu normal melawan X BD 1.' },
             { title: 'Hasil Akhir Lomba Futsal Putra', type: 'list', items: [
-                '🥇 Juara 1 — XI RPL 2 (menang adu penalti 4-3)',
-                '🥈 Juara 2 — X BD 1',
-                '🥉 Juara 3 — XII MP 1',
+                'ðŸ¥‡ Juara 1 â€” XI RPL 2 (menang adu penalti 4-3)',
+                'ðŸ¥ˆ Juara 2 â€” X BD 1',
+                'ðŸ¥‰ Juara 3 â€” XII MP 1',
             ]},
             { title: 'Statistik Final', type: 'list', items: [
-                '⚽ Skor normal: XI RPL 2 (2) — X BD 1 (2)',
-                '🎯 Penalti: XI RPL 2 (4) — X BD 1 (3)',
-                '⭐ Top scorer: Budi Santoso (XI RPL 2) — 3 gol',
-                '🧤 Best goalkeeper: Hendra (X BD 1)',
+                'âš½ Skor normal: XI RPL 2 (2) â€” X BD 1 (2)',
+                'ðŸŽ¯ Penalti: XI RPL 2 (4) â€” X BD 1 (3)',
+                'â­ Top scorer: Budi Santoso (XI RPL 2) â€” 3 gol',
+                'ðŸ§¤ Best goalkeeper: Hendra (X BD 1)',
             ]},
             { title: 'Info Sertifikat', type: 'highlight',
               content: 'Sertifikat achievement untuk seluruh juara akan tersedia di akun Eventty dalam 1x24 jam setelah pengumuman resmi ini.' },
@@ -868,22 +868,22 @@ const newsData = {
     },
     11: {
         cat: 'competition-result', catLabel: 'Hasil Kompetisi', important: false,
-        title: '🎤 Hasil Lomba Vocal Group — Class Meeting 2026',
-        thumb: null, thumbClass: '', thumbEmoji: '🎤',
+        title: 'ðŸŽ¤ Hasil Lomba Vocal Group â€” Class Meeting 2026',
+        thumb: null, thumbClass: '', thumbEmoji: 'ðŸŽ¤',
         thumbStyle: 'background:linear-gradient(135deg,#4c1d95,#6d28d9)',
-        byline: 'By Panitia Class Meeting · 2 days ago · 2 min read · 214 views',
+        byline: 'By Panitia Class Meeting Â· 2 days ago Â· 2 min read Â· 214 views',
         sections: [
             { title: 'X MP 1 Sabet Juara Vocal Group!', type: 'text',
               content: 'X MP 1 tampil memukau dengan aransemen lagu yang kreatif dan kekompakan yang luar biasa, berhasil merebut hati dewan juri dan meraih juara pertama Vocal Group Class Meeting 2026.' },
             { title: 'Hasil Akhir Lomba Vocal Group', type: 'list', items: [
-                '🥇 Juara 1 — X MP 1',
-                '🥈 Juara 2 — XI LPS 1',
-                '🥉 Juara 3 — XII BD 2',
+                'ðŸ¥‡ Juara 1 â€” X MP 1',
+                'ðŸ¥ˆ Juara 2 â€” XI LPS 1',
+                'ðŸ¥‰ Juara 3 â€” XII BD 2',
             ]},
             { title: 'Penilaian Juri', type: 'list', items: [
-                '🎵 Kategori: Kekompakan, Teknik Vokal, Aransemen, Stage Presence',
-                '⭐ Nilai tertinggi: X MP 1 (94.5/100)',
-                '🎙️ Special mention: XI LPS 1 — Best Arrangement',
+                'ðŸŽµ Kategori: Kekompakan, Teknik Vokal, Aransemen, Stage Presence',
+                'â­ Nilai tertinggi: X MP 1 (94.5/100)',
+                'ðŸŽ™ï¸ Special mention: XI LPS 1 â€” Best Arrangement',
             ]},
             { title: 'Info Sertifikat', type: 'highlight',
               content: 'Sertifikat achievement untuk seluruh juara akan tersedia di akun Eventty dalam 1x24 jam.' },
@@ -891,24 +891,24 @@ const newsData = {
     },
     12: {
         cat: 'competition-result', catLabel: 'Hasil Kompetisi', important: false,
-        title: '🎨 Hasil Lomba Desain Grafis 2026',
-        thumb: null, thumbClass: '', thumbEmoji: '🎨',
+        title: 'ðŸŽ¨ Hasil Lomba Desain Grafis 2026',
+        thumb: null, thumbClass: '', thumbEmoji: 'ðŸŽ¨',
         thumbStyle: 'background:linear-gradient(135deg,#b45309,#d97706)',
-        byline: 'By Panitia OSIS · 3 days ago · 2 min read · 189 views',
+        byline: 'By Panitia OSIS Â· 3 days ago Â· 2 min read Â· 189 views',
         sections: [
             { title: 'Fathi Rizkiansyah Juara Desain Grafis!', type: 'text',
               content: 'Lomba Desain Grafis bertema "Lingkungan Hijau" telah usai. Fathi Rizkiansyah dari XI RPL 1 berhasil meraih juara pertama dengan karya poster digital yang dinilai paling inovatif dan impactful oleh dewan juri.' },
             { title: 'Hasil Akhir Lomba Desain Grafis', type: 'list', items: [
-                '🥇 Juara 1 — Fathi Rizkiansyah (XI RPL 1)',
-                '🥈 Juara 2 — Siti Nurhaliza (XI AK 1)',
-                '🥉 Juara 3 — Budi Santoso (XII RPL 1)',
-                '🌟 Best Concept — Dewi Anggraini (XI MP 1)',
+                'ðŸ¥‡ Juara 1 â€” Fathi Rizkiansyah (XI RPL 1)',
+                'ðŸ¥ˆ Juara 2 â€” Siti Nurhaliza (XI AK 1)',
+                'ðŸ¥‰ Juara 3 â€” Budi Santoso (XII RPL 1)',
+                'ðŸŒŸ Best Concept â€” Dewi Anggraini (XI MP 1)',
             ]},
             { title: 'Karya Terbaik', type: 'list', items: [
-                '🖼️ Judul karya Fathi: "Jejak Hijau" — Poster digital A3',
-                '🛠️ Tools: Adobe Illustrator + Canva',
-                '💡 Tema: Kampanye hemat energi untuk generasi muda',
-                '📊 Nilai: 96/100 dari 3 dewan juri',
+                'ðŸ–¼ï¸ Judul karya Fathi: "Jejak Hijau" â€” Poster digital A3',
+                'ðŸ› ï¸ Tools: Adobe Illustrator + Canva',
+                'ðŸ’¡ Tema: Kampanye hemat energi untuk generasi muda',
+                'ðŸ“Š Nilai: 96/100 dari 3 dewan juri',
             ]},
             { title: 'Info Sertifikat', type: 'highlight',
               content: 'Sertifikat achievement untuk seluruh pemenang tersedia di akun Eventty masing-masing. Karya terbaik akan dipajang di galeri sekolah selama 2 minggu.' },
@@ -931,7 +931,7 @@ document.querySelectorAll('.nf-chip').forEach(function(chip){
     });
 });
 
-// ── Open modal
+// â”€â”€ Open modal
 function openModal(id) {
     const d = newsData[id];
     if (!d) return;
@@ -946,7 +946,7 @@ function openModal(id) {
 
     const catColors = {achievement:'cat-achievement',academic:'cat-academic',event:'cat-event',announcement:'cat-announcement','competition-result':'cat-competition'};
     const catClass = catColors[d.cat] || 'cat-event';
-    const impBadge = d.important ? '<span class="imp-badge">⚡ Important</span>' : '';
+    const impBadge = d.important ? '<span class="imp-badge">âš¡ Important</span>' : '';
 
     let sectionsHtml = '';
     (d.sections||[]).forEach(function(s){
@@ -976,9 +976,9 @@ function openModal(id) {
             <div class="nm-byline">${d.byline}</div>
             ${sectionsHtml}
             <div class="nm-actions">
-                <button class="nm-action-btn">👍 Helpful</button>
-                <button class="nm-action-btn">🔗 Share</button>
-                <button class="nm-action-btn">🔖 Bookmark</button>
+                <button class="nm-action-btn">ðŸ‘ Helpful</button>
+                <button class="nm-action-btn">ðŸ”— Share</button>
+                <button class="nm-action-btn">ðŸ”– Bookmark</button>
                 <button class="nm-close-btn" onclick="closeModal()">Tutup</button>
             </div>
         </div>
@@ -1002,3 +1002,8 @@ document.addEventListener('keydown', function(e){
 });
 </script>
 @endpush
+
+@push('js')
+@vite(['resources/js/utils/api.js', 'resources/js/user/notifications.js'])
+@endpush
+

@@ -83,6 +83,23 @@
 
             @csrf
 
+            {{-- Flash error dari server --}}
+            @if($errors->any())
+            <div class="login-alert login-alert-error">
+                <ul style="margin:0;padding-left:1.2rem;">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
+            @if(session('success'))
+            <div class="login-alert login-alert-success">
+                {{ session('success') }}
+            </div>
+            @endif
+
 
             <!-- NAMA LENGKAP -->
 

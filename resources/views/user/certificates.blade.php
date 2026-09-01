@@ -1,10 +1,10 @@
-@extends('user.layout')
+﻿@extends('user.layout')
 
 @section('title', 'Sertifikat')
 
 @push('css')
 <style>
-/* ══ Certificates Page ══ */
+/* â•â• Certificates Page â•â• */
 .cert-page { padding: 1.5rem 1.75rem; font-family:'Plus Jakarta Sans','Inter',sans-serif; }
 .cert-page-title { font-size:1.35rem; font-weight:800; color:var(--text-primary); margin-bottom:1.5rem; }
 
@@ -61,7 +61,7 @@
 .cert-empty svg { opacity:.25; margin-bottom:4px; }
 .cert-empty p { font-size:.875rem; line-height:1.6; }
 
-/* ── Preview Modal ── */
+/* â”€â”€ Preview Modal â”€â”€ */
 .cert-modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:center; justify-content:center; z-index:9999; opacity:0; visibility:hidden; transition:all .25s; padding:1rem; }
 .cert-modal-overlay.active { opacity:1; visibility:visible; }
 
@@ -108,271 +108,52 @@ body[data-theme="dark"] .cert-preview { background:linear-gradient(145deg,#0a153
 </style>
 @endpush
 
+
 @section('content')
 <div class="cert-page">
     <h1 class="cert-page-title">Sertifikat Saya</h1>
 
-    {{-- Tabs --}}
-    <div class="cert-tabs">
-        <button class="cert-tab active" data-panel="general" onclick="switchCertTab('general',this)">Event Umum</button>
-        <button class="cert-tab"        data-panel="competition" onclick="switchCertTab('competition',this)">Kompetisi</button>
+    {{-- Filter & Search --}}
+    <div style="display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center;">
+        <input type="text" id="certSearch" placeholder="🔍 Cari nama event..."
+               style="padding:.5rem .875rem;border:1.5px solid var(--border-color);border-radius:999px;font-size:.82rem;background:var(--bg-secondary);color:var(--text-primary);outline:none;min-width:220px;">
+        <select id="typeFilter"
+                style="padding:.5rem .875rem;border:1.5px solid var(--border-color);border-radius:999px;font-size:.82rem;background:var(--bg-secondary);color:var(--text-primary);">
+            <option value="all">Semua Tipe</option>
+            <option value="participation">Participation</option>
+            <option value="completion">Completion</option>
+            <option value="attendance">Attendance</option>
+            <option value="achievement">Achievement</option>
+        </select>
     </div>
 
-    {{-- Panel: Event Umum --}}
-    <div class="cert-panel active" id="cert-panel-general">
-        <div class="cert-grid">
-
-            {{-- Available --}}
-            <div class="cert-card">
-                <div class="cert-card-banner">
-                    <img src="{{ asset('images/sertifikat.png') }}" alt="Workshop Leadership">
-                    <span class="cert-type-badge">Workshop</span>
-                </div>
-                <div class="cert-card-body">
-                    <h3 class="cert-card-event">Workshop Leadership</h3>
-                    <p class="cert-card-sub">Certificate of Participation</p>
-                    <div class="cert-card-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>15 Agustus 2026</div>
-                    <div class="cert-status-row">
-                        <span class="cert-badge-available">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                            Sertifikat Tersedia
-                        </span>
-                    </div>
-                    <div class="cert-actions">
-                        <button class="cert-btn-view" onclick="previewCert({type:'participation',event:'Workshop Leadership',date:'15 Agustus 2026',name:'Fathi Rizkiansyah',kind:'Certificate of Participation'})">Lihat</button>
-                        <button class="cert-btn-download"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</button>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Available --}}
-            <div class="cert-card">
-                <div class="cert-card-banner">
-                    <img src="{{ asset('images/seminar.png') }}" alt="Seminar Teknologi">
-                    <span class="cert-type-badge">Seminar</span>
-                </div>
-                <div class="cert-card-body">
-                    <h3 class="cert-card-event">Seminar Teknologi</h3>
-                    <p class="cert-card-sub">Certificate of Attendance</p>
-                    <div class="cert-card-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>28 Juli 2026</div>
-                    <div class="cert-status-row">
-                        <span class="cert-badge-available">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                            Sertifikat Tersedia
-                        </span>
-                    </div>
-                    <div class="cert-actions">
-                        <button class="cert-btn-view" onclick="previewCert({type:'participation',event:'Seminar Teknologi',date:'28 Juli 2026',name:'Fathi Rizkiansyah',kind:'Certificate of Attendance'})">Lihat</button>
-                        <button class="cert-btn-download"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</button>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Waiting --}}
-            <div class="cert-card">
-                <div class="cert-card-banner" style="background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" opacity=".4"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
-                    <span class="cert-type-badge">Career</span>
-                </div>
-                <div class="cert-card-body">
-                    <h3 class="cert-card-event">Career Day 2026</h3>
-                    <p class="cert-card-sub">Certificate of Participation</p>
-                    <div class="cert-card-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>15 September 2026</div>
-                    <div class="cert-status-row">
-                        <span class="cert-badge-waiting">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            Menunggu Kehadiran
-                        </span>
-                    </div>
-                    <div class="cert-actions">
-                        <button class="cert-btn-locked">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            Sertifikat Terkunci
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+    {{-- Certificate Grid — diisi oleh certificates.js via API --}}
+    <div class="cert-grid" id="certificatesGrid">
+        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-muted);">
+            <p>Memuat sertifikat...</p>
         </div>
     </div>
 
-    {{-- Panel: Kompetisi --}}
-    <div class="cert-panel" id="cert-panel-competition">
-        <div class="cert-grid">
-
-            {{-- Juara 1 --}}
-            <div class="cert-card">
-                <div class="cert-card-banner">
-                    <img src="{{ asset('images/basket.jpeg') }}" alt="Turnamen Basket">
-                    <span class="cert-type-badge">Kompetisi</span>
-                </div>
-                <div class="cert-card-body">
-                    <h3 class="cert-card-event">Turnamen Basket</h3>
-                    <p class="cert-card-sub">Certificate of Achievement</p>
-                    <div class="cert-card-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>10 Oktober 2026</div>
-                    <div class="cert-achievement-badge">
-                        <span class="cert-achievement-rank">🥇</span>
-                        <div class="cert-achievement-info">
-                            <span class="cert-achievement-label">Penghargaan</span>
-                            <span class="cert-achievement-value">JUARA 1</span>
-                        </div>
-                    </div>
-                    <div class="cert-status-row">
-                        <span class="cert-badge-achievement">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                            Sertifikat Tersedia
-                        </span>
-                    </div>
-                    <div class="cert-actions">
-                        <button class="cert-btn-view" onclick="previewCert({type:'achievement',event:'Turnamen Basket',date:'10 Oktober 2026',name:'Fathi Rizkiansyah',rank:'JUARA 1'})">Lihat</button>
-                        <button class="cert-btn-download"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</button>
-                    </div>
-                </div>
+    {{-- Modal Preview Sertifikat --}}
+    <div class="cert-modal-overlay" id="certPreviewModal">
+        <div class="cert-modal">
+            <button class="cert-modal-close" id="closeCertModal">✕</button>
+            <div class="cert-modal-preview" id="certModalContent">
+                {{-- Diisi oleh JS --}}
             </div>
-
-            {{-- Juara 2 --}}
-            <div class="cert-card">
-                <div class="cert-card-banner">
-                    <img src="{{ asset('images/classmeeting.jpeg') }}" alt="Class Meeting">
-                    <span class="cert-type-badge">Kompetisi</span>
-                </div>
-                <div class="cert-card-body">
-                    <h3 class="cert-card-event">Class Meeting — Futsal</h3>
-                    <p class="cert-card-sub">Certificate of Achievement</p>
-                    <div class="cert-card-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>20 September 2026</div>
-                    <div class="cert-achievement-badge">
-                        <span class="cert-achievement-rank">🥈</span>
-                        <div class="cert-achievement-info">
-                            <span class="cert-achievement-label">Penghargaan</span>
-                            <span class="cert-achievement-value">JUARA 2</span>
-                        </div>
-                    </div>
-                    <div class="cert-status-row">
-                        <span class="cert-badge-achievement">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                            Sertifikat Tersedia
-                        </span>
-                    </div>
-                    <div class="cert-actions">
-                        <button class="cert-btn-view" onclick="previewCert({type:'achievement',event:'Class Meeting — Futsal',date:'20 September 2026',name:'Fathi Rizkiansyah',rank:'JUARA 2'})">Lihat</button>
-                        <button class="cert-btn-download"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</button>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Waiting competition --}}
-            <div class="cert-card">
-                <div class="cert-card-banner" style="background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" opacity=".4"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
-                    <span class="cert-type-badge">Kompetisi</span>
-                </div>
-                <div class="cert-card-body">
-                    <h3 class="cert-card-event">Lomba Desain Grafis</h3>
-                    <p class="cert-card-sub">Certificate of Achievement</p>
-                    <div class="cert-card-date"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>3 Oktober 2026</div>
-                    <div class="cert-status-row">
-                        <span class="cert-badge-waiting">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            Menunggu Hasil
-                        </span>
-                    </div>
-                    <div class="cert-actions">
-                        <button class="cert-btn-locked">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            Menunggu Pengumuman
-                        </button>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 
 </div>
 
-{{-- Preview Modal --}}
-<div class="cert-modal-overlay" id="certPreviewModal" onclick="closeCertPreview(event)">
-    <div class="cert-modal-box">
-        <div class="cert-modal-hd">
-            <span class="cert-modal-hd-title" id="certModalTitle">Preview Sertifikat</span>
-            <button class="cert-modal-close" onclick="document.getElementById('certPreviewModal').classList.remove('active');document.body.style.overflow=''">✕</button>
-        </div>
-        <div class="cert-preview-wrap">
-            <div class="cert-preview" id="certPreviewContent">
-                {{-- Rendered by JS --}}
-            </div>
-        </div>
-        <div class="cert-modal-ft">
-            <button class="btn btn-outline btn-sm" onclick="document.getElementById('certPreviewModal').classList.remove('active');document.body.style.overflow=''">Tutup</button>
-            <button class="btn btn-primary btn-sm">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download Sertifikat
-            </button>
-        </div>
-    </div>
-</div>
+{{-- Pass nama user ke JS agar dipakai di preview sertifikat --}}
+<script>
+    window.authUserName = @json(Auth::user()->name);
+    window.authUserNis  = @json(Auth::user()->nis ?? '');
+    window.authUserClass = @json(Auth::user()->class ?? '');
+</script>
 @endsection
 
 @push('js')
-<script>
-function switchCertTab(panel, btn) {
-    document.querySelectorAll('.cert-tab').forEach(function(b){ b.classList.remove('active'); });
-    document.querySelectorAll('.cert-panel').forEach(function(p){ p.classList.remove('active'); });
-    btn.classList.add('active');
-    document.getElementById('cert-panel-' + panel).classList.add('active');
-}
-
-function previewCert(data) {
-    var modal   = document.getElementById('certPreviewModal');
-    var title   = document.getElementById('certModalTitle');
-    var content = document.getElementById('certPreviewContent');
-    title.textContent = 'Preview — ' + data.event;
-    if (data.type === 'achievement') {
-        content.innerHTML =
-            '<div class="cert-preview-logo">— EVENTTY —</div>' +
-            '<div class="cert-preview-school">SMKN 20 JAKARTA</div>' +
-            '<div class="cert-preview-divider"></div>' +
-            '<div class="cert-preview-type">Certificate</div>' +
-            '<div class="cert-preview-heading">OF ACHIEVEMENT</div>' +
-            '<div class="cert-preview-divider" style="margin-bottom:1.5rem"></div>' +
-            '<div class="cert-preview-given">Diberikan kepada</div>' +
-            '<div class="cert-preview-name">' + data.name.toUpperCase() + '</div>' +
-            '<div class="cert-preview-for">sebagai</div>' +
-            '<div class="cert-preview-achievement">' + data.rank + '</div>' +
-            '<div class="cert-preview-event">' + data.event + '</div>' +
-            '<div class="cert-preview-date">' + data.date + '</div>' +
-            '<div class="cert-preview-footer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>&nbsp;EVENTTY · SMKN 20 JAKARTA</div>';
-    } else {
-        content.innerHTML =
-            '<div class="cert-preview-logo">— EVENTTY —</div>' +
-            '<div class="cert-preview-school">SMKN 20 JAKARTA</div>' +
-            '<div class="cert-preview-divider"></div>' +
-            '<div class="cert-preview-type">Certificate</div>' +
-            '<div class="cert-preview-heading">' + data.kind.replace('Certificate of ','OF ') + '</div>' +
-            '<div class="cert-preview-divider" style="margin-bottom:1.5rem"></div>' +
-            '<div class="cert-preview-given">Diberikan kepada</div>' +
-            '<div class="cert-preview-name">' + data.name.toUpperCase() + '</div>' +
-            '<div class="cert-preview-for">atas partisipasinya dalam</div>' +
-            '<div class="cert-preview-event">' + data.event.toUpperCase() + '</div>' +
-            '<div class="cert-preview-date">' + data.date + '</div>' +
-            '<div class="cert-preview-footer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>&nbsp;EVENTTY · SMKN 20 JAKARTA</div>';
-    }
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeCertPreview(e) {
-    if (e.target === document.getElementById('certPreviewModal')) {
-        document.getElementById('certPreviewModal').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-}
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        document.getElementById('certPreviewModal').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-});
-</script>
+@vite(['resources/js/utils/api.js', 'resources/js/user/certificates.js'])
 @endpush

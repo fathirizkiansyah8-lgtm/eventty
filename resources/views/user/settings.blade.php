@@ -181,13 +181,13 @@
                     <div class="stg-card-head-title">Profil Saya</div>
                 </div>
                 <div class="profile-info-card">
-                    <div class="profile-avatar-big">F</div>
+                    <div class="profile-avatar-big">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
                     <div>
-                        <div class="profile-name">Fathi</div>
-                        <div class="profile-email">fathi@smkn20jkt.sch.id</div>
+                        <div class="profile-name">{{ Auth::user()->name }}</div>
+                        <div class="profile-email">{{ Auth::user()->email }}</div>
                         <div class="profile-class">
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                            XI RPL 1
+                            {{ Auth::user()->class ?? 'Belum diisi' }}
                         </div>
                     </div>
                 </div>
@@ -196,14 +196,14 @@
                         <div class="stg-row-label">NIS</div>
                         <div class="stg-row-desc">Nomor Induk Siswa</div>
                     </div>
-                    <span style="font-size:.875rem; font-weight:700; color:var(--text-primary);">12345</span>
+                    <span style="font-size:.875rem; font-weight:700; color:var(--text-primary);">{{ Auth::user()->nis ?? '-' }}</span>
                 </div>
                 <div class="stg-row">
                     <div class="stg-row-info">
                         <div class="stg-row-label">Kelas</div>
                         <div class="stg-row-desc">Kelas aktif saat ini</div>
                     </div>
-                    <span style="font-size:.875rem; font-weight:700; color:var(--text-primary);">XI RPL 1</span>
+                    <span style="font-size:.875rem; font-weight:700; color:var(--text-primary);">{{ Auth::user()->class ?? 'Belum diisi' }}</span>
                 </div>
             </div>
 

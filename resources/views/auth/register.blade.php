@@ -74,8 +74,22 @@
 
             <form
                 id="registerForm"
+                method="POST"
+                action="{{ url('/register') }}"
                 novalidate
             >
+                @csrf
+
+                {{-- Server errors --}}
+                @if($errors->any())
+                <div class="register-alert-error" style="background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;padding:.75rem 1rem;border-radius:.5rem;margin-bottom:1rem;font-size:.875rem;">
+                    <ul style="margin:0;padding-left:1.2rem;">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
 
                 <!-- NAMA -->
 

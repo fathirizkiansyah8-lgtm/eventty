@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') - Eventy</title>
 
     @vite([
@@ -160,7 +161,7 @@
             <div class="header-left">
                 <div class="header-greeting">
                     <span class="header-greeting-text">Selamat datang,</span>
-                    <span class="header-user-name">Fathi</span>
+                    <span class="header-user-name">{{ Auth::user()->name }}</span>
                 </div>
             </div>
 
@@ -168,7 +169,7 @@
                 <div class="header-actions">
                     <div class="header-profile" id="profileBtn">
                         <div class="avatar avatar-sm">
-                            <span>F</span>
+                            <span>{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                         </div>
                     </div>
 
@@ -176,11 +177,11 @@
                     <div class="profile-dropdown" id="profileDropdown">
                         <div class="profile-dropdown-header">
                             <div class="avatar avatar-md">
-                                <span>F</span>
+                                <span>{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                             </div>
                             <div class="profile-dropdown-user-info">
-                                <span class="profile-dropdown-user-name">Fathi</span>
-                                <span class="profile-dropdown-user-nis">NIS 12345</span>
+                                <span class="profile-dropdown-user-name">{{ Auth::user()->name }}</span>
+                                <span class="profile-dropdown-user-nis">NIS {{ Auth::user()->nis ?? '-' }}</span>
                             </div>
                         </div>
                         <div class="profile-dropdown-divider"></div>
