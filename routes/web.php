@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\EventController as UserEventController;
@@ -10,6 +11,10 @@ use App\Http\Controllers\User\ProfileController as UserProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\ParticipantsController as AdminParticipantsController;
+use App\Http\Controllers\Admin\StudentsController as AdminStudentsController;
+use App\Http\Controllers\Admin\AnnouncementsController as AdminAnnouncementsController;
+use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Admin\FileController as AdminFileController;
 
 // Public routes
@@ -97,10 +102,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/list', [AdminFileController::class, 'listFiles'])->name('admin.files.list');
     });
 
-    // Other admin pages (placeholder for now)
-    Route::get('/participants', function () {
-        return view('admin.participants');
-    })->name('admin.participants');
+    // Other admin pages
+    Route::get('/participants', [AdminParticipantsController::class, 'index'])->name('admin.participants');
 
     Route::get('/attendance', [AdminAttendanceController::class, 'index'])->name('admin.attendance');
 
@@ -108,21 +111,20 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.certificates');
     })->name('admin.certificates');
 
-    Route::get('/announcements', function () {
-        return view('admin.announcements');
-    })->name('admin.announcements');
+    Route::get('/announcements', [AdminAnnouncementsController::class, 'index'])->name('admin.announcements');
+    Route::post('/announcements', [AdminAnnouncementsController::class, 'store'])->name('admin.announcements.store');
+    Route::delete('/announcements/{id}', [AdminAnnouncementsController::class, 'destroy'])->name('admin.announcements.destroy');
+    Route::patch('/announcements/{id}/toggle', [AdminAnnouncementsController::class, 'toggleStatus'])->name('admin.announcements.toggle');
 
-    Route::get('/students', function () {
-        return view('admin.students');
-    })->name('admin.students');
+    Route::get('/students', [AdminStudentsController::class, 'index'])->name('admin.students');
 
     Route::get('/notifications', function () {
         return view('admin.notifications');
     })->name('admin.notifications');
 
-    Route::get('/settings', function () {
-        return view('admin.settings');
-    })->name('admin.settings');
+    Route::get('/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
+    Route::post('/settings/profile', [AdminSettingsController::class, 'updateProfile'])->name('admin.settings.profile');
+    Route::post('/settings/password', [AdminSettingsController::class, 'changePassword'])->name('admin.settings.password');
 });
 
 // API Routes for AJAX calls
@@ -163,5 +165,31 @@ Route::prefix('api')->middleware(['auth'])->group(function () {
         Route::get('/admin/attendance/events', [AdminAttendanceController::class, 'getEvents']);
         Route::post('/admin/attendance/mark', [AdminAttendanceController::class, 'mark']);
         Route::post('/admin/attendance/mark-bulk', [AdminAttendanceController::class, 'markBulk']);
+
+        // Certificate issue
+        Route::post('/admin/certificates/issue', function (\Illuminate\Http\Request $request) {
+            $request->validate([
+                'user_id'  => 'required|exists:users,id',
+                'event_id' => 'required|exists:events,id',
+            ]);
+
+            $exists = \App\Models\Certificate::where('user_id', $request->user_id)
+                ->where('event_id', $request->event_id)->exists();
+
+            if ($exists) {
+                return response()->json(['success' => false, 'message' => 'Sertifikat sudah ada.']);
+            }
+
+            \App\Models\Certificate::create([
+                'user_id'            => $request->user_id,
+                'event_id'           => $request->event_id,
+                'certificate_type'   => 'participation',
+                'issued_date'        => now(),
+                'status'             => 'issued',
+                'issued_by'          => Auth::id(),
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Sertifikat berhasil diterbitkan.']);
+        });
     });
 });
