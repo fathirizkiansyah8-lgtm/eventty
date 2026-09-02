@@ -24,16 +24,16 @@
         </a>
 
         <nav class="lp-nav-links" id="navMenu">
-            <a href="/" class="lp-nav-link active" id="nl-home">Home</a>
-            <a href="/events/public?id=1" class="lp-nav-link" id="nl-events" data-require-login="true" data-redirect="/events/public?id=1">Events</a>
-            <a href="/login" class="lp-nav-link" id="nl-features">Fitur</a>
-            <a href="/login" class="lp-nav-link" id="nl-how">Cara Kerja</a>
-            <a href="/login" class="lp-nav-link" id="nl-about">Tentang</a>
+            <a href="#home" class="lp-nav-link active" id="nl-home" data-landing-target="home">Home</a>
+            <a href="#events" class="lp-nav-link" id="nl-events" data-landing-target="events">Events</a>
+            <a href="#features" class="lp-nav-link" id="nl-features" data-landing-target="features">Fitur</a>
+            <a href="#how-it-works" class="lp-nav-link" id="nl-how" data-landing-target="how-it-works">Cara Kerja</a>
+            <a href="#about" class="lp-nav-link" id="nl-about" data-landing-target="about">Tentang</a>
         </nav>
 
         <div class="lp-nav-actions">
-            <a href="/login"    class="lp-btn-ghost">Login</a>
-            <a href="/register" class="lp-btn-primary">Daftar Sekarang</a>
+            <a href="/login" class="lp-btn-ghost lp-btn-compact">Login</a>
+            <a href="/register" class="lp-btn-primary lp-btn-small lp-btn-compact">Daftar</a>
         </div>
 
         <button class="lp-hamburger" id="mobileMenuButton" aria-label="Menu">
@@ -47,7 +47,7 @@
 {{-- ═══════════════════════════════
      HERO
 ════════════════════════════════ --}}
-<section class="lp-hero" id="home">
+<section class="lp-landing-panel lp-hero active" id="home" data-panel="home">
     <div class="lp-container lp-hero-inner">
 
         {{-- LEFT --}}
@@ -69,7 +69,7 @@
             </p>
 
             <div class="lp-hero-btns">
-                <a href="/events/public?id=1" class="lp-btn-primary lp-btn-lg" data-require-login="true" data-redirect="/events/public?id=1">
+                <a href="#events" class="lp-btn-primary lp-btn-lg" data-landing-target="events">
                     Lihat Event
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
@@ -300,7 +300,7 @@
 {{-- ═══════════════════════════════
      EVENT SEDANG BERLANGSUNG
 ════════════════════════════════ --}}
-<section class="lp-section lp-events-section" id="events">
+<section class="lp-landing-panel lp-section lp-events-section" id="events" data-panel="events">
     <div class="lp-container">
 
         <div class="lp-section-hd">
@@ -341,7 +341,7 @@
                         </div>
                         <span class="lp-quota-text">45 / 50 peserta</span>
                     </div>
-                    <a href="{{ url('/events/public?id=1') }}" class="lp-ev-btn" data-require-login="true" data-redirect="{{ url('/events/public?id=1') }}">Lihat Detail</a>
+                    <a href="/events/public?id=2" class="lp-ev-btn">Lihat Detail</a>
                 </div>
             </article>
 
@@ -370,7 +370,7 @@
                         </div>
                         <span class="lp-quota-text">20 / 30 peserta</span>
                     </div>
-                    <a href="{{ url('/events/public?id=4') }}" class="lp-ev-btn" data-require-login="true" data-redirect="{{ url('/events/public?id=4') }}">Lihat Detail</a>
+                    <a href="/events/public?id=4" class="lp-ev-btn">Lihat Detail</a>
                 </div>
             </article>
 
@@ -399,7 +399,7 @@
                         </div>
                         <span class="lp-quota-text">47 / 50 peserta</span>
                     </div>
-                    <a href="{{ url('/events/public?id=3') }}" class="lp-ev-btn" data-require-login="true" data-redirect="{{ url('/events/public?id=3') }}">Lihat Detail</a>
+                    <a href="/events/public?id=3" class="lp-ev-btn">Lihat Detail</a>
                 </div>
             </article>
 
@@ -428,7 +428,7 @@
                         </div>
                         <span class="lp-quota-text">40 / 50 peserta</span>
                     </div>
-                    <a href="{{ url('/events/public?id=6') }}" class="lp-ev-btn" data-require-login="true" data-redirect="{{ url('/events/public?id=6') }}">Lihat Detail</a>
+                    <a href="/events/public?id=6" class="lp-ev-btn">Lihat Detail</a>
                 </div>
             </article>
 
@@ -498,7 +498,7 @@
 {{-- ═══════════════════════════════
      KENAPA EVENTTY
 ════════════════════════════════ --}}
-<section class="lp-section lp-features-section" id="features">
+<section class="lp-landing-panel lp-section lp-features-section" id="features" data-panel="features">
     <div class="lp-container">
 
         <div class="lp-section-center reveal">
@@ -554,12 +554,13 @@
 {{-- ═══════════════════════════════
      HOW IT WORKS
 ════════════════════════════════ --}}
-<section class="lp-section lp-how-section" id="how-it-works">
+<section class="lp-landing-panel lp-section lp-how-section" id="how-it-works" data-panel="how-it-works">
     <div class="lp-container">
 
         <div class="lp-section-center reveal">
             <div class="lp-section-eyebrow">CARA KERJA EVENTTY</div>
             <h2 class="lp-section-h2">Mulai dalam <span>empat langkah</span> sederhana</h2>
+            <p class="lp-section-sub">Dari menemukan kegiatan sampai menerima sertifikat, semua prosesnya tersusun rapi dalam satu tempat.</p>
         </div>
 
         <div class="lp-steps">
@@ -621,14 +622,14 @@
 {{-- ═══════════════════════════════
      CERTIFICATE SHOWCASE
 ════════════════════════════════ --}}
-<section class="lp-section lp-cert-section" id="about">
+<section class="lp-landing-panel lp-section lp-cert-section" id="about" data-panel="about">
     <div class="lp-container lp-cert-inner">
 
         {{-- LEFT --}}
         <div class="lp-cert-copy reveal">
-            <div class="lp-section-eyebrow">SERTIFIKAT DIGITAL EVENTTY</div>
-            <h2 class="lp-section-h2" style="max-width:420px;">Bukti nyata partisipasimu dalam setiap <span>event sekolah.</span></h2>
-            <p class="lp-cert-desc">Dapatkan sertifikat digital resmi setelah mengikuti event dan memenuhi syarat kehadiran. Tersimpan permanen di akunmu.</p>
+            <div class="lp-section-eyebrow">TENTANG EVENTTY</div>
+            <h2 class="lp-section-h2" style="max-width:450px;">Kegiatan sekolah lebih teratur, dari daftar sampai <span>sertifikat.</span></h2>
+            <p class="lp-cert-desc">Eventty membantu siswa menemukan kegiatan yang sesuai, sementara panitia dapat mengelola peserta, kehadiran, dan bukti partisipasi dengan lebih mudah.</p>
 
             <ul class="lp-cert-benefits">
                 <li>
@@ -749,7 +750,7 @@
             <h2 class="lp-cta-h2">Ada event yang ingin kamu ikuti?</h2>
             <p class="lp-cta-sub">Temukan event sekolahmu dan mulai berpartisipasi bersama Eventty. Gratis untuk semua siswa.</p>
             <div class="lp-cta-btns">
-                <a href="#events"   class="lp-btn-white lp-btn-lg">
+                <a href="#events" class="lp-btn-white lp-btn-lg" data-landing-target="events">
                     Lihat Semua Event
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
@@ -779,10 +780,10 @@
 
             <div class="lp-footer-col">
                 <h4>Menu</h4>
-                <a href="#home">Home</a>
-                <a href="#events">Events</a>
-                <a href="#features">Fitur</a>
-                <a href="#about">Tentang</a>
+                <a href="#home" data-landing-target="home">Home</a>
+                <a href="#events" data-landing-target="events">Events</a>
+                <a href="#features" data-landing-target="features">Fitur</a>
+                <a href="#about" data-landing-target="about">Tentang</a>
             </div>
 
             <div class="lp-footer-col">

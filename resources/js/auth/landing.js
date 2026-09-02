@@ -10,28 +10,51 @@ document.addEventListener('DOMContentLoaded', function () {
     var navMenu    = document.getElementById('navMenu');
     var navLinks   = document.querySelectorAll('.lp-nav-link');
     var reveals    = document.querySelectorAll('.reveal');
+    var landingPanels = document.querySelectorAll('.lp-landing-panel');
 
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
 
-    function redirectToLoginIfNeeded(event) {
-        var targetUrl = event.currentTarget.getAttribute('data-redirect') || '/events/public?id=1';
-        var isLoggedIn = localStorage.getItem('eventty_logged_in') === 'true';
+    function setActiveLandingPanel(target) {
+        var panelName = target || 'home';
+        document.body.setAttribute('data-landing-panel', panelName);
+        landingPanels.forEach(function (panel) {
+            var isActive = panel.getAttribute('data-panel') === panelName;
+            panel.classList.toggle('active', isActive);
+            if (isActive) {
+                panel.querySelectorAll('.reveal').forEach(function (element) {
+                    element.classList.add('visible');
+                });
+            }
+        });
 
-        if (!isLoggedIn) {
-            localStorage.setItem('eventty_login_redirect', targetUrl);
-            window.location.href = '/login';
-            return false;
-        }
+        navLinks.forEach(function (link) {
+            var isActive = link.getAttribute('data-landing-target') === panelName;
+            link.classList.toggle('active', isActive);
+        });
 
-        window.location.href = targetUrl;
-        return false;
+        window.scrollTo({ top: 0, behavior: 'auto' });
     }
 
-    document.querySelectorAll('[data-require-login="true"]').forEach(function (link) {
-        link.addEventListener('click', function (e) {
+    var initialPanel = window.location.hash.replace('#', '') || 'home';
+    setActiveLandingPanel(initialPanel);
+
+    document.querySelectorAll('[data-landing-target]').forEach(function (trigger) {
+        trigger.addEventListener('click', function (e) {
+            var target = this.getAttribute('data-landing-target');
+            if (!target) return;
             e.preventDefault();
-            redirectToLoginIfNeeded(e);
+            setActiveLandingPanel(target);
+        });
+    });
+    document.querySelectorAll('.lp-ev-btn[href^="/events/public"]').forEach(function (link) {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            var destination = link.href;
+            document.body.classList.add('lp-page-leaving');
+            window.setTimeout(function () {
+                window.location.assign(destination);
+            }, 160);
         });
     });
 
@@ -53,15 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         navLinks.forEach(function (link) {
-            link.addEventListener('click', function (e) {
-                if (link.getAttribute('data-require-login') === 'true') {
-                    if (localStorage.getItem('eventty_logged_in') !== 'true') {
-                        e.preventDefault();
-                        localStorage.setItem('eventty_login_redirect', link.getAttribute('data-redirect') || '/events/public?id=1');
-                        window.location.href = '/login';
-                        return;
-                    }
-                }
+            link.addEventListener('click', function () {
                 navMenu.classList.remove('open');
                 hamburger.classList.remove('open');
                 hamburger.setAttribute('aria-expanded', 'false');
