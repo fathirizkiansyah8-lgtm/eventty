@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Buat Event — Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
@@ -35,8 +36,27 @@
             <a href="{{ url('/admin/events') }}" class="abtn abtn-secondary">Batal</a>
         </div>
 
+        {{-- Validation errors --}}
+        @if($errors->any())
+        <div style="background:#fee2e2;border:1.5px solid #fca5a5;color:#991b1b;padding:.875rem 1rem;border-radius:.75rem;margin-bottom:1.25rem;font-size:.875rem;">
+            <strong>Terdapat kesalahan:</strong>
+            <ul style="margin:.35rem 0 0;padding-left:1.25rem;">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <div class="form-container">
-            <form id="createEventForm">
+
+            {{-- ✅ Form dengan method POST, action ke controller store, enctype untuk file upload --}}
+            <form id="createEventForm"
+                  method="POST"
+                  action="{{ route('admin.events.store') }}"
+                  enctype="multipart/form-data"
+                  novalidate>
+                @csrf
 
                 {{-- ── Informasi Event ── --}}
                 <div class="form-section">
@@ -45,30 +65,47 @@
                     <div class="form-row">
                         <div class="input-group">
                             <label class="input-label" for="eventName">Nama Event <span style="color:#ef4444;">*</span></label>
-                            <input type="text" id="eventName" class="input-field" placeholder="Masukkan nama event" required>
-                            <small class="field-error" id="eventNameError"></small>
+                            <input type="text"
+                                   id="eventName"
+                                   name="name"
+                                   class="input-field {{ $errors->has('name') ? 'is-invalid' : '' }}"
+                                   placeholder="Masukkan nama event"
+                                   value="{{ old('name') }}"
+                                   required>
+                            <small class="field-error" id="eventNameError">{{ $errors->first('name') }}</small>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="input-group">
                             <label class="input-label" for="eventCategory">Kategori <span style="color:#ef4444;">*</span></label>
-                            <select id="eventCategory" class="input-field" required>
+                            {{-- ✅ Kategori dari database --}}
+                            <select id="eventCategory"
+                                    name="category_id"
+                                    class="input-field {{ $errors->has('category_id') ? 'is-invalid' : '' }}"
+                                    required>
                                 <option value="">Pilih kategori</option>
-                                <option value="school-event">School Event</option>
-                                <option value="workshop">Workshop</option>
-                                <option value="seminar">Seminar</option>
-                                <option value="competition">Competition</option>
-                                <option value="training">Training</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                            {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
                             </select>
-                            <small class="field-error" id="eventCategoryError"></small>
+                            <small class="field-error" id="eventCategoryError">{{ $errors->first('category_id') }}</small>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="input-group">
-                            <label class="input-label" for="eventDescription">Deskripsi</label>
-                            <textarea id="eventDescription" class="input-field" rows="4" placeholder="Deskripsi singkat event"></textarea>
+                            <label class="input-label" for="eventDescription">Deskripsi <span style="color:#ef4444;">*</span></label>
+                            <textarea id="eventDescription"
+                                      name="description"
+                                      class="input-field {{ $errors->has('description') ? 'is-invalid' : '' }}"
+                                      rows="4"
+                                      placeholder="Deskripsi singkat event"
+                                      required>{{ old('description') }}</textarea>
+                            <small class="field-error">{{ $errors->first('description') }}</small>
                         </div>
                     </div>
                 </div>
@@ -77,34 +114,52 @@
                 <div class="form-section">
                     <h2 class="form-section-title">Waktu &amp; Lokasi</h2>
 
+                    {{-- ✅ Hapus field duplikat "eventTime" — hanya gunakan start_time dan end_time --}}
                     <div class="form-row form-row-2">
                         <div class="input-group">
                             <label class="input-label" for="eventDate">Tanggal <span style="color:#ef4444;">*</span></label>
-                            <input type="date" id="eventDate" class="input-field" required>
-                            <small class="field-error" id="eventDateError"></small>
+                            <input type="date"
+                                   id="eventDate"
+                                   name="date"
+                                   class="input-field {{ $errors->has('date') ? 'is-invalid' : '' }}"
+                                   value="{{ old('date') }}"
+                                   min="{{ date('Y-m-d') }}"
+                                   required>
+                            <small class="field-error" id="eventDateError">{{ $errors->first('date') }}</small>
                         </div>
                         <div class="input-group">
-                            <label class="input-label" for="eventTime">Waktu Mulai <span style="color:#ef4444;">*</span></label>
-                            <input type="time" id="eventTime" class="input-field" required>
+                            <label class="input-label" for="eventStartTime">Waktu Mulai <span style="color:#ef4444;">*</span></label>
+                            <input type="time"
+                                   id="eventStartTime"
+                                   name="start_time"
+                                   class="input-field {{ $errors->has('start_time') ? 'is-invalid' : '' }}"
+                                   value="{{ old('start_time') }}"
+                                   required>
+                            <small class="field-error">{{ $errors->first('start_time') }}</small>
                         </div>
                     </div>
 
                     <div class="form-row form-row-2">
                         <div class="input-group">
-                            <label class="input-label" for="eventStartTime">Waktu Mulai</label>
-                            <input type="time" id="eventStartTime" class="input-field">
+                            <label class="input-label" for="eventEndTime">Waktu Selesai <span style="color:#ef4444;">*</span></label>
+                            <input type="time"
+                                   id="eventEndTime"
+                                   name="end_time"
+                                   class="input-field {{ $errors->has('end_time') ? 'is-invalid' : '' }}"
+                                   value="{{ old('end_time') }}"
+                                   required>
+                            <small class="field-error">{{ $errors->first('end_time') }}</small>
                         </div>
-                        <div class="input-group">
-                            <label class="input-label" for="eventEndTime">Waktu Selesai</label>
-                            <input type="time" id="eventEndTime" class="input-field">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
                         <div class="input-group">
                             <label class="input-label" for="eventLocation">Lokasi <span style="color:#ef4444;">*</span></label>
-                            <input type="text" id="eventLocation" class="input-field" placeholder="Masukkan lokasi event" required>
-                            <small class="field-error" id="eventLocationError"></small>
+                            <input type="text"
+                                   id="eventLocation"
+                                   name="location"
+                                   class="input-field {{ $errors->has('location') ? 'is-invalid' : '' }}"
+                                   placeholder="Masukkan lokasi event"
+                                   value="{{ old('location') }}"
+                                   required>
+                            <small class="field-error" id="eventLocationError">{{ $errors->first('location') }}</small>
                         </div>
                     </div>
                 </div>
@@ -116,13 +171,26 @@
                     <div class="form-row form-row-2">
                         <div class="input-group">
                             <label class="input-label" for="eventQuota">Kuota Peserta <span style="color:#ef4444;">*</span></label>
-                            <input type="number" id="eventQuota" class="input-field" placeholder="Contoh: 100" min="1" required>
-                            <small class="field-error" id="eventQuotaError"></small>
+                            <input type="number"
+                                   id="eventQuota"
+                                   name="quota"
+                                   class="input-field {{ $errors->has('quota') ? 'is-invalid' : '' }}"
+                                   placeholder="Contoh: 100"
+                                   min="1"
+                                   value="{{ old('quota') }}"
+                                   required>
+                            <small class="field-error" id="eventQuotaError">{{ $errors->first('quota') }}</small>
                         </div>
                         <div class="input-group">
                             <label class="input-label" for="eventOrganizer">Penyelenggara <span style="color:#ef4444;">*</span></label>
-                            <input type="text" id="eventOrganizer" class="input-field" placeholder="Contoh: OSIS SMKN 20" required>
-                            <small class="field-error" id="eventOrganizerError"></small>
+                            <input type="text"
+                                   id="eventOrganizer"
+                                   name="organizer"
+                                   class="input-field {{ $errors->has('organizer') ? 'is-invalid' : '' }}"
+                                   placeholder="Contoh: OSIS SMKN 20"
+                                   value="{{ old('organizer', 'OSIS') }}"
+                                   required>
+                            <small class="field-error" id="eventOrganizerError">{{ $errors->first('organizer') }}</small>
                         </div>
                     </div>
                 </div>
@@ -133,131 +201,66 @@
                     <div class="form-row">
                         <div class="input-group">
                             <label class="input-label" for="eventBanner">Banner Image</label>
-                            <input type="file" id="eventBanner" class="input-field" accept="image/*">
+                            <input type="file"
+                                   id="eventBanner"
+                                   name="banner"
+                                   class="input-field"
+                                   accept="image/jpeg,image/png,image/jpg,image/gif">
                             <small class="field-hint">Format: JPG, PNG. Maksimal 2MB.</small>
+                            <small class="field-error">{{ $errors->first('banner') }}</small>
+                            {{-- Preview banner saat file dipilih --}}
+                            <div id="bannerPreview" style="display:none;margin-top:.75rem;">
+                                <img id="bannerPreviewImg" src="" alt="Preview Banner"
+                                     style="max-width:320px;max-height:180px;border-radius:.75rem;object-fit:cover;border:1.5px solid #e2e8f0;">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- ── SERTIFIKAT ── (T5: UI Only, no backend) --}}
+                {{-- ── Sertifikat ── --}}
                 <div class="form-section">
                     <h2 class="form-section-title">Sertifikat</h2>
-                    <p style="font-size:.82rem;color:#64748b;margin-bottom:1rem;">Apakah event ini menyediakan sertifikat untuk peserta?</p>
+                    <p style="font-size:.82rem;color:#64748b;margin-bottom:1rem;">
+                        Apakah event ini menyediakan sertifikat untuk peserta yang hadir?
+                    </p>
 
-                    {{-- Toggle pilihan --}}
-                    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.25rem;" id="certOptions">
-                        <label class="cert-opt" id="certOptYes" style="flex:1;min-width:180px;display:flex;align-items:center;gap:.75rem;padding:.875rem 1.1rem;border:2px solid #e2e8f0;border-radius:.875rem;cursor:pointer;transition:all .15s;background:#fff;" onclick="setCertOpt(true)">
-                            <div class="cert-opt-radio" id="certRadioYes" style="width:18px;height:18px;border-radius:50%;border:2px solid #d1d5db;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;"></div>
+                    {{-- Hidden field default false, di-override checkbox jika dipilih Ya --}}
+                    <input type="hidden" name="has_certificate" value="0">
+
+                    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;" id="certOptions">
+
+                        {{-- Pilihan: Ya --}}
+                        <label id="certOptYes"
+                               style="flex:1;min-width:180px;display:flex;align-items:center;gap:.75rem;padding:.875rem 1.1rem;border:2px solid #e2e8f0;border-radius:.875rem;cursor:pointer;transition:all .15s;background:#fff;">
+                            <input type="radio" name="has_certificate" value="1"
+                                   id="certRadioYes"
+                                   {{ old('has_certificate') == '1' ? 'checked' : '' }}
+                                   style="width:18px;height:18px;accent-color:#2563eb;flex-shrink:0;">
                             <div>
                                 <div style="font-size:.875rem;font-weight:700;color:#0f172a;">Ya, sertifikat tersedia</div>
-                                <div style="font-size:.72rem;color:#94a3b8;margin-top:1px;">Peserta yang hadir mendapat sertifikat digital</div>
+                                <div style="font-size:.72rem;color:#94a3b8;margin-top:1px;">Peserta yang hadir mendapat sertifikat</div>
                             </div>
                         </label>
-                        <label class="cert-opt" id="certOptNo" style="flex:1;min-width:180px;display:flex;align-items:center;gap:.75rem;padding:.875rem 1.1rem;border:2px solid #e2e8f0;border-radius:.875rem;cursor:pointer;transition:all .15s;background:#fff;" onclick="setCertOpt(false)">
-                            <div class="cert-opt-radio" id="certRadioNo" style="width:18px;height:18px;border-radius:50%;border:2px solid #d1d5db;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;"></div>
+
+                        {{-- Pilihan: Tidak --}}
+                        <label id="certOptNo"
+                               style="flex:1;min-width:180px;display:flex;align-items:center;gap:.75rem;padding:.875rem 1.1rem;border:2px solid #e2e8f0;border-radius:.875rem;cursor:pointer;transition:all .15s;background:#fff;">
+                            <input type="radio" name="has_certificate" value="0"
+                                   id="certRadioNo"
+                                   {{ old('has_certificate', '0') == '0' ? 'checked' : '' }}
+                                   style="width:18px;height:18px;accent-color:#2563eb;flex-shrink:0;">
                             <div>
                                 <div style="font-size:.875rem;font-weight:700;color:#0f172a;">Tidak, tanpa sertifikat</div>
                                 <div style="font-size:.72rem;color:#94a3b8;margin-top:1px;">Event ini tidak menyertakan sertifikat</div>
                             </div>
                         </label>
+
                     </div>
 
-                    {{-- Config fields — shown only when Yes is selected --}}
-                    <div id="certConfig" style="display:none;">
-                        <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:.875rem;padding:1.25rem;margin-bottom:1rem;">
-
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-                                <div class="input-group">
-                                    <label class="input-label">Judul Sertifikat</label>
-                                    <input type="text" id="certTitle" class="input-field" value="Certificate of Participation" placeholder="Judul sertifikat">
-                                </div>
-                                <div class="input-group">
-                                    <label class="input-label">Template</label>
-                                    <select id="certTemplate" class="input-field">
-                                        <option value="participation">Participation</option>
-                                        <option value="achievement">Achievement</option>
-                                        <option value="completion">Completion</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="input-group" style="margin-bottom:1rem;">
-                                <label class="input-label">Nama Penyelenggara (di sertifikat)</label>
-                                <input type="text" id="certOrganizer" class="input-field" value="OSIS SMKN 20 Jakarta" placeholder="Nama penyelenggara">
-                            </div>
-
-                            <div class="input-group" style="margin-bottom:1rem;">
-                                <label class="input-label">Template Sertifikat / Gambar</label>
-                                <div style="border:1.5px dashed #cbd5e1;border-radius:12px;padding:1rem;background:#fff;">
-                                    <input type="file" id="certTemplateUpload" accept="image/*" hidden>
-                                    <div id="certTemplatePreview" style="display:flex;align-items:center;justify-content:center;width:100%;min-height:180px;border-radius:12px;background:linear-gradient(135deg,#eef6ff,#f8fafc);border:1px solid #dfeaf9;overflow:hidden;position:relative;">
-                                        <div id="certTemplatePlaceholder" style="text-align:center;color:#64748b;padding:1rem;">
-                                            <div style="width:56px;height:56px;border-radius:14px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="1.8"><path d="M4 16l4.5-4.5 3.5 3.5 5-6 7 7"/><circle cx="15" cy="8" r="1.8"/></svg>
-                                            </div>
-                                            <div style="font-size:.8rem;font-weight:700;color:#0f172a;margin-bottom:.25rem;">Belum ada template sertifikat</div>
-                                            <div style="font-size:.72rem;">Upload desain dari teman Anda nanti</div>
-                                        </div>
-                                        <img id="certTemplateImage" alt="Preview template sertifikat" style="display:none;max-width:100%;max-height:220px;object-fit:contain;" />
-                                    </div>
-                                    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.75rem;">
-                                        <button type="button" onclick="document.getElementById('certTemplateUpload').click()" style="border:none;border-radius:10px;background:#2563eb;color:#fff;padding:.6rem .9rem;font-weight:700;cursor:pointer;">Pilih Gambar</button>
-                                        <button type="button" id="replaceCertTemplateBtn" onclick="document.getElementById('certTemplateUpload').click()" style="border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#0f172a;padding:.6rem .9rem;font-weight:700;cursor:pointer;">Ganti Gambar</button>
-                                        <button type="button" id="removeCertTemplateBtn" onclick="removeCertTemplate()" style="border:1px solid #fecaca;border-radius:10px;background:#fff;color:#b91c1c;padding:.6rem .9rem;font-weight:700;cursor:pointer;">Hapus</button>
-                                    </div>
-                                    <div style="font-size:.7rem;color:#64748b;margin-top:.5rem;">Format yang didukung: JPG, PNG, WEBP. Ukuran bisa disesuaikan sesuai tema event.</div>
-                                </div>
-                            </div>
-
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                                <div class="input-group">
-                                    <label class="input-label">Nama Penandatangan</label>
-                                    <input type="text" id="certSigner" class="input-field" placeholder="Nama Ketua OSIS / Pembina">
-                                </div>
-                                <div class="input-group">
-                                    <label class="input-label">Jabatan Penandatangan</label>
-                                    <input type="text" id="certSignerRole" class="input-field" placeholder="Ketua OSIS / Pembina">
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Certificate Preview --}}
-                        <div>
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;">
-                                <span style="font-size:.8rem;font-weight:700;color:#0f172a;">Preview Sertifikat</span>
-                                <button type="button" onclick="updateCertPreview()" style="font-size:.72rem;color:#1d4ed8;font-weight:600;background:none;border:none;cursor:pointer;padding:0;">Perbarui Preview</button>
-                            </div>
-                            <div id="certPreviewBox" style="background:linear-gradient(145deg,#0d1b4b 0%,#162152 40%,#1a2d6e 100%);border-radius:12px;padding:2rem 1.75rem;text-align:center;position:relative;overflow:hidden;max-width:520px;margin:0 auto;">
-                                <div style="position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;border:1px solid rgba(255,255,255,.07);"></div>
-                                <div style="position:relative;z-index:2;">
-                                    <div style="font-size:.65rem;font-weight:800;letter-spacing:.15em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:.25rem;">— EVENTTY —</div>
-                                    <div style="font-size:.58rem;color:rgba(255,255,255,.3);letter-spacing:.1em;margin-bottom:1.25rem;">SMKN 20 JAKARTA</div>
-                                    <div style="width:36px;height:1.5px;background:rgba(255,255,255,.15);margin:0 auto .875rem;"></div>
-                                    <div style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#93c5fd;margin-bottom:.15rem;">Certificate</div>
-                                    <div style="font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:.875rem;" id="prevCertTitle">OF PARTICIPATION</div>
-                                    <div style="font-size:.6rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem;">Diberikan kepada</div>
-                                    <div style="font-size:.95rem;font-weight:800;color:#fbbf24;margin-bottom:.875rem;">NAMA PESERTA</div>
-                                    <div style="font-size:.6rem;color:rgba(255,255,255,.4);margin-bottom:.3rem;">atas partisipasinya dalam</div>
-                                    <div style="font-size:.825rem;font-weight:700;color:#fff;margin-bottom:.35rem;" id="prevEventName">NAMA EVENT</div>
-                                    <div style="font-size:.6rem;color:rgba(255,255,255,.35);margin-bottom:1rem;" id="prevEventDate">Tanggal Event</div>
-                                    <div style="width:36px;height:1px;background:rgba(255,255,255,.1);margin:0 auto .875rem;"></div>
-                                    <div style="display:flex;align-items:center;justify-content:space-evenly;padding-top:.5rem;">
-                                        <div style="text-align:center;">
-                                            <div style="width:48px;height:1px;background:rgba(255,255,255,.2);margin:0 auto .35rem;"></div>
-                                            <div style="font-size:.58rem;color:rgba(255,255,255,.4);" id="prevSigner">Penandatangan</div>
-                                            <div style="font-size:.52rem;color:rgba(255,255,255,.3);" id="prevSignerRole">Jabatan</div>
-                                        </div>
-                                        <div style="text-align:center;">
-                                            <div id="certQrBox" style="width:52px;height:52px;border-radius:8px;background:#f8fafc;padding:4px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(15,23,42,.18);margin:0 auto .35rem;overflow:hidden;">
-                                                <svg id="certQrSvg" width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-label="QR code preview"></svg>
-                                            </div>
-                                            <div style="font-size:.5rem;color:rgba(255,255,255,.25);">QR Code</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p style="font-size:.68rem;color:#94a3b8;text-align:center;margin-top:.625rem;">Preview. Nama peserta akan diisi otomatis.</p>
-                        </div>
+                    {{-- Info tambahan yang muncul jika Ya dipilih --}}
+                    <div id="certInfo" style="{{ old('has_certificate') == '1' ? 'display:block' : 'display:none' }};background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:.75rem;padding:.875rem 1rem;font-size:.82rem;color:#1e40af;">
+                        <strong>ℹ️ Info:</strong> Sertifikat akan otomatis bisa diterbitkan untuk peserta yang hadir setelah event selesai.
+                        Admin bisa menerbitkan sertifikat dari halaman <a href="{{ url('/admin/certificates') }}" style="font-weight:700;color:#1d4ed8;">Kelola Sertifikat</a>.
                     </div>
                 </div>
 
@@ -266,19 +269,28 @@
                     <h2 class="form-section-title">Status Event</h2>
                     <div class="form-row">
                         <div class="input-group">
-                            <label class="input-label" for="eventStatus">Status</label>
-                            <select id="eventStatus" class="input-field">
-                                <option value="draft">Draft</option>
-                                <option value="open">Open</option>
-                                <option value="closed">Closed</option>
+                            <label class="input-label" for="eventStatus">Status <span style="color:#ef4444;">*</span></label>
+                            <select id="eventStatus"
+                                    name="status"
+                                    class="input-field"
+                                    required>
+                                <option value="draft"  {{ old('status', 'draft') === 'draft'  ? 'selected' : '' }}>Draft — Belum dipublikasikan</option>
+                                <option value="open"   {{ old('status') === 'open'   ? 'selected' : '' }}>Open — Pendaftaran dibuka</option>
+                                <option value="closed" {{ old('status') === 'closed' ? 'selected' : '' }}>Closed — Pendaftaran ditutup</option>
                             </select>
+                            <small class="field-hint" style="margin-top:.35rem;">
+                                Pilih <strong>Draft</strong> jika ingin menyimpan tanpa mempublikasikan.
+                            </small>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-actions">
-                    <a href="{{ url('/admin/events') }}" class="abtn abtn-secondary">Batal</a>
-                    <button type="submit" class="abtn abtn-primary">
+                    <a href="{{ url('/admin/events') }}" class="abtn abtn-secondary"
+                       onclick="return confirm('Batalkan pembuatan event? Data yang sudah diisi akan hilang.')">
+                        Batal
+                    </a>
+                    <button type="submit" class="abtn abtn-primary" id="submitBtn">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                         Simpan Event
                     </button>
@@ -294,155 +306,117 @@
 @vite(['resources/js/components/sidebar.js', 'resources/js/admin/admin-shared.js'])
 
 <script>
-var certEnabled = null;
+// ── Banner preview saat file dipilih ──
+document.getElementById('eventBanner').addEventListener('change', function () {
+    var file = this.files[0];
+    var preview = document.getElementById('bannerPreview');
+    var previewImg = document.getElementById('bannerPreviewImg');
 
-function setCertOpt(yes) {
-    certEnabled = yes;
-    var optYes  = document.getElementById('certOptYes');
-    var optNo   = document.getElementById('certOptNo');
-    var radYes  = document.getElementById('certRadioYes');
-    var radNo   = document.getElementById('certRadioNo');
-    var config  = document.getElementById('certConfig');
+    if (!file) { preview.style.display = 'none'; return; }
 
-    if (yes) {
-        optYes.style.borderColor  = '#2563eb';
-        optYes.style.background   = '#eff6ff';
-        optNo.style.borderColor   = '#e2e8f0';
-        optNo.style.background    = '#fff';
-        radYes.style.borderColor  = '#2563eb';
-        radYes.style.background   = '#2563eb';
-        radYes.innerHTML          = '<div style="width:7px;height:7px;border-radius:50%;background:#fff;"></div>';
-        radNo.style.borderColor   = '#d1d5db';
-        radNo.style.background    = 'transparent';
-        radNo.innerHTML           = '';
-        config.style.display      = 'block';
-        updateCertPreview();
-    } else {
-        optNo.style.borderColor   = '#2563eb';
-        optNo.style.background    = '#eff6ff';
-        optYes.style.borderColor  = '#e2e8f0';
-        optYes.style.background   = '#fff';
-        radNo.style.borderColor   = '#2563eb';
-        radNo.style.background    = '#2563eb';
-        radNo.innerHTML           = '<div style="width:7px;height:7px;border-radius:50%;background:#fff;"></div>';
-        radYes.style.borderColor  = '#d1d5db';
-        radYes.style.background   = 'transparent';
-        radYes.innerHTML          = '';
-        config.style.display      = 'none';
+    if (file.size > 2 * 1024 * 1024) {
+        alert('Ukuran file terlalu besar. Maksimal 2MB.');
+        this.value = '';
+        preview.style.display = 'none';
+        return;
     }
-}
 
-function buildQrSvg(seed) {
-    var size = 44;
-    var cell = 4;
-    var matrix = Array.from({ length: size / cell }, function () {
-        return Array(size / cell).fill(0);
-    });
-
-    var fill = function (x, y) {
-        if (x >= 0 && y >= 0 && x < matrix.length && y < matrix.length) {
-            matrix[y][x] = 1;
-        }
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        previewImg.src = e.target.result;
+        preview.style.display = 'block';
     };
-
-    var finder = function (x, y) {
-        for (var dy = 0; dy < 7; dy++) {
-            for (var dx = 0; dx < 7; dx++) {
-                var border = dx === 0 || dy === 0 || dx === 6 || dy === 6;
-                var center = dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4;
-                if (border || center) {
-                    fill(x + dx, y + dy);
-                }
-            }
-        }
-    };
-
-    finder(0, 0);
-    finder(matrix.length - 7, 0);
-    finder(0, matrix.length - 7);
-
-    for (var y = 0; y < matrix.length; y++) {
-        for (var x = 0; x < matrix.length; x++) {
-            if (matrix[y][x] !== 1) {
-                var v = ((x * 13 + y * 17 + seed * 7) % 11);
-                if (v < 5) {
-                    matrix[y][x] = 1;
-                }
-            }
-        }
-    }
-
-    var svg = '<rect width="44" height="44" fill="#f8fafc"/>';
-    for (var y = 0; y < matrix.length; y++) {
-        for (var x = 0; x < matrix.length; x++) {
-            if (matrix[y][x]) {
-                svg += '<rect x="' + (x * cell + 1) + '" y="' + (y * cell + 1) + '" width="' + (cell - 1) + '" height="' + (cell - 1) + '" fill="#0f172a"/>';
-            }
-        }
-    }
-    return svg;
-}
-
-function updateCertPreview() {
-    var title   = document.getElementById('certTitle').value || 'Certificate of Participation';
-    var signer  = document.getElementById('certSigner').value || 'Penandatangan';
-    var role    = document.getElementById('certSignerRole').value || 'Jabatan';
-    var evName  = (document.getElementById('eventName').value || 'NAMA EVENT').toUpperCase();
-    var evDate  = document.getElementById('eventDate').value || 'Tanggal Event';
-    var parts   = evDate.split('-');
-    var months  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-    var fmtDate = parts.length === 3 ? parts[2]+' '+months[parseInt(parts[1])-1]+' '+parts[0] : evDate;
-
-    var titleParts  = title.split(' ');
-    var titleSuffix = titleParts.slice(2).join(' ').toUpperCase() || 'PARTICIPATION';
-
-    document.getElementById('prevCertTitle').textContent  = 'OF ' + titleSuffix;
-    document.getElementById('prevEventName').textContent  = evName;
-    document.getElementById('prevEventDate').textContent  = fmtDate;
-    document.getElementById('prevSigner').textContent     = signer;
-    document.getElementById('prevSignerRole').textContent = role;
-
-    var qrSvg = document.getElementById('certQrSvg');
-    if (qrSvg) {
-        qrSvg.innerHTML = buildQrSvg((evName.length + title.length) % 9 || 3);
-    }
-}
-
-const certTemplateUpload = document.getElementById('certTemplateUpload');
-const certTemplateImage = document.getElementById('certTemplateImage');
-const certTemplatePlaceholder = document.getElementById('certTemplatePlaceholder');
-
-function removeCertTemplate() {
-    if (certTemplateUpload) certTemplateUpload.value = '';
-    if (certTemplateImage) {
-        certTemplateImage.src = '';
-        certTemplateImage.style.display = 'none';
-    }
-    if (certTemplatePlaceholder) certTemplatePlaceholder.style.display = 'block';
-}
-
-if (certTemplateUpload) {
-    certTemplateUpload.addEventListener('change', function (event) {
-        var file = event.target.files && event.target.files[0];
-        if (!file) return;
-
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            if (certTemplateImage) {
-                certTemplateImage.src = e.target.result;
-                certTemplateImage.style.display = 'block';
-            }
-            if (certTemplatePlaceholder) certTemplatePlaceholder.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
-document.getElementById('eventName').addEventListener('input', function() { if(certEnabled) updateCertPreview(); });
-document.getElementById('eventDate').addEventListener('change', function() { if(certEnabled) updateCertPreview(); });
-window.addEventListener('DOMContentLoaded', function () {
-    updateCertPreview();
+    reader.readAsDataURL(file);
 });
+
+// ── Validasi sisi klien sebelum submit ──
+document.getElementById('createEventForm').addEventListener('submit', function (e) {
+    var valid = true;
+    var firstError = null;
+
+    // Clear semua error
+    this.querySelectorAll('.field-error').forEach(function (el) {
+        if (!el.textContent.includes('{{ $errors->')) { el.textContent = ''; }
+    });
+
+    var required = [
+        { id: 'eventName',       msg: 'Nama event harus diisi.',          errId: 'eventNameError' },
+        { id: 'eventCategory',   msg: 'Kategori harus dipilih.',          errId: 'eventCategoryError' },
+        { id: 'eventDescription',msg: 'Deskripsi harus diisi.',           errId: null },
+        { id: 'eventDate',       msg: 'Tanggal harus diisi.',             errId: 'eventDateError' },
+        { id: 'eventStartTime',  msg: 'Waktu mulai harus diisi.',         errId: null },
+        { id: 'eventEndTime',    msg: 'Waktu selesai harus diisi.',       errId: null },
+        { id: 'eventLocation',   msg: 'Lokasi harus diisi.',              errId: 'eventLocationError' },
+        { id: 'eventQuota',      msg: 'Kuota peserta harus diisi.',       errId: 'eventQuotaError' },
+        { id: 'eventOrganizer',  msg: 'Penyelenggara harus diisi.',       errId: 'eventOrganizerError' },
+    ];
+
+    required.forEach(function (field) {
+        var el = document.getElementById(field.id);
+        if (!el || el.value.trim() === '' || el.value === '') {
+            valid = false;
+            var errEl = field.errId ? document.getElementById(field.errId) : el.nextElementSibling;
+            if (errEl) errEl.textContent = field.msg;
+            if (!firstError) firstError = el;
+        }
+    });
+
+    // Validasi waktu selesai > waktu mulai
+    var startTime = document.getElementById('eventStartTime').value;
+    var endTime   = document.getElementById('eventEndTime').value;
+    if (startTime && endTime && startTime >= endTime) {
+        valid = false;
+        var endErr = document.getElementById('eventEndTime').nextElementSibling;
+        if (endErr) endErr.textContent = 'Waktu selesai harus lebih dari waktu mulai.';
+        if (!firstError) firstError = document.getElementById('eventEndTime');
+    }
+
+    if (!valid) {
+        e.preventDefault();
+        if (firstError) { firstError.focus(); firstError.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        return;
+    }
+
+    // Loading state
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.2-8.6"/></svg> Menyimpan...';
+});
+
+// ── Toggle highlight pilihan sertifikat ──
+(function () {
+    var radios = document.querySelectorAll('input[name="has_certificate"][type="radio"]');
+    var certInfo = document.getElementById('certInfo');
+
+    function updateCertStyle() {
+        var yesChecked = document.getElementById('certRadioYes').checked;
+        var optYes = document.getElementById('certOptYes');
+        var optNo  = document.getElementById('certOptNo');
+
+        if (yesChecked) {
+            optYes.style.borderColor = '#2563eb';
+            optYes.style.background  = '#eff6ff';
+            optNo.style.borderColor  = '#e2e8f0';
+            optNo.style.background   = '#fff';
+            if (certInfo) certInfo.style.display = 'block';
+        } else {
+            optNo.style.borderColor  = '#2563eb';
+            optNo.style.background   = '#eff6ff';
+            optYes.style.borderColor = '#e2e8f0';
+            optYes.style.background  = '#fff';
+            if (certInfo) certInfo.style.display = 'none';
+        }
+    }
+
+    radios.forEach(function (r) { r.addEventListener('change', updateCertStyle); });
+    updateCertStyle(); // set initial state
+})();
 </script>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+.is-invalid { border-color: #ef4444 !important; }
+</style>
+
 </body>
 </html>

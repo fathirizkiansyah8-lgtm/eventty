@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\EventCategory;
 use App\Services\FileUploadService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -65,62 +66,67 @@ class EventController extends Controller
     /**
      * Store a newly created event.
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request): RedirectResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+        $request->validate([
+            'name'        => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:event_categories,id',
-            'date' => 'required|date|after_or_equal:today',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-            'location' => 'required|string|max:255',
-            'organizer' => 'required|string|max:255',
-            'quota' => 'required|integer|min:1',
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:draft,open,closed',
+            'date'        => 'required|date|after_or_equal:today',
+            'start_time'  => 'required|date_format:H:i',
+            'end_time'    => 'required|date_format:H:i|after:start_time',
+            'location'    => 'required|string|max:255',
+            'organizer'   => 'required|string|max:255',
+            'quota'       => 'required|integer|min:1',
+            'banner'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'status'      => 'required|in:draft,open,closed',
+        ], [
+            'name.required'        => 'Nama event harus diisi.',
+            'description.required' => 'Deskripsi harus diisi.',
+            'category_id.required' => 'Kategori harus dipilih.',
+            'category_id.exists'   => 'Kategori tidak valid.',
+            'date.required'        => 'Tanggal harus diisi.',
+            'date.after_or_equal'  => 'Tanggal tidak boleh sebelum hari ini.',
+            'start_time.required'  => 'Waktu mulai harus diisi.',
+            'end_time.required'    => 'Waktu selesai harus diisi.',
+            'end_time.after'       => 'Waktu selesai harus lebih dari waktu mulai.',
+            'location.required'    => 'Lokasi harus diisi.',
+            'organizer.required'   => 'Penyelenggara harus diisi.',
+            'quota.required'       => 'Kuota peserta harus diisi.',
+            'quota.min'            => 'Kuota minimal 1.',
+            'banner.image'         => 'Banner harus berupa gambar.',
+            'banner.max'           => 'Ukuran banner maksimal 2MB.',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal.',
-                'errors' => $validator->errors()
-            ], 422);
-        }
 
         $bannerPath = null;
         if ($request->hasFile('banner')) {
             try {
                 $bannerPath = $this->fileUploadService->uploadEventBanner($request->file('banner'));
             } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal mengupload banner: ' . $e->getMessage()
-                ], 422);
+                return redirect()->back()
+                    ->withErrors(['banner' => 'Gagal mengupload banner: ' . $e->getMessage()])
+                    ->withInput();
             }
         }
 
-        $event = Event::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-            'date' => $request->date,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
-            'location' => $request->location,
-            'organizer' => $request->organizer,
-            'quota' => $request->quota,
-            'banner_path' => $bannerPath,
-            'status' => $request->status,
-            'created_by' => Auth::id(),
+        Event::create([
+            'name'            => $request->name,
+            'description'     => $request->description,
+            'category_id'     => $request->category_id,
+            'date'            => $request->date,
+            'start_time'      => $request->start_time,
+            'end_time'        => $request->end_time,
+            'location'        => $request->location,
+            'organizer'       => $request->organizer,
+            'quota'           => $request->quota,
+            'banner_path'     => $bannerPath,
+            'has_certificate' => $request->boolean('has_certificate'),
+            'status'          => $request->status,
+            'created_by'      => Auth::id(),
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Event berhasil dibuat.',
-            'event' => $event
-        ]);
+        return redirect()->route('admin.events.index')
+            ->with('success', 'Event berhasil dibuat!');
     }
 
     /**
@@ -292,19 +298,20 @@ class EventController extends Controller
 
         $events = $query->paginate(10)->through(function ($event) {
             return [
-                'id' => $event->id,
-                'name' => $event->name,
-                'category' => $event->category->name,
-                'category_color' => $event->category->color,
-                'date' => $event->formatted_date,
-                'time' => $event->formatted_time,
-                'location' => $event->location,
-                'quota' => $event->quota,
+                'id'               => $event->id,
+                'name'             => $event->name,
+                'category'         => $event->category->name,
+                'category_color'   => $event->category->color,
+                'date'             => $event->formatted_date,
+                'time'             => $event->formatted_time,
+                'location'         => $event->location,
+                'quota'            => $event->quota,
                 'registered_count' => $event->registered_count,
-                'remaining_slots' => $event->getRemainingSlots(),
-                'status' => $event->status,
-                'created_by' => $event->creator->name,
-                'created_at' => $event->created_at->format('d M Y'),
+                'remaining_slots'  => $event->getRemainingSlots(),
+                'status'           => $event->status,
+                'created_by'       => $event->creator->name,
+                'created_at'       => $event->created_at->format('d M Y'),
+                'has_certificate'  => (bool) $event->has_certificate,
             ];
         });
 
