@@ -12,7 +12,8 @@ use Carbon\Carbon;
 
 #[Fillable([
     'name', 'description', 'category_id', 'date', 'start_time', 'end_time',
-    'location', 'organizer', 'quota', 'registered_count', 'banner_path', 'status', 'created_by'
+    'location', 'organizer', 'quota', 'registered_count', 'banner_path',
+    'has_certificate', 'status', 'created_by'
 ])]
 class Event extends Model
 {
@@ -24,11 +25,12 @@ class Event extends Model
     protected function casts(): array
     {
         return [
-            'date' => 'date',
-            'start_time' => 'datetime:H:i',
-            'end_time' => 'datetime:H:i',
-            'quota' => 'integer',
-            'registered_count' => 'integer',
+            'date'            => 'date',
+            'start_time'      => 'datetime:H:i',
+            'end_time'        => 'datetime:H:i',
+            'quota'           => 'integer',
+            'registered_count'=> 'integer',
+            'has_certificate' => 'boolean',
         ];
     }
 
