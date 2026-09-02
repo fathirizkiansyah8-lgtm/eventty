@@ -9,13 +9,32 @@ document.addEventListener('DOMContentLoaded', function () {
     var hamburger  = document.getElementById('mobileMenuButton');
     var navMenu    = document.getElementById('navMenu');
     var navLinks   = document.querySelectorAll('.lp-nav-link');
-    var sections   = document.querySelectorAll('section[id]');
     var reveals    = document.querySelectorAll('.reveal');
 
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
 
-    /* ─────────────────────────────────────
-       NAVBAR — scroll effect
-    ───────────────────────────────────── */
+    function redirectToLoginIfNeeded(event) {
+        var targetUrl = event.currentTarget.getAttribute('data-redirect') || '/events/public?id=1';
+        var isLoggedIn = localStorage.getItem('eventty_logged_in') === 'true';
+
+        if (!isLoggedIn) {
+            localStorage.setItem('eventty_login_redirect', targetUrl);
+            window.location.href = '/login';
+            return false;
+        }
+
+        window.location.href = targetUrl;
+        return false;
+    }
+
+    document.querySelectorAll('[data-require-login="true"]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            redirectToLoginIfNeeded(e);
+        });
+    });
+
     function handleNavScroll () {
         if (!navbar) return;
         if (window.scrollY > 30) {
@@ -24,13 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
             navbar.classList.remove('scrolled');
         }
     }
-    window.addEventListener('scroll', handleNavScroll, { passive: true });
     handleNavScroll();
 
-
-    /* ─────────────────────────────────────
-       HAMBURGER — mobile menu
-    ───────────────────────────────────── */
     if (hamburger && navMenu) {
         hamburger.addEventListener('click', function () {
             var open = navMenu.classList.toggle('open');
@@ -39,7 +53,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         navLinks.forEach(function (link) {
-            link.addEventListener('click', function () {
+            link.addEventListener('click', function (e) {
+                if (link.getAttribute('data-require-login') === 'true') {
+                    if (localStorage.getItem('eventty_logged_in') !== 'true') {
+                        e.preventDefault();
+                        localStorage.setItem('eventty_login_redirect', link.getAttribute('data-redirect') || '/events/public?id=1');
+                        window.location.href = '/login';
+                        return;
+                    }
+                }
                 navMenu.classList.remove('open');
                 hamburger.classList.remove('open');
                 hamburger.setAttribute('aria-expanded', 'false');
@@ -55,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* Resize: close mobile menu on desktop */
     window.addEventListener('resize', function () {
         if (window.innerWidth > 768 && navMenu && hamburger) {
             navMenu.classList.remove('open');
@@ -63,10 +84,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-
-    /* ─────────────────────────────────────
-       SCROLL REVEAL
-    ───────────────────────────────────── */
     if ('IntersectionObserver' in window) {
         var revealObserver = new IntersectionObserver(
             function (entries) {
@@ -83,47 +100,6 @@ document.addEventListener('DOMContentLoaded', function () {
         reveals.forEach(function (el) { el.classList.add('visible'); });
     }
 
-
-    /* ─────────────────────────────────────
-       ACTIVE NAV — section tracking
-    ───────────────────────────────────── */
-    if (sections.length > 0 && navLinks.length > 0) {
-        function updateActiveNav () {
-            var scrollY = window.scrollY + 120;
-            var current = '';
-            sections.forEach(function (sec) {
-                if (scrollY >= sec.offsetTop) {
-                    current = sec.getAttribute('id');
-                }
-            });
-            navLinks.forEach(function (link) {
-                var href = link.getAttribute('href') || '';
-                link.classList.toggle('active', href === '#' + current);
-            });
-        }
-        window.addEventListener('scroll', updateActiveNav, { passive: true });
-        updateActiveNav();
-    }
-
-
-    /* ─────────────────────────────────────
-       SMOOTH SCROLL — anchor links
-    ───────────────────────────────────── */
-    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
-        anchor.addEventListener('click', function (e) {
-            var id = this.getAttribute('href').substring(1);
-            var target = document.getElementById(id);
-            if (!target) return;
-            e.preventDefault();
-            var offset = navbar ? navbar.offsetHeight + 8 : 68;
-            window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
-        });
-    });
-
-
-    /* ─────────────────────────────────────
-       STAGGERED REVEAL — cards
-    ───────────────────────────────────── */
     var cardGrids = document.querySelectorAll('.lp-events-grid, .lp-features-grid, .lp-steps');
     cardGrids.forEach(function (grid) {
         var cards = grid.querySelectorAll('.reveal');

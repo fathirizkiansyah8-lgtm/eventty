@@ -24,11 +24,11 @@
         </a>
 
         <nav class="lp-nav-links" id="navMenu">
-            <a href="#home"         class="lp-nav-link active" id="nl-home">Home</a>
-            <a href="#events"       class="lp-nav-link" id="nl-events">Events</a>
-            <a href="#features"     class="lp-nav-link" id="nl-features">Fitur</a>
-            <a href="#how-it-works" class="lp-nav-link" id="nl-how">Cara Kerja</a>
-            <a href="#about"        class="lp-nav-link" id="nl-about">Tentang</a>
+            <a href="/" class="lp-nav-link active" id="nl-home">Home</a>
+            <a href="/events/public?id=1" class="lp-nav-link" id="nl-events" data-require-login="true" data-redirect="/events/public?id=1">Events</a>
+            <a href="/login" class="lp-nav-link" id="nl-features">Fitur</a>
+            <a href="/login" class="lp-nav-link" id="nl-how">Cara Kerja</a>
+            <a href="/login" class="lp-nav-link" id="nl-about">Tentang</a>
         </nav>
 
         <div class="lp-nav-actions">
@@ -69,7 +69,7 @@
             </p>
 
             <div class="lp-hero-btns">
-                <a href="#events"   class="lp-btn-primary lp-btn-lg">
+                <a href="/events/public?id=1" class="lp-btn-primary lp-btn-lg" data-require-login="true" data-redirect="/events/public?id=1">
                     Lihat Event
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
@@ -341,7 +341,7 @@
                         </div>
                         <span class="lp-quota-text">45 / 50 peserta</span>
                     </div>
-                    <a href="{{ url('/events/public?id=1') }}" class="lp-ev-btn">Lihat Detail</a>
+                    <a href="{{ url('/events/public?id=1') }}" class="lp-ev-btn" data-require-login="true" data-redirect="{{ url('/events/public?id=1') }}">Lihat Detail</a>
                 </div>
             </article>
 
@@ -370,7 +370,7 @@
                         </div>
                         <span class="lp-quota-text">20 / 30 peserta</span>
                     </div>
-                    <a href="{{ url('/events/public?id=4') }}" class="lp-ev-btn">Lihat Detail</a>
+                    <a href="{{ url('/events/public?id=4') }}" class="lp-ev-btn" data-require-login="true" data-redirect="{{ url('/events/public?id=4') }}">Lihat Detail</a>
                 </div>
             </article>
 
@@ -399,7 +399,7 @@
                         </div>
                         <span class="lp-quota-text">47 / 50 peserta</span>
                     </div>
-                    <a href="{{ url('/events/public?id=3') }}" class="lp-ev-btn">Lihat Detail</a>
+                    <a href="{{ url('/events/public?id=3') }}" class="lp-ev-btn" data-require-login="true" data-redirect="{{ url('/events/public?id=3') }}">Lihat Detail</a>
                 </div>
             </article>
 
@@ -428,7 +428,7 @@
                         </div>
                         <span class="lp-quota-text">40 / 50 peserta</span>
                     </div>
-                    <a href="{{ url('/events/public?id=6') }}" class="lp-ev-btn">Lihat Detail</a>
+                    <a href="{{ url('/events/public?id=6') }}" class="lp-ev-btn" data-require-login="true" data-redirect="{{ url('/events/public?id=6') }}">Lihat Detail</a>
                 </div>
             </article>
 
