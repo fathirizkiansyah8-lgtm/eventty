@@ -432,3 +432,55 @@ body {
         padding: 25px;
     }
 }
+
+/* Full-screen illustration with centered form */
+body {
+    background: #08152f;
+}
+
+.register-page {
+    position: relative;
+    min-height: 100vh;
+    padding: 24px;
+    overflow: hidden;
+}
+
+.register-visual {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.register-visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 17, 42, .58);
+}
+
+.register-visual img {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.register-visual-text {
+    display: none;
+}
+
+.register-card {
+    position: relative;
+    z-index: 2;
+    max-width: 430px;
+    background: rgba(255, 255, 255, .95);
+    box-shadow: 0 24px 70px rgba(2, 8, 23, .32);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}

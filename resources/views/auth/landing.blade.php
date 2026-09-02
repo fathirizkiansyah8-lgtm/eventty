@@ -149,7 +149,7 @@
                         <div class="lp-mini-topbar">
                             <div>
                                 <div class="lp-mini-greet">Selamat datang,</div>
-                                <div class="lp-mini-name">Fathi Rizkiansyah 👋</div>
+                                <div class="lp-mini-name">Siswa/Pengguna 👋</div>
                             </div>
                             <div class="lp-mini-avatar">F</div>
                         </div>
@@ -341,7 +341,7 @@
                         </div>
                         <span class="lp-quota-text">45 / 50 peserta</span>
                     </div>
-                    <a href="/events/public?id=2" class="lp-ev-btn">Lihat Detail</a>
+                    <a href="/login" data-event-target="/events/public?id=2" class="lp-ev-btn">Lihat Detail</a>
                 </div>
             </article>
 
@@ -370,7 +370,7 @@
                         </div>
                         <span class="lp-quota-text">20 / 30 peserta</span>
                     </div>
-                    <a href="/events/public?id=4" class="lp-ev-btn">Lihat Detail</a>
+                    <a href="/login" data-event-target="/events/public?id=4" class="lp-ev-btn">Lihat Detail</a>
                 </div>
             </article>
 
@@ -399,7 +399,7 @@
                         </div>
                         <span class="lp-quota-text">47 / 50 peserta</span>
                     </div>
-                    <a href="/events/public?id=3" class="lp-ev-btn">Lihat Detail</a>
+                    <a href="/login" data-event-target="/events/public?id=3" class="lp-ev-btn">Lihat Detail</a>
                 </div>
             </article>
 
@@ -428,7 +428,7 @@
                         </div>
                         <span class="lp-quota-text">40 / 50 peserta</span>
                     </div>
-                    <a href="/events/public?id=6" class="lp-ev-btn">Lihat Detail</a>
+                    <a href="/login" data-event-target="/events/public?id=6" class="lp-ev-btn">Lihat Detail</a>
                 </div>
             </article>
 

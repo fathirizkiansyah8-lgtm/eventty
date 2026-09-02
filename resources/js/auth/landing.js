@@ -47,13 +47,14 @@ document.addEventListener('DOMContentLoaded', function () {
             setActiveLandingPanel(target);
         });
     });
-    document.querySelectorAll('.lp-ev-btn[href^="/events/public"]').forEach(function (link) {
+    document.querySelectorAll('.lp-ev-btn[data-event-target]').forEach(function (link) {
         link.addEventListener('click', function (event) {
             event.preventDefault();
-            var destination = link.href;
+            var eventTarget = link.getAttribute('data-event-target');
+            localStorage.setItem('eventty_login_redirect', eventTarget);
             document.body.classList.add('lp-page-leaving');
             window.setTimeout(function () {
-                window.location.assign(destination);
+                window.location.assign('/login');
             }, 160);
         });
     });
