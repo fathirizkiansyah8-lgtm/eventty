@@ -237,10 +237,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     hasError = true;
 
-                } else if (password.length < 8) {
+                } else if (password.length < 6) {
 
                     passwordError.textContent =
-                        "Password minimal 8 karakter.";
+                        "Password minimal 6 karakter.";
 
                     hasError = true;
 
@@ -248,13 +248,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 // -----------------------------------------
-                // STOP SUBMIT
+                // STOP SUBMIT jika ada error validasi
                 // -----------------------------------------
 
                 if (hasError) {
 
                     event.preventDefault();
-
 
                     const fields = [
                         {
@@ -271,29 +270,22 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     ];
 
-
                     const firstError =
                         fields.find(
                             (field) =>
                                 field.error.textContent
                         );
 
-
                     if (firstError) {
-
                         firstError.input.focus();
-
                     }
 
                     return;
                 }
 
-                event.preventDefault();
-                localStorage.setItem('eventty_logged_in', 'true');
-
-                const redirectUrl = localStorage.getItem('eventty_login_redirect') || '/user/dashboard';
-                localStorage.removeItem('eventty_login_redirect');
-                window.location.href = redirectUrl;
+                // Validasi lulus — submit form ke server (POST /login)
+                // Backend yang handle autentikasi dan redirect
+                loginForm.submit();
             }
         );
 
