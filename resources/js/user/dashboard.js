@@ -134,6 +134,7 @@
                         <div class="event-category" style="background-color: ${event.category_color}">
                             ${event.category}
                         </div>
+                        ${event.has_certificate ? '<div style="position:absolute;top:.5rem;right:.5rem;background:#10b981;color:#fff;padding:.2rem .5rem;border-radius:999px;font-size:.6rem;font-weight:700;">🏆 Sertifikat</div>' : ''}
                     </div>
                     <div class="event-content">
                         <h4 class="event-title">${event.name}</h4>

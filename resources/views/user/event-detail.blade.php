@@ -74,6 +74,15 @@
                     <div style="font-size:.875rem;font-weight:700;color:var(--text-primary);">{{ $value }}</div>
                 </div>
                 @endforeach
+
+                {{-- Sertifikat dari DB --}}
+                <div style="background:{{ $event->has_certificate ? '#dcfce7' : 'var(--bg-secondary)' }};border:1.5px solid {{ $event->has_certificate ? '#86efac' : 'var(--border-color)' }};border-radius:.75rem;padding:.875rem 1rem;">
+                    <div style="font-size:.7rem;color:var(--text-muted);font-weight:600;margin-bottom:.25rem;">🏆 Sertifikat</div>
+                    <div style="font-size:.875rem;font-weight:700;color:{{ $event->has_certificate ? '#15803d' : 'var(--text-primary)' }};">
+                        {{ $event->has_certificate ? 'Tersedia ✓' : 'Tidak tersedia' }}
+                    </div>
+                </div>
+
             </div>
 
             {{-- Quota bar --}}
@@ -99,6 +108,13 @@
         {{-- Right: Registration Card --}}
         <div style="background:var(--bg-secondary);border:1.5px solid var(--border-color);border-radius:1rem;padding:1.25rem;position:sticky;top:1rem;">
             <h3 style="font-size:1rem;font-weight:800;color:var(--text-primary);margin-bottom:1rem;">Pendaftaran</h3>
+
+            {{-- Badge sertifikat di registration card --}}
+            @if($event->has_certificate)
+            <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:.75rem;padding:.625rem .875rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;font-size:.8rem;font-weight:600;color:#15803d;">
+                🏆 Event ini menyediakan <strong>sertifikat</strong> untuk peserta yang hadir
+            </div>
+            @endif
 
             @if($isRegistered)
                 <div style="background:#dcfce7;border:1.5px solid #86efac;border-radius:.75rem;padding:.875rem;text-align:center;margin-bottom:1rem;">

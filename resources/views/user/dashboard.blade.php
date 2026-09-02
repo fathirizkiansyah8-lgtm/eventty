@@ -635,7 +635,12 @@
                         <div class="event-row-thumb" style="background:{{ $event->category->color ?? '#3b82f6' }};display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🎉</div>
                     @endif
                     <div class="event-row-info">
-                        <div class="event-row-title">{{ $event->name }}</div>
+                        <div class="event-row-title">
+                            {{ $event->name }}
+                            @if($event->has_certificate)
+                                <span style="margin-left:.35rem;font-size:.62rem;background:#dcfce7;color:#15803d;padding:.1rem .4rem;border-radius:999px;font-weight:700;vertical-align:middle;">🏆 Sertifikat</span>
+                            @endif
+                        </div>
                         <div class="event-row-meta">
                             <span>
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>

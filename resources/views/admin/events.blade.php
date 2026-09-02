@@ -119,7 +119,12 @@
                         <tr>
                             <td>
                                 <div style="font-weight:700;color:#0f172a;font-size:.875rem;">{{ $ev->name }}</div>
-                                <div style="font-size:.7rem;color:#94a3b8;margin-top:2px;">{{ $ev->organizer }}</div>
+                                <div style="display:flex;align-items:center;gap:.35rem;margin-top:3px;">
+                                    <span style="font-size:.7rem;color:#94a3b8;">{{ $ev->organizer }}</span>
+                                    @if($ev->has_certificate)
+                                        <span style="font-size:.62rem;background:#dcfce7;color:#15803d;padding:.1rem .4rem;border-radius:999px;font-weight:700;">🏆 Sertifikat</span>
+                                    @endif
+                                </div>
                             </td>
                             <td>
                                 <span class="abadge abadge-gray" style="font-size:.68rem;background:{{ $ev->category->color ?? '#94a3b8' }}20;color:{{ $ev->category->color ?? '#64748b' }};">

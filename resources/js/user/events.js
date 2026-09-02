@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <span class="event-category-badge" style="background:${event.category_color}">
                             ${event.category}
                         </span>
+                        ${event.has_certificate ? '<span style="position:absolute;top:.5rem;right:.5rem;background:#10b981;color:#fff;padding:.2rem .55rem;border-radius:999px;font-size:.65rem;font-weight:700;">🏆 Sertifikat</span>' : ''}
                         ${event.is_full ? '<span class="event-full-badge">Penuh</span>' : ''}
                     </div>
                     <div class="event-content">

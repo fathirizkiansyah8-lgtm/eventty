@@ -115,18 +115,19 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($event) {
                 return [
-                    'id' => $event->id,
-                    'name' => $event->name,
-                    'date' => $event->formatted_date,
-                    'time' => $event->formatted_time,
-                    'location' => $event->location,
-                    'category' => $event->category->name,
-                    'category_color' => $event->category->color,
-                    'quota' => $event->quota,
+                    'id'               => $event->id,
+                    'name'             => $event->name,
+                    'date'             => $event->formatted_date,
+                    'time'             => $event->formatted_time,
+                    'location'         => $event->location,
+                    'category'         => $event->category->name,
+                    'category_color'   => $event->category->color,
+                    'quota'            => $event->quota,
                     'registered_count' => $event->registered_count,
-                    'remaining_slots' => $event->getRemainingSlots(),
-                    'is_full' => $event->isFull(),
-                    'banner_url' => $event->banner_url,
+                    'remaining_slots'  => $event->getRemainingSlots(),
+                    'is_full'          => $event->isFull(),
+                    'banner_url'       => $event->banner_url,
+                    'has_certificate'  => (bool) $event->has_certificate,
                 ];
             });
 
