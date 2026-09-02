@@ -254,6 +254,17 @@
 </footer>
 
 <script>
+(function () {
+    var isLoggedIn = localStorage.getItem('eventty_logged_in') === 'true';
+    if (!isLoggedIn) {
+        var params = new URLSearchParams(window.location.search);
+        var targetId = params.get('id') || '1';
+        localStorage.setItem('eventty_login_redirect', '/events/public?id=' + targetId);
+        window.location.href = '/login';
+        return;
+    }
+})();
+
 var eventsData = {
     1: { title:'Seminar Digital', sub:'Transformasi digital dan peran teknologi dalam dunia kerja', cat:'seminar', catLabel:'Seminar', img:'{{ asset("images/seminar.png") }}', date:'10 September 2026', time:'08:00 – 12:00 WIB', location:'Aula Sekolah', organizer:'OSIS SMKN 20 Jakarta', quota:100, registered:72, cert:'Certificate of Participation', status:'open', statusLabel:'Pendaftaran Dibuka' },
     2: { title:'Career Day 2026', sub:'Temui profesional dari 30+ perusahaan dan eksplorasi peluang karir', cat:'career', catLabel:'Career', img:'{{ asset("images/careerday.jpeg") }}', date:'15 September 2026', time:'08:00 – 15:00 WIB', location:'Aula Sekolah', organizer:'OSIS SMKN 20 Jakarta', quota:100, registered:45, cert:'Certificate of Participation', status:'open', statusLabel:'Pendaftaran Dibuka' },

@@ -54,6 +54,7 @@ export default defineConfig({
                 'resources/js/user/events.js',
                 'resources/js/user/event-detail.js',
                 'resources/js/user/settings.js',
+                'resources/js/user/messages.js',
                 'resources/js/admin/admin-shared.js',
                 'resources/js/admin/dashboard.js',
                 'resources/js/admin/events.js',

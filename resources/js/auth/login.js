@@ -285,8 +285,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     }
 
+                    return;
                 }
 
+                event.preventDefault();
+                localStorage.setItem('eventty_logged_in', 'true');
+
+                const redirectUrl = localStorage.getItem('eventty_login_redirect') || '/user/dashboard';
+                localStorage.removeItem('eventty_login_redirect');
+                window.location.href = redirectUrl;
             }
         );
 
