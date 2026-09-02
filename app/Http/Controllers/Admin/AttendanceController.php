@@ -16,10 +16,47 @@ class AttendanceController extends Controller
     /**
      * Show attendance page
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         $events = Event::orderBy('date', 'desc')->get(['id', 'name', 'date', 'status']);
-        return view('admin.attendance', compact('events'));
+
+        $query = EventParticipant::with(['user', 'event', 'event.category']);
+
+        // Filter by event
+        if ($request->filled('event_id')) {
+            $query->where('event_id', $request->event_id);
+        }
+
+        // Filter by attendance status
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('attendance_status', $request->status);
+        }
+
+        // Search by student name / NIS / class
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nis', 'like', "%{$search}%")
+                  ->orWhere('class', 'like', "%{$search}%");
+            });
+        }
+
+        $participants = $query->orderBy('created_at', 'desc')->paginate(20)->withQueryString();
+
+        // Summary counts for selected event or overall
+        $summaryQuery = EventParticipant::query();
+        if ($request->filled('event_id')) {
+            $summaryQuery->where('event_id', $request->event_id);
+        }
+        $summary = [
+            'total'     => (clone $summaryQuery)->count(),
+            'present'   => (clone $summaryQuery)->where('attendance_status', 'present')->count(),
+            'absent'    => (clone $summaryQuery)->where('attendance_status', 'absent')->count(),
+            'unchecked' => (clone $summaryQuery)->where('attendance_status', 'registered')->count(),
+        ];
+
+        return view('admin.attendance', compact('events', 'participants', 'summary'));
     }
 
     /**

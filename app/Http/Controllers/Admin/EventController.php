@@ -24,10 +24,33 @@ class EventController extends Controller
     /**
      * Display a listing of events.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        $query = Event::with(['category', 'creator']);
+
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        // Category filter
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $events = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
         $categories = EventCategory::orderBy('name')->get();
-        return view('admin.events', compact('categories'));
+
+        return view('admin.events', compact('events', 'categories'));
     }
 
     /**
