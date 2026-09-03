@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\EventParticipant;
+use App\Models\TeamRegistration;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -12,12 +13,26 @@ class ParticipantsController extends Controller
 {
     public function index(Request $request): View
     {
-        $events = Event::orderBy('date', 'desc')->get(['id', 'name', 'date']);
+        $events = Event::with('category')->orderBy('date', 'desc')->get();
 
         $query = EventParticipant::with(['user', 'event', 'event.category']);
 
+        $selectedEvent  = null;
+        $isCompetition  = false;
+        $teamRegistrations = collect();
+
         if ($request->filled('event_id')) {
             $query->where('event_id', $request->event_id);
+            $selectedEvent = Event::with('category')->find($request->event_id);
+            $isCompetition = $selectedEvent && $selectedEvent->isCompetition();
+
+            // Jika event competition, ambil data tim
+            if ($isCompetition) {
+                $teamRegistrations = TeamRegistration::with(['captain'])
+                    ->where('event_id', $request->event_id)
+                    ->orderBy('created_at')
+                    ->get();
+            }
         }
 
         if ($request->filled('status')) {
@@ -33,10 +48,12 @@ class ParticipantsController extends Controller
             });
         }
 
-        $participants = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
-
+        $participants      = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
         $totalParticipants = EventParticipant::count();
 
-        return view('admin.participants', compact('participants', 'events', 'totalParticipants'));
+        return view('admin.participants', compact(
+            'participants', 'events', 'totalParticipants',
+            'selectedEvent', 'isCompetition', 'teamRegistrations'
+        ));
     }
 }
