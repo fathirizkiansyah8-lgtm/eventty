@@ -69,6 +69,22 @@ class Event extends Model
     }
 
     /**
+     * Team registrations for this competition event
+     */
+    public function teamRegistrations(): HasMany
+    {
+        return $this->hasMany(TeamRegistration::class);
+    }
+
+    /**
+     * Check if event is a competition
+     */
+    public function isCompetition(): bool
+    {
+        return strtolower($this->category->name ?? '') === 'competition';
+    }
+
+    /**
      * Check if event is full
      */
     public function isFull(): bool
