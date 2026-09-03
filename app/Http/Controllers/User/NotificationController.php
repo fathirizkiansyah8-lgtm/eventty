@@ -12,11 +12,38 @@ use Illuminate\View\View;
 class NotificationController extends Controller
 {
     /**
-     * Show notifications page
+     * Show notifications page — gabungkan notifikasi user + pengumuman + event mendatang
      */
     public function index(): View
     {
-        return view('user.notifications');
+        $user = Auth::user();
+
+        // Notifikasi personal user (terbaru 20)
+        $notifications = $user->notifications()
+            ->orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get();
+
+        $unreadCount = $user->unreadNotificationsCount();
+
+        // Pengumuman aktif dari admin
+        $announcements = \App\Models\Announcement::active()
+            ->orderByDesc('is_pinned')
+            ->orderByDesc('publish_date')
+            ->limit(15)
+            ->get();
+
+        // Event mendatang yang terbuka untuk didaftarkan
+        $upcomingEvents = \App\Models\Event::active()
+            ->upcoming()
+            ->with(['category'])
+            ->orderBy('date')
+            ->limit(6)
+            ->get();
+
+        return view('user.notifications', compact(
+            'notifications', 'unreadCount', 'announcements', 'upcomingEvents'
+        ));
     }
 
     /**
