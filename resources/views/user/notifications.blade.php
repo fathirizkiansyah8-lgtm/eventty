@@ -255,15 +255,8 @@
 
         @if($notifications->count() > 0)
         <div style="display:flex;justify-content:flex-end;gap:.5rem;margin-bottom:1rem;">
-            <form method="POST" action="{{ route('user.notifications.read-all') }}" style="display:inline;">
-                @csrf
-                <button type="submit" class="nf-chip" style="border:none;cursor:pointer;">✓ Tandai semua dibaca</button>
-            </form>
-            <form method="POST" action="{{ route('user.notifications.delete-all') }}" style="display:inline;"
-                  onsubmit="return confirm('Hapus semua notifikasi?')">
-                @csrf @method('DELETE')
-                <button type="submit" class="nf-chip" style="border-color:#ef4444;color:#ef4444;border:none;cursor:pointer;">🗑 Hapus semua</button>
-            </form>
+            <button onclick="markAllRead()" class="nf-chip" style="cursor:pointer;">✓ Tandai semua dibaca</button>
+            <button onclick="deleteAllNotif()" class="nf-chip" style="border-color:#ef4444;color:#ef4444;cursor:pointer;">🗑 Hapus semua</button>
         </div>
         @endif
 
@@ -282,7 +275,7 @@
                     <div style="font-weight:700;color:var(--text-primary);font-size:.875rem;margin-bottom:.2rem;">
                         {{ $notif->title }}
                         @if(!$notif->isRead())
-                            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ef4444;margin-left:.4rem;vertical-align:middle;"></span>
+                            <span id="dot-{{ $notif->id }}" style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ef4444;margin-left:.4rem;vertical-align:middle;"></span>
                         @endif
                     </div>
                     <div style="font-size:.8rem;color:var(--text-secondary);line-height:1.5;margin-bottom:.4rem;">{{ $notif->message }}</div>
@@ -290,22 +283,15 @@
                 </div>
                 <div style="display:flex;gap:.4rem;flex-shrink:0;">
                     @if(!$notif->isRead())
-                    <form method="POST" action="{{ route('user.notifications.read', $notif->id) }}">
-                        @csrf
-                        <button type="submit" title="Tandai dibaca"
-                                style="width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-size:.75rem;color:var(--text-muted);">
-                            ✓
-                        </button>
-                    </form>
+                    <button onclick="markRead({{ $notif->id }}, this)" title="Tandai dibaca"
+                            style="width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border-color);background:var(--bg-primary);cursor:pointer;font-size:.75rem;color:var(--text-muted);">
+                        ✓
+                    </button>
                     @endif
-                    <form method="POST" action="{{ route('user.notifications.delete', $notif->id) }}"
-                          onsubmit="return confirm('Hapus notifikasi ini?')">
-                        @csrf @method('DELETE')
-                        <button type="submit" title="Hapus"
-                                style="width:28px;height:28px;border-radius:50%;border:1.5px solid #fca5a5;background:#fff5f5;cursor:pointer;font-size:.75rem;color:#ef4444;">
-                            ✕
-                        </button>
-                    </form>
+                    <button onclick="deleteNotif({{ $notif->id }}, this)" title="Hapus"
+                            style="width:28px;height:28px;border-radius:50%;border:1.5px solid #fca5a5;background:#fff5f5;cursor:pointer;font-size:.75rem;color:#ef4444;">
+                        ✕
+                    </button>
                 </div>
             </div>
             @empty
@@ -410,11 +396,89 @@
 </div>
 @endsection
 
+
 @push('js')
 <script>
-var activeTab = 'notif';
+var CSRF = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
+
+function ajaxFetch(url, method, onSuccess) {
+    fetch(url, {
+        method: method,
+        headers: { 'X-CSRF-TOKEN': CSRF, 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) onSuccess(data);
+        else showNotifToast(data.message || 'Terjadi kesalahan.', 'error');
+    })
+    .catch(function() { showNotifToast('Gagal terhubung ke server.', 'error'); });
+}
+
+function showNotifToast(msg, type) {
+    var old = document.getElementById('notifToast');
+    if (old) old.remove();
+    var toast = document.createElement('div');
+    toast.id = 'notifToast';
+    var bg = type === 'error' ? '#ef4444' : '#10b981';
+    toast.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:' + bg
+        + ';color:#fff;padding:.875rem 1.25rem;border-radius:.75rem;font-weight:600;'
+        + 'font-size:.875rem;box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:9999;max-width:320px;';
+    toast.textContent = (type === 'error' ? '❌ ' : '✅ ') + msg;
+    document.body.appendChild(toast);
+    setTimeout(function() { if (toast.parentNode) toast.remove(); }, 3500);
+}
+
+function markRead(id, btn) {
+    ajaxFetch('/user/notifications/' + id + '/read', 'POST', function() {
+        var item = document.getElementById('notif-' + id);
+        if (item) { item.style.opacity = '.8'; item.style.borderColor = 'var(--border-color)'; }
+        var dot = document.getElementById('dot-' + id);
+        if (dot) dot.remove();
+        if (btn) btn.remove();
+        showNotifToast('Ditandai sudah dibaca.', 'success');
+    });
+}
+
+function markAllRead() {
+    ajaxFetch('/user/notifications/read-all', 'POST', function(data) {
+        document.querySelectorAll('[id^="dot-"]').forEach(function(el) { el.remove(); });
+        document.querySelectorAll('[id^="notif-"]').forEach(function(el) {
+            el.style.opacity = '.8'; el.style.borderColor = 'var(--border-color)';
+        });
+        document.querySelectorAll('button[onclick^="markRead"]').forEach(function(el) { el.remove(); });
+        showNotifToast(data.message, 'success');
+    });
+}
+
+function deleteNotif(id) {
+    if (!confirm('Hapus notifikasi ini?')) return;
+    ajaxFetch('/user/notifications/' + id, 'DELETE', function() {
+        var item = document.getElementById('notif-' + id);
+        if (item) { item.style.opacity = '0'; setTimeout(function() { if (item.parentNode) item.remove(); checkNotifEmpty(); }, 250); }
+        showNotifToast('Notifikasi dihapus.', 'success');
+    });
+}
+
+function deleteAllNotif() {
+    if (!confirm('Hapus semua notifikasi?')) return;
+    ajaxFetch('/user/notifications', 'DELETE', function(data) {
+        var list = document.getElementById('notifList');
+        if (list) list.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);"><div style="font-size:2.5rem;margin-bottom:.75rem;">🔔</div><div style="font-weight:600;">Belum ada notifikasi</div></div>';
+        var actRow = document.querySelector('#panelNotif > div[style*="justify-content:flex-end"]');
+        if (actRow) actRow.style.display = 'none';
+        showNotifToast(data.message, 'success');
+    });
+}
+
+function checkNotifEmpty() {
+    var list = document.getElementById('notifList');
+    if (!list) return;
+    if (list.querySelectorAll('[id^="notif-"]').length === 0) {
+        list.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);"><div style="font-size:2.5rem;margin-bottom:.75rem;">🔔</div><div style="font-weight:600;">Belum ada notifikasi</div></div>';
+    }
+}
+
 function switchTab(tab) {
-    activeTab = tab;
     ['notif','announce','events'].forEach(function(t) {
         var panel = document.getElementById('panel' + t.charAt(0).toUpperCase() + t.slice(1));
         var btn   = document.getElementById('tab'   + t.charAt(0).toUpperCase() + t.slice(1));
@@ -431,81 +495,7 @@ function switchTab(tab) {
             btn.style.boxShadow  = 'none';
         }
     });
-<<<<<<< HEAD
 }
-// Set initial tab style
 switchTab('notif');
-=======
-
-    document.getElementById('newsModalInner').innerHTML = `
-        ${thumbHtml}
-        <div class="nm-body">
-            <div class="nm-meta">
-                <span class="cat-badge ${catClass}">${d.catLabel}</span>
-                ${impBadge}
-            </div>
-            <h2 class="nm-title">${d.title}</h2>
-            <div class="nm-byline">${d.byline}</div>
-            ${sectionsHtml}
-            <div class="nm-actions">
-                <button class="nm-action-btn">ðŸ‘ Helpful</button>
-                <button class="nm-action-btn">ðŸ”— Share</button>
-                <button class="nm-action-btn">ðŸ”– Bookmark</button>
-                <button class="nm-close-btn" onclick="closeModal()">Tutup</button>
-            </div>
-        </div>
-    `;
-    normalizeNewsText(document.getElementById('newsModalInner'));
-
-    document.getElementById('newsModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-    document.getElementById('newsModal').classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-function closeModalOutside(e) {
-    if (e.target === document.getElementById('newsModal')) closeModal();
-}
-
-document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape') closeModal();
-});
-
-function decodeMojibake(value) {
-    if (!/[ðŸÂâ]/.test(value)) return value;
-    try {
-        var cp1252 = {
-            '€': 0x80, '‚': 0x82, 'ƒ': 0x83, '„': 0x84, '…': 0x85,
-            '†': 0x86, '‡': 0x87, '‰': 0x89, 'Š': 0x8a, '‹': 0x8b,
-            'Œ': 0x8c, 'Ž': 0x8e, '‘': 0x91, '’': 0x92, '“': 0x93,
-            '”': 0x94, '•': 0x95, '–': 0x96, '—': 0x97, '˜': 0x98,
-            '™': 0x99, 'š': 0x9a, '›': 0x9b, 'œ': 0x9c, 'ž': 0x9e,
-            'Ÿ': 0x9f,
-        };
-        var bytes = Array.from(value).map(function (character) {
-            var code = cp1252[character] || character.charCodeAt(0);
-            return '%' + code.toString(16).padStart(2, '0');
-        }).join('');
-        return decodeURIComponent(bytes);
-    } catch (error) {
-        return value;
-    }
-}
-
-function normalizeNewsText(root) {
-    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    var node;
-    while ((node = walker.nextNode())) {
-        if (node.parentElement && !['SCRIPT', 'STYLE'].includes(node.parentElement.tagName)) {
-            node.nodeValue = decodeMojibake(node.nodeValue);
-        }
-    }
-}
-
-normalizeNewsText(document.body);
->>>>>>> f2d372f4c62e8d25440e45f8b0b0c2c13b30efa6
 </script>
 @endpush
