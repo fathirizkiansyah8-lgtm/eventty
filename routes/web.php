@@ -111,6 +111,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.certificates');
     })->name('admin.certificates');
 
+    Route::get('/messages', function () {
+        return view('admin.messages');
+    })->name('admin.messages');
+
     Route::get('/announcements', [AdminAnnouncementsController::class, 'index'])->name('admin.announcements');
     Route::post('/announcements', [AdminAnnouncementsController::class, 'store'])->name('admin.announcements.store');
     Route::delete('/announcements/{id}', [AdminAnnouncementsController::class, 'destroy'])->name('admin.announcements.destroy');

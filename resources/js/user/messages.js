@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const sendBtn = document.getElementById('msgSendBtn');
     const statusBox = document.getElementById('sendStatus');
     const quickActions = document.getElementById('quickActions');
-    const systemNotification = document.getElementById('systemNotification');
     const chatName = document.getElementById('chatName');
     const chatAvatar = document.getElementById('chatAvatar');
     const chatStatus = document.getElementById('chatStatus');
@@ -22,25 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return `${hours}:${minutes}`;
     };
 
-    const conversationData = [
-        {
-            id: 'bot',
-            type: 'bot',
-            name: 'EVENTTY Bot',
-            status: 'Online',
-            avatar: 'B',
-            color: 'linear-gradient(135deg, #0f172a, #1d4ed8)',
-            lastMessage: 'Saya bisa bantu cek event, pendaftaran, dan sertifikat.',
-            lastTime: '2 menit lalu',
-            unread: 2,
-            messages: [
-                { sender: 'bot', text: 'Halo! Saya EVENTTY Bot. Ada yang bisa saya bantu seputar event, pendaftaran, atau sertifikat?', time: '08:10' },
-                { sender: 'user', text: 'Saya ingin cek jadwal event workshop besok.', time: '08:12' },
-                { sender: 'bot', text: 'Untuk jadwal workshop, cek menu Events. Bila Anda mau, saya juga bisa membantu memilih event yang paling cocok.', time: '08:12' },
-            ],
-            suggestions: ['Cek event hari ini', 'Bagaimana cara mendaftar?', 'Dimana sertifikat saya?'],
-        },
-        {
+    const conversationData = [{
             id: 'admin',
             type: 'admin',
             name: 'Admin EVENTTY',
@@ -51,15 +32,14 @@ document.addEventListener('DOMContentLoaded', function () {
             lastTime: '12 menit lalu',
             unread: 1,
             messages: [
-                { sender: 'admin', text: 'Halo Fathi, ada yang bisa kami bantu?', time: '09:00' },
+                { sender: 'admin', text: 'Halo, ada yang bisa kami bantu?', time: '09:00' },
                 { sender: 'user', text: 'Saya ingin memastikan format file desain yang diterima.', time: '09:03' },
                 { sender: 'admin', text: 'Format file yang diterima adalah PNG, JPG, atau PDF dengan maksimal ukuran 10MB.', time: '09:04' },
             ],
             suggestions: ['Format file yang diterima?', 'Batas deadline?', 'Apakah boleh pakai Canva?'],
-        }
-    ];
+        }];
 
-    let activeConversationId = 'bot';
+    let activeConversationId = 'admin';
     let isTyping = false;
 
     function getConversationById(id) {
@@ -109,21 +89,14 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
 
             item.addEventListener('click', function () {
-                openConversation(conversation.id, true);
+                openConversation(conversation.id);
+                if (window.innerWidth <= 768) {
+                    layout.classList.add('chat-open');
+                }
             });
 
             list.appendChild(item);
         });
-    }
-
-    function setSystemNotification(message) {
-        if (!systemNotification) return;
-        systemNotification.textContent = message;
-        systemNotification.classList.add('visible');
-        clearTimeout(setSystemNotification.timeoutId);
-        setSystemNotification.timeoutId = setTimeout(() => {
-            systemNotification.classList.remove('visible');
-        }, 2600);
     }
 
     function renderSuggestions(conversation) {
@@ -137,8 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.textContent = question;
             btn.addEventListener('click', function () {
                 input.value = question;
-                input.focus();
-                updateSendButton();
+                sendMessage();
             });
             quickActions.appendChild(btn);
         });
@@ -196,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const typing = document.createElement('div');
         typing.className = 'msg-typing';
-        typing.id = 'botTypingIndicator';
+        typing.id = 'adminTypingIndicator';
         typing.innerHTML = `
             <div class="msg-row-av">${conversation.avatar}</div>
             <div class="msg-typing-bbl"><span></span><span></span><span></span></div>
@@ -206,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
         scrollToBottom();
     }
 
-    function openConversation(id, notify = false) {
+    function openConversation(id) {
         const conversation = getConversationById(id);
         activeConversationId = id;
 
@@ -219,10 +191,6 @@ document.addEventListener('DOMContentLoaded', function () {
         renderMessages(conversation);
         renderConversationList();
 
-        if (notify) {
-            const message = id === 'bot' ? 'Connected to EVENTTY Bot' : 'You are now chatting with Admin';
-            setSystemNotification(message);
-        }
     }
 
     function updateSendButton() {
@@ -257,26 +225,25 @@ document.addEventListener('DOMContentLoaded', function () {
         renderMessages(conversation);
     }
 
-    function simulateBotReply() {
+    function simulateAdminReply(text) {
         const conversation = getConversationById(activeConversationId);
-        const typingIndicator = document.getElementById('botTypingIndicator');
+        const typingIndicator = document.getElementById('adminTypingIndicator');
         if (typingIndicator) {
             typingIndicator.style.display = 'flex';
         }
         isTyping = true;
         updateSendButton();
 
-        const replies = [
-            'Terima kasih, saya sudah mencatat pertanyaan Anda. Silakan cek menu Events untuk detail lengkap.',
-            'Untuk informasi lebih lanjut, Anda juga bisa mengakses halaman My Events dan Certificates.',
-            'Tentu, kami akan membantu Anda. Jika perlu, Anda bisa menghubungi admin untuk konfirmasi lebih lanjut.',
-            'Informasi terbaru akan muncul di halaman News dan Events. Pantau terus ya!',
-        ];
+        const normalizedText = text.toLowerCase();
+        const isOnTopic = /(event|acara|daftar|registrasi|sertifikat|hadir|absen|kehadiran|jadwal|workshop|classmeeting|career day|file|deadline|canva)/i.test(normalizedText);
+        const replies = isOnTopic
+            ? ['Pesanmu sudah diterima. Admin EVENTTY akan menindaklanjuti informasinya.']
+            : ['Pertanyaanmu sudah kami catat. Mohon tunggu, admin EVENTTY akan membalas secara manual.'];
 
         window.setTimeout(() => {
             const replyText = replies[Math.floor(Math.random() * replies.length)];
             conversation.messages.push({
-                sender: activeConversationId === 'bot' ? 'bot' : 'admin',
+                sender: 'admin',
                 text: replyText,
                 time: formatTime(now()),
             });
@@ -317,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
             hideStatus();
             isTyping = false;
             updateSendButton();
-            simulateBotReply();
+            simulateAdminReply(text);
         }, 550);
     }
 
@@ -339,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.innerWidth <= 768) {
         window.openChat = function (element) {
             const conversationId = element.dataset.id || activeConversationId;
-            openConversation(conversationId, true);
+            openConversation(conversationId);
             layout.classList.add('chat-open');
         };
         window.closeChat = function () {
@@ -348,7 +315,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     renderConversationList();
-    openConversation(activeConversationId, false);
+    openConversation(activeConversationId);
     updateSendButton();
-    setSystemNotification('Connected to EVENTTY Bot');
 });

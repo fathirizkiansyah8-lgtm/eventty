@@ -53,7 +53,7 @@
                                 <span class="adm-conv-time">2 mnt</span>
                             </div>
                             <div class="adm-conv-row2">
-                                <span class="adm-conv-preview">Min, mau tanya tentang lomba...</span>
+                                <span class="adm-conv-preview">Saya mau bertanya di luar topik...</span>
                                 <span class="adm-unread">2</span>
                             </div>
                         </div>
@@ -142,7 +142,7 @@
                         <div class="adm-row-av" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">F</div>
                         <div class="adm-row-col">
                             <span class="adm-row-sender">Fathi Rizkiansyah</span>
-                            <div class="adm-bubble stu">Halo Admin, mau tanya tentang lomba desain. Apakah boleh pakai Canva?</div>
+                            <div class="adm-bubble stu">Halo Admin, saya mau bertanya tentang hal di luar informasi event.</div>
                             <span class="adm-bbl-time">10:23</span>
                         </div>
                     </div>
@@ -157,12 +157,12 @@
                     <div class="adm-row stu">
                         <div class="adm-row-av" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">F</div>
                         <div class="adm-row-col">
-                            <div class="adm-bubble stu">Format file apa yang diterima?</div>
+                            <div class="adm-bubble stu">Mohon dibantu ya, kalau pertanyaannya di luar topik apakah bisa tetap ditanyakan?</div>
                             <span class="adm-bbl-time">10:26</span>
                         </div>
                     </div>
 
-                    <div class="adm-unread-div"><span>2 pesan belum dibaca</span></div>
+                    <div class="adm-unread-div"><span>2 pesan menunggu balasan</span></div>
 
                     <div class="adm-row stu unread-msg">
                         <div class="adm-row-av" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">F</div>
@@ -190,6 +190,7 @@
                     <button class="adm-qr-btn" onclick="insertReply('Format PNG, JPG, PDF. Maks 10MB ya.')">Format PNG/JPG/PDF, maks 10MB</button>
                     <button class="adm-qr-btn" onclick="insertReply('Terima kasih sudah menghubungi kami! 😊')">Terima kasih</button>
                     <button class="adm-qr-btn" onclick="insertReply('Deadline pengumpulan 30 September 2026 pukul 23:59 WIB.')">Info deadline</button>
+                    <button class="adm-qr-btn" onclick="insertReply('Pertanyaanmu sudah kami catat. Mohon tunggu, kami akan meneruskannya kepada admin yang sesuai.')">Jawab pertanyaan di luar topik</button>
                 </div>
 
                 <div class="adm-input-area">

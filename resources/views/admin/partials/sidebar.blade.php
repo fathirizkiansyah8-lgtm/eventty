@@ -1,7 +1,7 @@
 {{--
     Admin Sidebar — digunakan di semua halaman admin.
     Param: $activePage = 'dashboard' | 'events' | 'participants' | 'attendance'
-                       | 'certificates' | 'announcements' | 'students' | 'settings'
+                       | 'certificates' | 'messages' | 'announcements' | 'students' | 'settings'
 --}}
 <aside class="sidebar admin-sidebar" id="sidebar">
 
@@ -78,6 +78,17 @@
                     </svg>
                 </span>
                 <span>Sertifikat</span>
+            </a>
+
+            <a href="{{ url('/admin/messages') }}"
+               class="sidebar-link {{ ($activePage ?? '') === 'messages' ? 'active' : '' }}">
+                <span class="sidebar-link-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </span>
+                <span>Messages</span>
+                <span class="admin-badge-pill">3</span>
             </a>
         </div>
 

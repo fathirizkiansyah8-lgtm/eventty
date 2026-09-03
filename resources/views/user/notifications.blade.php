@@ -983,6 +983,7 @@ function openModal(id) {
             </div>
         </div>
     `;
+    normalizeNewsText(document.getElementById('newsModalInner'));
 
     document.getElementById('newsModal').classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -1000,6 +1001,39 @@ function closeModalOutside(e) {
 document.addEventListener('keydown', function(e){
     if (e.key === 'Escape') closeModal();
 });
+
+function decodeMojibake(value) {
+    if (!/[ðŸÂâ]/.test(value)) return value;
+    try {
+        var cp1252 = {
+            '€': 0x80, '‚': 0x82, 'ƒ': 0x83, '„': 0x84, '…': 0x85,
+            '†': 0x86, '‡': 0x87, '‰': 0x89, 'Š': 0x8a, '‹': 0x8b,
+            'Œ': 0x8c, 'Ž': 0x8e, '‘': 0x91, '’': 0x92, '“': 0x93,
+            '”': 0x94, '•': 0x95, '–': 0x96, '—': 0x97, '˜': 0x98,
+            '™': 0x99, 'š': 0x9a, '›': 0x9b, 'œ': 0x9c, 'ž': 0x9e,
+            'Ÿ': 0x9f,
+        };
+        var bytes = Array.from(value).map(function (character) {
+            var code = cp1252[character] || character.charCodeAt(0);
+            return '%' + code.toString(16).padStart(2, '0');
+        }).join('');
+        return decodeURIComponent(bytes);
+    } catch (error) {
+        return value;
+    }
+}
+
+function normalizeNewsText(root) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    var node;
+    while ((node = walker.nextNode())) {
+        if (node.parentElement && !['SCRIPT', 'STYLE'].includes(node.parentElement.tagName)) {
+            node.nodeValue = decodeMojibake(node.nodeValue);
+        }
+    }
+}
+
+normalizeNewsText(document.body);
 </script>
 @endpush
 
