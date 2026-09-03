@@ -283,8 +283,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
-                // Validasi lulus — submit form ke server (POST /login)
-                // Backend yang handle autentikasi dan redirect
                 loginForm.submit();
             }
         );

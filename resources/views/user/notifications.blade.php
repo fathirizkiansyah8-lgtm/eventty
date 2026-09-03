@@ -431,8 +431,81 @@ function switchTab(tab) {
             btn.style.boxShadow  = 'none';
         }
     });
+<<<<<<< HEAD
 }
 // Set initial tab style
 switchTab('notif');
+=======
+
+    document.getElementById('newsModalInner').innerHTML = `
+        ${thumbHtml}
+        <div class="nm-body">
+            <div class="nm-meta">
+                <span class="cat-badge ${catClass}">${d.catLabel}</span>
+                ${impBadge}
+            </div>
+            <h2 class="nm-title">${d.title}</h2>
+            <div class="nm-byline">${d.byline}</div>
+            ${sectionsHtml}
+            <div class="nm-actions">
+                <button class="nm-action-btn">ðŸ‘ Helpful</button>
+                <button class="nm-action-btn">ðŸ”— Share</button>
+                <button class="nm-action-btn">ðŸ”– Bookmark</button>
+                <button class="nm-close-btn" onclick="closeModal()">Tutup</button>
+            </div>
+        </div>
+    `;
+    normalizeNewsText(document.getElementById('newsModalInner'));
+
+    document.getElementById('newsModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('newsModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function closeModalOutside(e) {
+    if (e.target === document.getElementById('newsModal')) closeModal();
+}
+
+document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeModal();
+});
+
+function decodeMojibake(value) {
+    if (!/[ðŸÂâ]/.test(value)) return value;
+    try {
+        var cp1252 = {
+            '€': 0x80, '‚': 0x82, 'ƒ': 0x83, '„': 0x84, '…': 0x85,
+            '†': 0x86, '‡': 0x87, '‰': 0x89, 'Š': 0x8a, '‹': 0x8b,
+            'Œ': 0x8c, 'Ž': 0x8e, '‘': 0x91, '’': 0x92, '“': 0x93,
+            '”': 0x94, '•': 0x95, '–': 0x96, '—': 0x97, '˜': 0x98,
+            '™': 0x99, 'š': 0x9a, '›': 0x9b, 'œ': 0x9c, 'ž': 0x9e,
+            'Ÿ': 0x9f,
+        };
+        var bytes = Array.from(value).map(function (character) {
+            var code = cp1252[character] || character.charCodeAt(0);
+            return '%' + code.toString(16).padStart(2, '0');
+        }).join('');
+        return decodeURIComponent(bytes);
+    } catch (error) {
+        return value;
+    }
+}
+
+function normalizeNewsText(root) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    var node;
+    while ((node = walker.nextNode())) {
+        if (node.parentElement && !['SCRIPT', 'STYLE'].includes(node.parentElement.tagName)) {
+            node.nodeValue = decodeMojibake(node.nodeValue);
+        }
+    }
+}
+
+normalizeNewsText(document.body);
+>>>>>>> f2d372f4c62e8d25440e45f8b0b0c2c13b30efa6
 </script>
 @endpush

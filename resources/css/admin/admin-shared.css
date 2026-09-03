@@ -7,17 +7,17 @@
    ========================================================= */
 
 /* =========================================================
-   ADMIN SIDEBAR — Putih, konsisten di semua halaman
+   ADMIN SIDEBAR — Navy, konsisten di semua halaman
    ========================================================= */
 
 .admin-sidebar {
-    background: #ffffff !important;
-    border-right: 1.5px solid #e8edf5 !important;
-    box-shadow: 2px 0 12px rgba(15, 31, 78, 0.04);
+    background: #0f1f4e !important;
+    border-right: none !important;
+    box-shadow: 2px 0 12px rgba(15, 31, 78, 0.12);
 }
 
 .admin-sidebar .sidebar-header {
-    border-bottom: 1px solid #e8edf5 !important;
+    border-bottom: 1px solid rgba(255,255,255,.1) !important;
     padding: 1.125rem 1.25rem;
     display: flex;
     align-items: center;
@@ -33,7 +33,7 @@
 }
 
 .admin-sidebar .sidebar-brand {
-    color: #0f172a !important;
+    color: #ffffff !important;
     font-weight: 800 !important;
     font-size: 1rem;
     letter-spacing: -0.3px;
@@ -42,7 +42,7 @@
 
 .admin-sidebar .sidebar-sub {
     font-size: 0.6rem;
-    color: #94a3b8;
+    color: rgba(255,255,255,.45);
     font-weight: 500;
     letter-spacing: 0.03em;
     margin-top: -2px;
@@ -50,7 +50,7 @@
 }
 
 .admin-sidebar .sidebar-section-title {
-    color: #94a3b8 !important;
+    color: rgba(255,255,255,.4) !important;
     font-size: 0.65rem !important;
     font-weight: 700 !important;
     text-transform: uppercase;
@@ -61,7 +61,7 @@
 }
 
 .admin-sidebar .sidebar-link {
-    color: #475569 !important;
+    color: rgba(255,255,255,.65) !important;
     border-radius: 0.625rem !important;
     font-size: 0.85rem;
     font-weight: 500;
@@ -74,13 +74,13 @@
 }
 
 .admin-sidebar .sidebar-link:hover {
-    background: #f1f5f9 !important;
-    color: #0f172a !important;
+    background: rgba(255,255,255,.1) !important;
+    color: #ffffff !important;
 }
 
 .admin-sidebar .sidebar-link.active {
-    background: #eff6ff !important;
-    color: #2563eb !important;
+    background: rgba(255,255,255,.15) !important;
+    color: #ffffff !important;
     font-weight: 700 !important;
 }
 
@@ -103,7 +103,7 @@
 }
 
 .admin-sidebar .sidebar-link.active .sidebar-link-icon {
-    color: #2563eb !important;
+    color: #ffffff !important;
 }
 
 /* Sidebar footer */
@@ -1085,9 +1085,9 @@
 .admin-sidebar-footer {
     padding: 0.75rem 1.25rem;
     font-size: 0.62rem;
-    color: #cbd5e1;
+    color: rgba(255,255,255,.45);
     font-weight: 500;
     line-height: 1.6;
-    border-top: 1px solid #e8edf5;
+    border-top: 1px solid rgba(255,255,255,.1);
     margin-top: auto;
 }

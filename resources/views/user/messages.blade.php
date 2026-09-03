@@ -190,6 +190,24 @@
         flex-shrink: 0;
     }
 
+    .msg-exit-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: var(--text-secondary);
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: color 0.18s ease, background 0.18s ease;
+        padding: 0.4rem 0.55rem;
+        border-radius: 0.55rem;
+    }
+
+    .msg-exit-link:hover {
+        color: var(--primary-hover);
+        background: var(--primary-light);
+    }
+
     .msg-conv-ft {
         padding: 0.75rem 1rem;
         border-top: 1px solid var(--border-color);
@@ -470,22 +488,6 @@
         }
     }
 
-    .msg-system-notification {
-        margin: 0 1.5rem 0.5rem;
-        padding: 0.7rem 0.9rem;
-        border-radius: 0.8rem;
-        background: rgba(59, 130, 246, 0.08);
-        border: 1px solid rgba(59, 130, 246, 0.14);
-        color: var(--text-primary);
-        font-size: 0.74rem;
-        font-weight: 600;
-        display: none;
-    }
-
-    .msg-system-notification.visible {
-        display: block;
-    }
-
     .msg-input-area {
         background: var(--bg-secondary);
         border-top: 1.5px solid var(--border-color);
@@ -693,12 +695,15 @@
         <aside class="msg-conv-panel">
             <div class="msg-conv-hd">
                 <h2>Messages</h2>
-                <span class="msg-online-badge">Online</span>
+                <a href="{{ url('/user/dashboard') }}" class="msg-exit-link" aria-label="Kembali ke Dashboard">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    Keluar
+                </a>
             </div>
             <div class="msg-conv-list" id="conversationList"></div>
             <div class="msg-conv-ft">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                Chat dengan bot atau admin EVENTTY
+                Chat langsung dengan Admin EVENTTY
             </div>
         </aside>
 
@@ -715,8 +720,6 @@
             </div>
 
             <div class="msg-feed" id="msgFeed"></div>
-
-            <div class="msg-system-notification" id="systemNotification"></div>
 
             <div class="msg-input-area">
                 <div class="msg-quick-actions" id="quickActions"></div>
