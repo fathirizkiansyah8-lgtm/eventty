@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // ── Load categories for filter dropdown ──
     async function loadCategories() {
         try {
-            const categories = await api.get('/api/admin/categories');
+            // Gunakan endpoint yang accessible oleh student (bukan admin)
+            const categories = await api.get('/api/user/categories');
             const select = document.getElementById('categoryFilter');
             if (!select || !categories) return;
 

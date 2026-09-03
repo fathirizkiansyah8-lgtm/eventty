@@ -158,10 +158,15 @@ class EventController extends Controller
      */
     public function register(Request $request): JsonResponse
     {
-        $event = Event::findOrFail($request->event_id);
-        $user = Auth::user();
+        // Validasi input dasar
+        $request->validate([
+            'event_id' => 'required|exists:events,id',
+        ]);
 
-        // Check if already registered
+        $event = Event::with(['category'])->findOrFail($request->event_id);
+        $user  = Auth::user();
+
+        // Cek sudah terdaftar
         if ($event->isUserRegistered($user)) {
             return response()->json([
                 'success' => false,
@@ -169,7 +174,7 @@ class EventController extends Controller
             ], 400);
         }
 
-        // Check if event is full
+        // Cek kuota
         if ($event->isFull()) {
             return response()->json([
                 'success' => false,
@@ -177,7 +182,7 @@ class EventController extends Controller
             ], 400);
         }
 
-        // Check if event is still open
+        // Cek status event
         if ($event->status !== 'open') {
             return response()->json([
                 'success' => false,
@@ -185,32 +190,66 @@ class EventController extends Controller
             ], 400);
         }
 
-        DB::transaction(function () use ($event, $user) {
-            // Create registration
+        // Jika kategori Competition — wajib kirim data tim
+        $isCompetition = strtolower($event->category->name ?? '') === 'competition';
+
+        if ($isCompetition) {
+            $request->validate([
+                'team_name'    => 'required|string|max:100',
+                'captain_name' => 'required|string|max:100',
+                'members'      => 'required|array|min:1',
+                'members.*'    => 'required|string|max:100',
+            ], [
+                'team_name.required'    => 'Nama tim harus diisi.',
+                'captain_name.required' => 'Nama kapten harus diisi.',
+                'members.required'      => 'Minimal 1 anggota tim harus diisi.',
+                'members.min'           => 'Minimal 1 anggota tim harus diisi.',
+            ]);
+        }
+
+        DB::transaction(function () use ($event, $user, $request, $isCompetition) {
+            // Buat pendaftaran peserta
             EventParticipant::create([
-                'event_id' => $event->id,
-                'user_id' => $user->id,
-                'registration_date' => now(),
-                'attendance_status' => 'registered',
+                'event_id'         => $event->id,
+                'user_id'          => $user->id,
+                'registration_date'=> now(),
+                'attendance_status'=> 'registered',
             ]);
 
-            // Update registered count
+            // Simpan data tim jika competition
+            if ($isCompetition) {
+                \App\Models\TeamRegistration::create([
+                    'event_id'     => $event->id,
+                    'user_id'      => $user->id,
+                    'team_name'    => $request->team_name,
+                    'captain_name' => $request->captain_name,
+                    'members'      => $request->members,
+                ]);
+            }
+
+            // Tambah registered count
             $event->incrementRegisteredCount();
 
-            // Create notification
+            // Kirim notifikasi
             Notification::createForUser($user, [
-                'title' => 'Pendaftaran Berhasil',
-                'message' => "Anda berhasil mendaftar untuk event '{$event->name}'.",
-                'type' => 'success',
-                'icon' => 'fas fa-check-circle',
+                'title'      => 'Pendaftaran Berhasil',
+                'message'    => "Anda berhasil mendaftar untuk event '{$event->name}'." .
+                                ($isCompetition ? " Tim Anda telah dicatat." : ''),
+                'type'       => 'success',
+                'icon'       => 'fas fa-check-circle',
                 'action_url' => route('user.my-events'),
-                'metadata' => ['event_id' => $event->id],
+                'metadata'   => ['event_id' => $event->id],
             ]);
         });
 
         return response()->json([
-            'success' => true,
-            'message' => "Selamat! Anda berhasil mendaftar untuk '{$event->name}'."
+            'success'        => true,
+            'is_competition' => $isCompetition,
+            'event_name'     => $event->name,
+            'event_date'     => $event->formatted_date,
+            'event_location' => $event->location,
+            'message'        => "Selamat! Anda berhasil mendaftar untuk '{$event->name}'." .
+                                ($isCompetition ? ' Data tim Anda sudah tersimpan.' : ''),
         ]);
     }
 
@@ -231,17 +270,18 @@ class EventController extends Controller
                        ->get()
                        ->map(function ($event) {
             return [
-                'id' => $event->id,
-                'name' => $event->name,
-                'date' => $event->formatted_date,
-                'time' => $event->formatted_time,
-                'location' => $event->location,
-                'category' => $event->category->name,
-                'category_color' => $event->category->color,
-                'attendance_status' => $event->pivot->attendance_status,
-                'registration_date' => $event->pivot->registration_date->format('d F Y'),
-                'banner_url' => $event->banner_url,
-                'is_upcoming' => $event->isUpcoming(),
+                'id'               => $event->id,
+                'name'             => $event->name,
+                'date'             => $event->formatted_date,
+                'time'             => $event->formatted_time,
+                'location'         => $event->location,
+                'category'         => $event->category->name,
+                'category_color'   => $event->category->color,
+                'attendance_status'=> $event->pivot->attendance_status,
+                'registration_date'=> $event->pivot->registration_date->format('d F Y'),
+                'banner_url'       => $event->banner_url,
+                'is_upcoming'      => $event->isUpcoming(),
+                'has_certificate'  => (bool) $event->has_certificate,
                 'can_get_certificate' => $event->pivot->attendance_status === 'present' && !$event->isUpcoming(),
             ];
         });
