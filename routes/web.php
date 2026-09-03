@@ -63,12 +63,12 @@ Route::prefix('user')->middleware(['auth', 'role:student'])->group(function () {
     Route::get('/certificates/{id}/download', [UserCertificateController::class, 'download'])->name('user.certificates.download');
     Route::get('/certificates/{id}/view', [UserCertificateController::class, 'view'])->name('user.certificates.view');
 
-    // Notifications
+    // Notifications — specific routes HARUS sebelum wildcard {id}
     Route::get('/notifications', [UserNotificationController::class, 'index'])->name('user.notifications');
-    Route::post('/notifications/{id}/read', [UserNotificationController::class, 'markAsRead'])->name('user.notifications.read');
     Route::post('/notifications/read-all', [UserNotificationController::class, 'markAllAsRead'])->name('user.notifications.read-all');
-    Route::delete('/notifications/{id}', [UserNotificationController::class, 'delete'])->name('user.notifications.delete');
     Route::delete('/notifications', [UserNotificationController::class, 'deleteAll'])->name('user.notifications.delete-all');
+    Route::post('/notifications/{id}/read', [UserNotificationController::class, 'markAsRead'])->name('user.notifications.read');
+    Route::delete('/notifications/{id}', [UserNotificationController::class, 'delete'])->name('user.notifications.delete');
 
     // Profile & Settings
     Route::get('/profile', [UserProfileController::class, 'index'])->name('user.profile');
@@ -139,6 +139,13 @@ Route::prefix('api')->middleware(['auth'])->group(function () {
         Route::get('/user/events', [UserEventController::class, 'getEvents']);
         Route::get('/user/events/{id}', [UserEventController::class, 'getEvent']);
         Route::get('/user/my-events', [UserEventController::class, 'getMyEvents']);
+
+        // Categories untuk filter (accessible oleh student)
+        Route::get('/user/categories', function () {
+            return response()->json(
+                \App\Models\EventCategory::orderBy('name')->get(['id','name','color'])
+            );
+        });
 
         Route::get('/user/certificates', [UserCertificateController::class, 'getCertificates']);
 
