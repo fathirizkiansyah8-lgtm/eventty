@@ -11,7 +11,6 @@
     align-items: center;
     backdrop-filter: blur(10px);
     overflow: visible;
-    /* Pastikan tinggi dan padding konsisten di semua halaman */
     min-height: 73px;
     box-sizing: border-box;
 }

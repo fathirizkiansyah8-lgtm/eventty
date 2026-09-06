@@ -738,5 +738,127 @@
 @endsection
 
 @push('js')
-@vite(['resources/js/user/messages.js'])
+<script>
+(function(){
+    var feed    = document.getElementById('msgFeed');
+    var input   = document.getElementById('msgInput');
+    var sendBtn = document.getElementById('msgSendBtn');
+    var layout  = document.getElementById('msgLayout');
+    var convBadge = document.getElementById('convBadge');
+    var sbarBadge = document.getElementById('sidebarMsgBadge');
+    var typing  = document.getElementById('msgTyping');
+    if (!feed || !input) return;
+
+    function scrollBottom(smooth) {
+        feed.scrollTo({ top: feed.scrollHeight, behavior: smooth ? 'smooth' : 'instant' });
+    }
+
+    // Auto-resize textarea
+    input.addEventListener('input', function(){
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    // Clear unread when scrolled to bottom
+    function clearUnread(){
+        if(convBadge) convBadge.style.display = 'none';
+        if(sbarBadge) sbarBadge.style.display = 'none';
+        var div = feed.querySelector('.msg-unread-div');
+        if(div) div.style.opacity = '.4';
+    }
+    feed.addEventListener('scroll', function(){
+        if(feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 60) clearUnread();
+    });
+    setTimeout(clearUnread, 2400);
+
+    var replies = [
+        'Terima kasih sudah menghubungi kami! 😊 Ada lagi yang bisa dibantu?',
+        'Baik, informasi sudah kami catat. Ada pertanyaan lain?',
+        'Untuk info lebih lanjut silakan kunjungi halaman Events ya.',
+        'Akan kami sampaikan ke panitia terkait. Ditunggu!',
+        'Pertanyaan bagus! Kami akan update info terbaru di platform ini.',
+    ];
+    var replyIdx = 0;
+
+    function createBubble(text, dir) {
+        var row = document.createElement('div');
+        row.className = 'msg-row ' + dir;
+        if (dir === 'in') {
+            var av = document.createElement('div');
+            av.className = 'msg-row-av'; av.textContent = 'E';
+            row.appendChild(av);
+        }
+        var col = document.createElement('div');
+        col.className = 'msg-col';
+        var bbl = document.createElement('div');
+        bbl.className = 'msg-bubble ' + dir;
+        bbl.textContent = text;
+        var now = new Date();
+        var t = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+        if (dir === 'out') {
+            var meta = document.createElement('div');
+            meta.className = 'msg-bbl-meta';
+            meta.innerHTML = '<span class="msg-bbl-time">' + t + '</span><span class="msg-tick"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>';
+            col.appendChild(bbl); col.appendChild(meta);
+            setTimeout(function(){ var tk = meta.querySelector('.msg-tick'); if(tk) tk.classList.add('read'); }, 900);
+        } else {
+            var tm = document.createElement('span');
+            tm.className = 'msg-bbl-time'; tm.textContent = t;
+            col.appendChild(bbl); col.appendChild(tm);
+        }
+        row.appendChild(col);
+        return row;
+    }
+
+    function sendMessage() {
+        var text = input.value.trim();
+        if (!text) return;
+        feed.insertBefore(createBubble(text, 'out'), typing);
+        scrollBottom(true);
+        input.value = ''; input.style.height = 'auto';
+
+        // ── Simpan pesan ke localStorage agar muncul di admin ──
+        var stored = JSON.parse(localStorage.getItem('eventty_pending_msgs') || '[]');
+        var now = new Date();
+        stored.push({
+            id:      Date.now(),
+            sender:  'Fathi Rizkiansyah',
+            senderKey: 'fathi',
+            initial: 'F',
+            color:   'linear-gradient(135deg,#3b82f6,#2563eb)',
+            sub:     'XI RPL 1 · NIS 12345',
+            text:    text,
+            time:    String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0'),
+            read:    false,
+            timestamp: now.getTime()
+        });
+        localStorage.setItem('eventty_pending_msgs', JSON.stringify(stored));
+
+        // Show typing then reply
+        typing.style.display = 'flex';
+        scrollBottom(true);
+        setTimeout(function(){
+            typing.style.display = 'none';
+            feed.insertBefore(createBubble(replies[replyIdx++ % replies.length], 'in'), typing);
+            scrollBottom(true);
+        }, 1500);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+
+    // Mobile
+    window.openChat = function(el){
+        document.querySelectorAll('.msg-conv-item').forEach(function(i){ i.classList.remove('active'); });
+        el.classList.add('active');
+        layout.classList.add('chat-open');
+        scrollBottom(false);
+    };
+    window.closeChat = function(){ layout.classList.remove('chat-open'); };
+
+    scrollBottom(false);
+})();
+</script>
 @endpush
