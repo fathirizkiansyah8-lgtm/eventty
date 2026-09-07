@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sertifikat - Eventty Admin</title>
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpeg') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo.jpeg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.jpeg') }}">
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',

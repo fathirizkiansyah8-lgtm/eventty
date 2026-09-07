@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventty — Platform Event Sekolah Modern</title>
     <meta name="description" content="Temukan berbagai event sekolah, daftar dengan mudah, pantau kehadiran, dan dapatkan sertifikat digital bersama Eventty.">
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpeg') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo.jpeg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.jpeg') }}">
     <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
     @vite([
         'resources/css/auth/landing.css',
