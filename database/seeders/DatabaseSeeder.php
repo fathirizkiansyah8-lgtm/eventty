@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UsersSeeder::class,         // Hanya admin
-            EventCategoriesSeeder::class, // 6 kategori default
         ]);
     }
 }

@@ -162,9 +162,10 @@ Route::prefix('api')->middleware(['auth'])->group(function () {
         Route::get('/user/profile', [UserProfileController::class, 'getProfile']);
 
         // Messages API
-        Route::get('/user/messages',        [UserMessageController::class, 'getMessages']);
-        Route::post('/user/messages',       [UserMessageController::class, 'send']);
-        Route::get('/user/messages/unread', [UserMessageController::class, 'unreadCount']);
+        Route::get('/user/messages/admins',      [UserMessageController::class, 'getAdmins']);
+        Route::get('/user/messages/unread',      [UserMessageController::class, 'unreadCount']);
+        Route::get('/user/messages/{adminId}',   [UserMessageController::class, 'getMessages']);
+        Route::post('/user/messages/{adminId}',  [UserMessageController::class, 'send']);
     });
 
     // Admin API routes

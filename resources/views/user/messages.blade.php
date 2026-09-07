@@ -689,38 +689,42 @@
 </style>
 @endpush
 
+
 @section('content')
 <div class="msg-page">
     <div class="msg-layout" id="msgLayout">
 
-        {{-- ── Conversation list (kiri) ── --}}
+        {{-- ── Conversation list (kiri) — semua admin ── --}}
         <aside class="msg-conv-panel">
             <div class="msg-conv-hd">
                 <h2>Messages</h2>
-                <span class="msg-online-badge" id="adminOnlineBadge">
-                    {{ $admin ? 'Admin Online' : 'Offline' }}
-                </span>
+                <span class="msg-online-badge">CS Eventty</span>
             </div>
 
-            {{-- Satu conversation: admin --}}
             <div class="msg-conv-list" id="conversationList">
-                @if($admin)
-                <div class="msg-conv-item active" id="convAdmin">
-                    <div class="msg-av" style="background:linear-gradient(135deg,#f59e0b,#ea580c);">
-                        {{ strtoupper(substr($admin->name, 0, 1)) }}
-                        <span class="msg-av-dot"></span>
-                    </div>
-                    <div class="msg-conv-info">
-                        <div class="msg-conv-row1">
-                            <span class="msg-conv-name">{{ $admin->name }}</span>
-                            <span class="msg-conv-time" id="convLastTime">—</span>
+                @if($admins->count() > 0)
+                    @foreach($admins as $admin)
+                    <div class="msg-conv-item {{ $loop->first ? 'active' : '' }}"
+                         id="conv-{{ $admin->id }}"
+                         data-admin-id="{{ $admin->id }}"
+                         data-admin-name="{{ $admin->name }}"
+                         data-admin-init="{{ strtoupper(substr($admin->name, 0, 1)) }}">
+                        <div class="msg-av" style="background:linear-gradient(135deg,#f59e0b,#ea580c);">
+                            {{ strtoupper(substr($admin->name, 0, 1)) }}
+                            <span class="msg-av-dot"></span>
                         </div>
-                        <div class="msg-conv-row2">
-                            <span class="msg-conv-preview" id="convLastMsg">Admin CS Eventty</span>
-                            <span class="msg-unread-pill" id="convUnreadBadge" style="display:none;"></span>
+                        <div class="msg-conv-info">
+                            <div class="msg-conv-row1">
+                                <span class="msg-conv-name">{{ $admin->name }}</span>
+                                <span class="msg-conv-time conv-last-time-{{ $admin->id }}">—</span>
+                            </div>
+                            <div class="msg-conv-row2">
+                                <span class="msg-conv-preview conv-last-msg-{{ $admin->id }}">Admin CS Eventty</span>
+                                <span class="msg-unread-pill conv-unread-{{ $admin->id }}" style="display:none;"></span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    @endforeach
                 @else
                 <div class="msg-empty-state">
                     <div class="msg-empty-icon">💬</div>
@@ -737,16 +741,19 @@
         </aside>
 
         {{-- ── Chat area (kanan) ── --}}
-        <section class="msg-chat">
+        <section class="msg-chat" id="msgChatSection">
             <div class="msg-chat-hd">
                 <button class="msg-back-btn" type="button" id="msgBackBtn" aria-label="Kembali">
                     <iconify-icon icon="lucide:arrow-left" width="17" height="17"></iconify-icon>
                 </button>
-                <div class="msg-chat-av" style="background:linear-gradient(135deg,#f59e0b,#ea580c);">
-                    {{ $admin ? strtoupper(substr($admin->name, 0, 1)) : 'A' }}
+                <div class="msg-chat-av" id="chatAvatar"
+                     style="background:linear-gradient(135deg,#f59e0b,#ea580c);">
+                    {{ $admins->count() > 0 ? strtoupper(substr($admins->first()->name, 0, 1)) : 'A' }}
                 </div>
                 <div class="msg-chat-hd-info">
-                    <span class="msg-chat-hd-name">{{ $admin?->name ?? 'Admin CS' }}</span>
+                    <span class="msg-chat-hd-name" id="chatName">
+                        {{ $admins->count() > 0 ? $admins->first()->name : 'Admin CS' }}
+                    </span>
                     <span class="msg-chat-hd-status">
                         <span class="msg-status-dot"></span>
                         <span>Admin CS Eventty</span>
@@ -754,16 +761,13 @@
                 </div>
             </div>
 
-            {{-- Feed --}}
             <div class="msg-feed" id="msgFeed">
                 <div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.82rem;">
                     Memuat percakapan...
                 </div>
             </div>
 
-            {{-- Input area --}}
             <div class="msg-input-area">
-                {{-- Quick replies --}}
                 <div class="msg-quick-actions" id="quickActions">
                     <button class="msg-quick-btn" data-text="Halo, saya ingin bertanya.">👋 Halo Admin</button>
                     <button class="msg-quick-btn" data-text="Bagaimana cara mendaftar event?">❓ Cara daftar event</button>
@@ -773,15 +777,13 @@
 
                 <div class="msg-send-status" id="sendStatus"></div>
 
-                @if($admin)
+                @if($admins->count() > 0)
                 <div class="msg-input-wrap">
                     <textarea class="msg-input" id="msgInput"
                               placeholder="Tulis pesan ke Admin..."
                               rows="1"
-                              aria-label="Tulis pesan"
-                              {{ $admin ? '' : 'disabled' }}></textarea>
-                    <button class="msg-send-btn" id="msgSendBtn"
-                            type="button" aria-label="Kirim" disabled>
+                              aria-label="Tulis pesan"></textarea>
+                    <button class="msg-send-btn" id="msgSendBtn" type="button" aria-label="Kirim" disabled>
                         <iconify-icon icon="lucide:send" width="16" height="16"></iconify-icon>
                     </button>
                 </div>
@@ -799,11 +801,11 @@
 
 {{-- Pass data ke JS --}}
 <script>
-window.MSG_ADMIN_NAME = @json($admin?->name ?? 'Admin CS');
-window.MSG_ADMIN_INIT = @json($admin ? strtoupper(substr($admin->name, 0, 1)) : 'A');
-window.MSG_USER_NAME  = @json(Auth::user()->name);
-window.MSG_USER_INIT  = @json(strtoupper(substr(Auth::user()->name, 0, 1)));
-window.CSRF_TOKEN     = @json(csrf_token());
+window.MSG_USER_NAME = @json(Auth::user()->name);
+window.MSG_USER_INIT = @json(strtoupper(substr(Auth::user()->name, 0, 1)));
+window.CSRF_TOKEN    = @json(csrf_token());
+// Admin pertama sebagai default active
+window.DEFAULT_ADMIN_ID = @json($admins->count() > 0 ? $admins->first()->id : null);
 </script>
 @endsection
 
