@@ -183,6 +183,50 @@
 
                 {{-- ── Sertifikat ── --}}
                 <div class="form-section">
+                    <h2 class="form-section-title">Batas Pendaftaran</h2>
+                    <p style="font-size:.82rem;color:#64748b;margin-bottom:1rem;">
+                        Tentukan batas waktu akhir pendaftaran. Kosongkan jika tidak ada batas waktu khusus.
+                    </p>
+                    @php
+                        $deadlineDate = $event->registration_deadline ? $event->registration_deadline->format('Y-m-d') : '';
+                        $deadlineTime = $event->registration_deadline ? $event->registration_deadline->format('H:i') : '23:59';
+                    @endphp
+                    <div class="form-row form-row-2">
+                        <div class="input-group">
+                            <label class="input-label" for="registrationDeadlineDate">Tanggal Batas Daftar</label>
+                            <input type="date"
+                                   id="registrationDeadlineDate"
+                                   class="input-field"
+                                   value="{{ old('registration_deadline_date', $deadlineDate) }}">
+                            <small class="field-hint">Kosongkan jika tidak ada batas waktu.</small>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label" for="registrationDeadlineTime">Jam Batas Daftar</label>
+                            <input type="time"
+                                   id="registrationDeadlineTime"
+                                   class="input-field"
+                                   value="{{ old('registration_deadline_time', $deadlineTime) }}">
+                        </div>
+                    </div>
+                    <input type="hidden" name="registration_deadline" id="registrationDeadlineFull"
+                           value="{{ old('registration_deadline', $event->registration_deadline ? $event->registration_deadline->format('Y-m-d\TH:i:s') : '') }}">
+                    @if($event->registration_deadline)
+                    <div id="deadlinePreview" style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:.75rem;padding:.75rem 1rem;font-size:.82rem;color:#1e40af;margin-top:.5rem;">
+                        <strong>Pendaftaran ditutup:</strong>
+                        <span id="deadlinePreviewText">{{ $event->formatted_deadline }}</span>
+                        @if($event->isRegistrationClosed())
+                            <span style="margin-left:.5rem;background:#fee2e2;color:#dc2626;padding:.1rem .4rem;border-radius:999px;font-size:.72rem;font-weight:700;">⏰ Sudah berakhir</span>
+                        @endif
+                    </div>
+                    @else
+                    <div id="deadlinePreview" style="display:none;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:.75rem;padding:.75rem 1rem;font-size:.82rem;color:#1e40af;margin-top:.5rem;">
+                        <strong>Pendaftaran ditutup:</strong> <span id="deadlinePreviewText"></span>
+                    </div>
+                    @endif
+                </div>
+
+                {{-- ── Sertifikat ── --}}
+                <div class="form-section">
                     <h2 class="form-section-title">Sertifikat</h2>
                     <p style="font-size:.82rem;color:#64748b;margin-bottom:1rem;">Apakah event ini menyediakan sertifikat untuk peserta yang hadir?</p>
                     <input type="hidden" name="has_certificate" value="0">
@@ -295,6 +339,32 @@ document.getElementById('editEventForm')?.addEventListener('submit', function (e
     var btn = document.getElementById('submitEditBtn');
     if (btn) { btn.disabled = true; btn.innerHTML = '<iconify-icon icon="lucide:loader-2" width="15" height="15"></iconify-icon> Menyimpan...'; }
 });
+// ── Deadline: gabungkan tanggal + jam → hidden field ──
+(function () {
+    var dateEl    = document.getElementById('registrationDeadlineDate');
+    var timeEl    = document.getElementById('registrationDeadlineTime');
+    var hiddenEl  = document.getElementById('registrationDeadlineFull');
+    var preview   = document.getElementById('deadlinePreview');
+    var previewTx = document.getElementById('deadlinePreviewText');
+    function updateDeadline() {
+        var d = dateEl ? dateEl.value : '';
+        var t = timeEl ? timeEl.value : '23:59';
+        if (d) {
+            hiddenEl && (hiddenEl.value = d + 'T' + (t || '23:59') + ':00');
+            if (preview) preview.style.display = 'block';
+            if (previewTx) {
+                var mo = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                var p = d.split('-');
+                previewTx.textContent = p[2] + ' ' + mo[parseInt(p[1])-1] + ' ' + p[0] + ' pukul ' + (t||'23:59') + ' WIB';
+            }
+        } else {
+            hiddenEl && (hiddenEl.value = '');
+            if (preview) preview.style.display = 'none';
+        }
+    }
+    if (dateEl) dateEl.addEventListener('change', updateDeadline);
+    if (timeEl) timeEl.addEventListener('change', updateDeadline);
+})();
 </script>
 
 </body>

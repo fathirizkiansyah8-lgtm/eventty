@@ -68,17 +68,18 @@ class EventController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name'        => 'required|string|max:255',
-            'description' => 'required|string',
-            'category_id' => 'required|exists:event_categories,id',
-            'date'        => 'required|date|after_or_equal:today',
-            'start_time'  => 'required|date_format:H:i',
-            'end_time'    => 'required|date_format:H:i|after:start_time',
-            'location'    => 'required|string|max:255',
-            'organizer'   => 'required|string|max:255',
-            'quota'       => 'required|integer|min:1',
-            'banner'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status'      => 'required|in:draft,open,closed',
+            'name'                  => 'required|string|max:255',
+            'description'           => 'required|string',
+            'category_id'           => 'required|exists:event_categories,id',
+            'date'                  => 'required|date|after_or_equal:today',
+            'start_time'            => 'required|date_format:H:i',
+            'end_time'              => 'required|date_format:H:i|after:start_time',
+            'location'              => 'required|string|max:255',
+            'organizer'             => 'required|string|max:255',
+            'quota'                 => 'required|integer|min:1',
+            'banner'                => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'status'                => 'required|in:draft,open,closed',
+            'registration_deadline' => 'nullable|date|before:date',
         ], [
             'name.required'        => 'Nama event harus diisi.',
             'description.required' => 'Deskripsi harus diisi.',
@@ -95,6 +96,7 @@ class EventController extends Controller
             'quota.min'            => 'Kuota minimal 1.',
             'banner.image'         => 'Banner harus berupa gambar.',
             'banner.max'           => 'Ukuran banner maksimal 2MB.',
+            'registration_deadline.before' => 'Batas pendaftaran harus sebelum tanggal pelaksanaan event.',
         ]);
 
         if ($validator->fails()) {
@@ -118,19 +120,20 @@ class EventController extends Controller
         }
 
         $event = Event::create([
-            'name'            => $request->name,
-            'description'     => $request->description,
-            'category_id'     => $request->category_id,
-            'date'            => $request->date,
-            'start_time'      => $request->start_time,
-            'end_time'        => $request->end_time,
-            'location'        => $request->location,
-            'organizer'       => $request->organizer,
-            'quota'           => $request->quota,
-            'banner_path'     => $bannerPath,
-            'has_certificate' => $request->boolean('has_certificate'),
-            'status'          => $request->status,
-            'created_by'      => Auth::id(),
+            'name'                  => $request->name,
+            'description'           => $request->description,
+            'category_id'           => $request->category_id,
+            'date'                  => $request->date,
+            'start_time'            => $request->start_time,
+            'end_time'              => $request->end_time,
+            'location'              => $request->location,
+            'organizer'             => $request->organizer,
+            'quota'                 => $request->quota,
+            'banner_path'           => $bannerPath,
+            'has_certificate'       => $request->boolean('has_certificate'),
+            'registration_deadline' => $request->filled('registration_deadline') ? $request->registration_deadline : null,
+            'status'                => $request->status,
+            'created_by'            => Auth::id(),
         ]);
 
         return response()->json([
@@ -227,18 +230,19 @@ class EventController extends Controller
         }
 
         $event->update([
-            'name'            => $request->name,
-            'description'     => $request->description,
-            'category_id'     => $request->category_id,
-            'date'            => $request->date,
-            'start_time'      => $request->start_time,
-            'end_time'        => $request->end_time,
-            'location'        => $request->location,
-            'organizer'       => $request->organizer,
-            'quota'           => $request->quota,
-            'banner_path'     => $bannerPath,
-            'has_certificate' => $request->boolean('has_certificate'),
-            'status'          => $request->status,
+            'name'                  => $request->name,
+            'description'           => $request->description,
+            'category_id'           => $request->category_id,
+            'date'                  => $request->date,
+            'start_time'            => $request->start_time,
+            'end_time'              => $request->end_time,
+            'location'              => $request->location,
+            'organizer'             => $request->organizer,
+            'quota'                 => $request->quota,
+            'banner_path'           => $bannerPath,
+            'has_certificate'       => $request->boolean('has_certificate'),
+            'registration_deadline' => $request->filled('registration_deadline') ? $request->registration_deadline : null,
+            'status'                => $request->status,
         ]);
 
         return response()->json([

@@ -116,6 +116,10 @@ class EventController extends Controller
                 'banner_url'       => $event->banner_url,
                 'days_until'       => $event->days_until_event,
                 'has_certificate'  => (bool) $event->has_certificate,
+                'registration_deadline'        => $event->registration_deadline?->toISOString(),
+                'formatted_registration_deadline' => $event->formatted_deadline,
+                'is_registration_closed'       => $event->isRegistrationClosed(),
+                'is_registration_open'         => $event->isRegistrationOpen(),
             ];
         });
 
@@ -187,6 +191,14 @@ class EventController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Pendaftaran untuk event ini sudah ditutup.'
+            ], 400);
+        }
+
+        // Cek batas waktu pendaftaran
+        if ($event->isRegistrationClosed()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Batas waktu pendaftaran event ini sudah berakhir pada ' . $event->formatted_deadline . '.'
             ], 400);
         }
 

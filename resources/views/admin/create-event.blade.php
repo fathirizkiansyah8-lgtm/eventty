@@ -219,6 +219,40 @@
 
                 {{-- ── Sertifikat ── --}}
                 <div class="form-section">
+                    <h2 class="form-section-title">Batas Pendaftaran</h2>
+                    <p style="font-size:.82rem;color:#64748b;margin-bottom:1rem;">
+                        Tentukan batas waktu akhir pendaftaran event. Kosongkan jika tidak ada batas waktu khusus.
+                    </p>
+                    <div class="form-row form-row-2">
+                        <div class="input-group">
+                            <label class="input-label" for="registrationDeadlineDate">
+                                Tanggal Batas Daftar
+                            </label>
+                            <input type="date"
+                                   id="registrationDeadlineDate"
+                                   class="input-field"
+                                   placeholder="Pilih tanggal (opsional)">
+                            <small class="field-hint">Kosongkan jika tidak ada batas waktu.</small>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label" for="registrationDeadlineTime">
+                                Jam Batas Daftar
+                            </label>
+                            <input type="time"
+                                   id="registrationDeadlineTime"
+                                   class="input-field"
+                                   value="23:59">
+                        </div>
+                    </div>
+                    {{-- Hidden field yang dikirim ke server --}}
+                    <input type="hidden" name="registration_deadline" id="registrationDeadlineFull">
+                    <div id="deadlinePreview" style="display:none;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:.75rem;padding:.75rem 1rem;font-size:.82rem;color:#1e40af;margin-top:.5rem;">
+                        <strong>Pendaftaran ditutup:</strong> <span id="deadlinePreviewText"></span>
+                    </div>
+                </div>
+
+                {{-- ── Sertifikat ── --}}
+                <div class="form-section">
                     <h2 class="form-section-title">Sertifikat</h2>
                     <p style="font-size:.82rem;color:#64748b;margin-bottom:1rem;">
                         Apakah event ini menyediakan sertifikat untuk peserta yang hadir?
@@ -382,6 +416,36 @@ document.getElementById('createEventForm').addEventListener('submit', function (
     btn.disabled = true;
     btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.2-8.6"/></svg> Menyimpan...';
 });
+
+// ── Deadline: gabungkan tanggal + jam → hidden field ──
+(function () {
+    var dateEl    = document.getElementById('registrationDeadlineDate');
+    var timeEl    = document.getElementById('registrationDeadlineTime');
+    var hiddenEl  = document.getElementById('registrationDeadlineFull');
+    var preview   = document.getElementById('deadlinePreview');
+    var previewTx = document.getElementById('deadlinePreviewText');
+
+    function updateDeadline() {
+        var d = dateEl ? dateEl.value : '';
+        var t = timeEl ? timeEl.value : '23:59';
+        if (d) {
+            var combined = d + 'T' + (t || '23:59') + ':00';
+            if (hiddenEl) hiddenEl.value = combined;
+            if (preview)  preview.style.display = 'block';
+            if (previewTx) {
+                var months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+                var parts = d.split('-');
+                previewTx.textContent = parts[2] + ' ' + months[parseInt(parts[1]) - 1] + ' ' + parts[0] + ' pukul ' + (t || '23:59') + ' WIB';
+            }
+        } else {
+            if (hiddenEl) hiddenEl.value = '';
+            if (preview)  preview.style.display = 'none';
+        }
+    }
+
+    if (dateEl) dateEl.addEventListener('change', updateDeadline);
+    if (timeEl) timeEl.addEventListener('change', updateDeadline);
+})();
 
 // ── Toggle highlight pilihan sertifikat ──
 (function () {

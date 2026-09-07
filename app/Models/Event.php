@@ -13,7 +13,7 @@ use Carbon\Carbon;
 #[Fillable([
     'name', 'description', 'category_id', 'date', 'start_time', 'end_time',
     'location', 'organizer', 'quota', 'registered_count', 'banner_path',
-    'has_certificate', 'status', 'created_by'
+    'has_certificate', 'registration_deadline', 'status', 'created_by'
 ])]
 class Event extends Model
 {
@@ -25,13 +25,45 @@ class Event extends Model
     protected function casts(): array
     {
         return [
-            'date'            => 'date',
-            'start_time'      => 'datetime:H:i',
-            'end_time'        => 'datetime:H:i',
-            'quota'           => 'integer',
-            'registered_count'=> 'integer',
-            'has_certificate' => 'boolean',
+            'date'                  => 'date',
+            'start_time'            => 'datetime:H:i',
+            'end_time'              => 'datetime:H:i',
+            'quota'                 => 'integer',
+            'registered_count'      => 'integer',
+            'has_certificate'       => 'boolean',
+            'registration_deadline' => 'datetime',
         ];
+    }
+
+    /**
+     * Cek apakah pendaftaran sudah ditutup (deadline terlewat)
+     */
+    public function isRegistrationClosed(): bool
+    {
+        if (!$this->registration_deadline) {
+            return false; // tidak ada deadline = masih bisa daftar selama event open
+        }
+        return now()->isAfter($this->registration_deadline);
+    }
+
+    /**
+     * Apakah user masih bisa mendaftar
+     */
+    public function isRegistrationOpen(): bool
+    {
+        return $this->status === 'open'
+            && !$this->isFull()
+            && !$this->isRegistrationClosed();
+    }
+
+    /**
+     * Format deadline untuk ditampilkan
+     */
+    public function getFormattedDeadlineAttribute(): ?string
+    {
+        return $this->registration_deadline
+            ? $this->registration_deadline->format('d F Y, H:i')
+            : null;
     }
 
     /**
