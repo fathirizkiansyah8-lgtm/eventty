@@ -8,10 +8,9 @@
 
 @section('content')
 @php
-    $registrationStart = $event->registration_start ?? $event->registration_open_at ?? null;
-    $registrationEnd = $event->registration_end ?? $event->registration_close_at ?? null;
-    $registrationEndDate = $registrationEnd ? \Carbon\Carbon::parse($registrationEnd) : null;
-    $registrationClosed = $registrationEndDate ? now()->greaterThan($registrationEndDate) : false;
+    // Kolom registration_start/end belum ada di DB — gunakan date event sebagai fallback
+    $registrationEndDate = null;
+    $registrationClosed  = false;
 @endphp
 <div class="dashboard-content" style="padding:1.5rem 1.75rem;">
 
@@ -118,12 +117,12 @@
 
             <div style="background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:.75rem;padding:.75rem;margin-bottom:1rem;font-size:.78rem;color:var(--text-secondary);">
                 <div style="display:flex;justify-content:space-between;gap:.75rem;margin-bottom:.35rem;">
-                    <span><iconify-icon icon="lucide:calendar-range"></iconify-icon> Periode daftar</span>
-                    <strong>{{ $registrationStart ? \Carbon\Carbon::parse($registrationStart)->format('d M Y') : 'Sesuai pengumuman' }} - {{ $registrationEndDate ? $registrationEndDate->format('d M Y') : 'sebelum acara' }}</strong>
+                    <span><iconify-icon icon="lucide:calendar-range"></iconify-icon> Pelaksanaan</span>
+                    <strong>{{ $event->formatted_date }}</strong>
                 </div>
                 <div style="display:flex;justify-content:space-between;gap:.75rem;">
-                    <span><iconify-icon icon="lucide:calendar-clock"></iconify-icon> Pelaksanaan</span>
-                    <strong>{{ $event->formatted_date }} · {{ $event->formatted_time }}</strong>
+                    <span><iconify-icon icon="lucide:clock-3"></iconify-icon> Waktu</span>
+                    <strong>{{ $event->formatted_time }}</strong>
                 </div>
             </div>
 

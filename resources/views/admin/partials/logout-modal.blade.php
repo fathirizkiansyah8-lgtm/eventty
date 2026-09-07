@@ -1,4 +1,6 @@
 {{-- Reusable logout confirmation modal --}}
+{{-- Iconify CDN untuk semua admin pages --}}
+<script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js" defer></script>
 <div class="admin-modal-overlay" id="logoutModal">
     <div class="logout-modal">
         <button type="button" class="logout-modal-close" onclick="document.getElementById('logoutModal').classList.remove('active')" aria-label="Tutup">
