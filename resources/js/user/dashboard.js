@@ -56,7 +56,7 @@
                 // No nearest event
                 container.innerHTML = `
                     <div class="nearest-event-empty">
-                        <div class="empty-icon">ðŸ“…</div>
+                        <iconify-icon class="empty-icon" icon="lucide:calendar-x" width="36" height="36"></iconify-icon>
                         <h3>Belum ada event mendatang</h3>
                         <p>Daftarkan diri Anda pada event yang tersedia.</p>
                         <a href="/user/events" class="btn btn-primary">Lihat Semua Event</a>
@@ -78,19 +78,19 @@
                     <h3 class="nearest-event-title">${nearestEvent.name}</h3>
                     <div class="nearest-event-details">
                         <div class="detail-item">
-                            <i class="fas fa-calendar"></i>
+                            <iconify-icon icon="lucide:calendar-days"></iconify-icon>
                             <span>${nearestEvent.date}</span>
                         </div>
                         <div class="detail-item">
-                            <i class="fas fa-clock"></i>
+                            <iconify-icon icon="lucide:clock-3"></iconify-icon>
                             <span>${nearestEvent.time}</span>
                         </div>
                         <div class="detail-item">
-                            <i class="fas fa-map-marker-alt"></i>
+                            <iconify-icon icon="lucide:map-pin"></iconify-icon>
                             <span>${nearestEvent.location}</span>
                         </div>
                         <div class="detail-item">
-                            <i class="fas fa-tag"></i>
+                            <iconify-icon icon="lucide:tag"></iconify-icon>
                             <span>${nearestEvent.category}</span>
                         </div>
                     </div>
@@ -118,7 +118,7 @@
             if (!events || events.length === 0) {
                 container.innerHTML = `
                     <div class="upcoming-events-empty">
-                        <div class="empty-icon">ðŸŽ‰</div>
+                        <iconify-icon class="empty-icon" icon="lucide:calendar-plus" width="36" height="36"></iconify-icon>
                         <h3>Belum ada event mendatang</h3>
                         <p>Event baru akan segera hadir. Stay tuned!</p>
                     </div>
@@ -134,21 +134,21 @@
                         <div class="event-category" style="background-color: ${event.category_color}">
                             ${event.category}
                         </div>
-                        ${event.has_certificate ? '<div style="position:absolute;top:.5rem;right:.5rem;background:#10b981;color:#fff;padding:.2rem .5rem;border-radius:999px;font-size:.6rem;font-weight:700;">🏆 Sertifikat</div>' : ''}
+                        ${event.has_certificate ? '<div style="position:absolute;top:.5rem;right:.5rem;background:#10b981;color:#fff;padding:.2rem .5rem;border-radius:999px;font-size:.6rem;font-weight:700;"><iconify-icon icon="lucide:badge-check"></iconify-icon> Sertifikat</div>' : ''}
                     </div>
                     <div class="event-content">
                         <h4 class="event-title">${event.name}</h4>
                         <div class="event-details">
                             <div class="detail-item">
-                                <i class="fas fa-calendar"></i>
+                                <iconify-icon icon="lucide:calendar-days"></iconify-icon>
                                 <span>${event.date}</span>
                             </div>
                             <div class="detail-item">
-                                <i class="fas fa-clock"></i>
+                                <iconify-icon icon="lucide:clock-3"></iconify-icon>
                                 <span>${event.time}</span>
                             </div>
                             <div class="detail-item">
-                                <i class="fas fa-map-marker-alt"></i>
+                                <iconify-icon icon="lucide:map-pin"></iconify-icon>
                                 <span>${event.location}</span>
                             </div>
                         </div>

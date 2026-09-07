@@ -1,18 +1,31 @@
 {{-- Reusable logout confirmation modal --}}
 <div class="admin-modal-overlay" id="logoutModal">
-    <div class="admin-modal">
-        <div class="admin-modal-hd">
-            <div class="admin-modal-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    <div class="logout-modal">
+        <button type="button" class="logout-modal-close" onclick="document.getElementById('logoutModal').classList.remove('active')" aria-label="Tutup">
+            <iconify-icon icon="solar:close-circle-linear" width="20" height="20"></iconify-icon>
+        </button>
+        <div class="logout-modal-body-wrapper">
+            <div class="logout-modal-icon-badge">
+                <iconify-icon icon="solar:logout-3-bold-duotone" width="26" height="26"></iconify-icon>
             </div>
-            <h3 class="admin-modal-title">Konfirmasi Keluar</h3>
+            <div class="logout-modal-content">
+                <h3 class="logout-modal-title">Konfirmasi Keluar</h3>
+                <p class="logout-modal-desc">
+                    Apakah Anda yakin ingin keluar dari akun Admin? Sesi Anda saat ini akan diakhiri.
+                </p>
+            </div>
         </div>
-        <div class="admin-modal-body">Apakah Anda yakin ingin keluar dari akun Admin?</div>
-        <div class="admin-modal-ft">
-            <button type="button" class="abtn abtn-secondary" id="cancelLogoutBtn">Batal</button>
-            <form action="{{ url('/logout') }}" method="POST" style="display:inline;">
+        <div class="logout-modal-actions">
+            <button type="button" class="btn-logout-cancel" id="cancelLogoutBtn">
+                <iconify-icon icon="solar:close-square-linear" width="18" height="18"></iconify-icon>
+                <span>Batal</span>
+            </button>
+            <form action="{{ url('/logout') }}" method="POST" class="logout-form-inline">
                 @csrf
-                <button type="submit" class="abtn abtn-danger">Ya, Keluar</button>
+                <button type="submit" class="btn-logout-confirm">
+                    <iconify-icon icon="solar:logout-2-bold" width="18" height="18"></iconify-icon>
+                    <span>Ya, Keluar</span>
+                </button>
             </form>
         </div>
     </div>

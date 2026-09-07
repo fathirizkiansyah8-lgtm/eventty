@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sertifikat â€” Eventty Admin</title>
+    <title>Sertifikat - Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -102,7 +102,7 @@
                     <tbody>
                         @forelse($eligibleParticipants as $ep)
                         @php
-                            $hasCert = \App\Models\Certificate::where('user_id',$ep->user_id)
+                            $hasCert = Certificate::where('user_id',$ep->user_id)
                                 ->where('event_id',$ep->event_id)->exists();
                         @endphp
                         <tr>
@@ -130,7 +130,7 @@
                         @empty
                         <tr>
                             <td colspan="7" style="text-align:center;padding:3rem;color:#94a3b8;">
-                                <div style="font-size:2rem;margin-bottom:.75rem;">🏆</div>
+                                <iconify-icon icon="solar:medal-ribbons-star-linear" width="36" height="36" style="margin-bottom:.75rem;"></iconify-icon>
                                 <div style="font-weight:600;margin-bottom:.25rem;">Belum ada peserta yang layak</div>
                                 <div style="font-size:.82rem;">Peserta yang hadir di event completed akan muncul di sini.</div>
                             </td>

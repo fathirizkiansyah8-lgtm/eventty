@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Data Siswa — Eventty Admin</title>
+    <title>Data Siswa - Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -127,7 +127,7 @@
                         @empty
                         <tr>
                             <td colspan="8" style="text-align:center;padding:3rem;color:#94a3b8;">
-                                <div style="font-size:2rem;margin-bottom:.75rem;">👤</div>
+                                <iconify-icon icon="lucide:graduation-cap" width="36" height="36" style="margin-bottom:.75rem;"></iconify-icon>
                                 <div style="font-weight:600;margin-bottom:.25rem;">Belum ada siswa terdaftar</div>
                                 @if(request()->hasAny(['search','class_level','status']))
                                     <a href="{{ url('/admin/students') }}" class="abtn abtn-outline abtn-sm" style="margin-top:.75rem;display:inline-block;">Reset Filter</a>

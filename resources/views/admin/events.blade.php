@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Kelola Event — Eventty Admin</title>
+    <title>Kelola Event - Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -47,12 +47,12 @@
         {{-- Flash messages --}}
         @if(session('success'))
         <div style="background:#dcfce7;border:1.5px solid #86efac;color:#15803d;padding:.75rem 1rem;border-radius:.75rem;margin-bottom:1rem;font-size:.875rem;font-weight:600;">
-            ✅ {{ session('success') }}
+            <iconify-icon icon="solar:check-circle-linear"></iconify-icon> {{ session('success') }}
         </div>
         @endif
         @if(session('error'))
         <div style="background:#fee2e2;border:1.5px solid #fca5a5;color:#991b1b;padding:.75rem 1rem;border-radius:.75rem;margin-bottom:1rem;font-size:.875rem;font-weight:600;">
-            ⚠️ {{ session('error') }}
+            <iconify-icon icon="solar:danger-triangle-linear"></iconify-icon> {{ session('error') }}
         </div>
         @endif
 
@@ -122,7 +122,7 @@
                                 <div style="display:flex;align-items:center;gap:.35rem;margin-top:3px;">
                                     <span style="font-size:.7rem;color:#94a3b8;">{{ $ev->organizer }}</span>
                                     @if($ev->has_certificate)
-                                        <span style="font-size:.62rem;background:#dcfce7;color:#15803d;padding:.1rem .4rem;border-radius:999px;font-weight:700;">🏆 Sertifikat</span>
+                                        <span style="font-size:.62rem;background:#dcfce7;color:#15803d;padding:.1rem .4rem;border-radius:999px;font-weight:700;"><iconify-icon icon="solar:medal-ribbons-star-linear"></iconify-icon> Sertifikat</span>
                                     @endif
                                 </div>
                             </td>
@@ -160,7 +160,7 @@
                         @empty
                         <tr>
                             <td colspan="7" style="text-align:center;padding:3rem;color:#94a3b8;">
-                                <div style="font-size:2rem;margin-bottom:.75rem;">📅</div>
+                                <iconify-icon icon="solar:calendar-search-linear" width="34" height="34" style="margin-bottom:.75rem;"></iconify-icon>
                                 <div style="font-weight:600;margin-bottom:.25rem;">Belum ada event</div>
                                 @if(request()->hasAny(['search','category','status']))
                                     <div style="font-size:.82rem;">Tidak ada event yang cocok dengan filter.</div>

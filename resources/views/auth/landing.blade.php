@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventty — Platform Event Sekolah Modern</title>
     <meta name="description" content="Temukan berbagai event sekolah, daftar dengan mudah, pantau kehadiran, dan dapatkan sertifikat digital bersama Eventty.">
+    <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
     @vite([
         'resources/css/auth/landing.css',
         'resources/js/auth/landing.js',
+        'resources/js/utils/iconify-migration.js',
     ])
 </head>
 <body>
@@ -24,11 +26,11 @@
         </a>
 
         <nav class="lp-nav-links" id="navMenu">
-            <a href="#home" class="lp-nav-link active" id="nl-home" data-landing-target="home">Home</a>
-            <a href="#events" class="lp-nav-link" id="nl-events" data-landing-target="events">Events</a>
-            <a href="#features" class="lp-nav-link" id="nl-features" data-landing-target="features">Fitur</a>
-            <a href="#how-it-works" class="lp-nav-link" id="nl-how" data-landing-target="how-it-works">Cara Kerja</a>
-            <a href="#about" class="lp-nav-link" id="nl-about" data-landing-target="about">Tentang</a>
+            <a href="{{ url('/landing') }}" class="lp-nav-link active" id="nl-home" data-landing-target="home">Home</a>
+            <a href="{{ url('/landing?page=events') }}" class="lp-nav-link" id="nl-events" data-landing-target="events">Events</a>
+            <a href="{{ url('/landing?page=features') }}" class="lp-nav-link" id="nl-features" data-landing-target="features">Fitur</a>
+            <a href="{{ url('/landing?page=how-it-works') }}" class="lp-nav-link" id="nl-how" data-landing-target="how-it-works">Cara Kerja</a>
+            <a href="{{ url('/landing?page=about') }}" class="lp-nav-link" id="nl-about" data-landing-target="about">Tentang</a>
         </nav>
 
         <div class="lp-nav-actions">
@@ -71,22 +73,22 @@
             <div class="lp-hero-btns">
                 <a href="#events" class="lp-btn-primary lp-btn-lg" data-landing-target="events">
                     Lihat Event
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    <iconify-icon icon="lucide:arrow-right" width="16" height="16"></iconify-icon>
                 </a>
                 <a href="/register" class="lp-btn-outline lp-btn-lg">Daftar Sekarang</a>
             </div>
 
             <div class="lp-hero-trust">
                 <div class="lp-trust-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <iconify-icon icon="lucide:check" width="14" height="14"></iconify-icon>
                     <span>Gratis untuk siswa</span>
                 </div>
                 <div class="lp-trust-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <iconify-icon icon="lucide:check" width="14" height="14"></iconify-icon>
                     <span>Sertifikat digital</span>
                 </div>
                 <div class="lp-trust-item">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <iconify-icon icon="lucide:check" width="14" height="14"></iconify-icon>
                     <span>Absensi terdata</span>
                 </div>
             </div>
@@ -314,10 +316,10 @@
             </a>
         </div>
 
-        <div class="lp-events-grid">
+        <div class="lp-events-grid" id="landingEventsGrid">
 
             {{-- Card 1 --}}
-            <article class="lp-ev-card reveal">
+            <article class="lp-ev-card reveal" data-event-date="2026-08-20">
                 <div class="lp-ev-img">
                     <img src="{{ asset('images/careerday.jpeg') }}" alt="Career Day" loading="lazy">
                     <span class="lp-ev-badge open">Buka</span>
@@ -346,7 +348,7 @@
             </article>
 
             {{-- Card 2 --}}
-            <article class="lp-ev-card reveal">
+            <article class="lp-ev-card reveal" data-event-date="2026-08-25">
                 <div class="lp-ev-img">
                     <img src="{{ asset('images/workshop.png') }}" alt="Workshop" loading="lazy">
                     <span class="lp-ev-badge open">Buka</span>
@@ -375,7 +377,7 @@
             </article>
 
             {{-- Card 3 --}}
-            <article class="lp-ev-card reveal">
+            <article class="lp-ev-card reveal" data-event-date="2026-09-01">
                 <div class="lp-ev-img">
                     <img src="{{ asset('images/classmeeting.jpeg') }}" alt="Classmeeting" loading="lazy">
                     <span class="lp-ev-badge hot">Hampir Penuh</span>
@@ -404,7 +406,7 @@
             </article>
 
             {{-- Card 4 --}}
-            <article class="lp-ev-card reveal">
+            <article class="lp-ev-card reveal" data-event-date="2026-09-03">
                 <div class="lp-ev-img">
                     <img src="{{ asset('images/seminar.png') }}" alt="Seminar" loading="lazy">
                     <span class="lp-ev-badge open">Buka</span>
@@ -446,7 +448,7 @@
 
             <div class="lp-stat-item reveal">
                 <div class="lp-stat-icon-wrap navy">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <iconify-icon icon="solar:calendar-bold" width="20" height="20"></iconify-icon>
                 </div>
                 <div>
                     <div class="lp-stat-num">24+</div>
@@ -458,7 +460,7 @@
 
             <div class="lp-stat-item reveal">
                 <div class="lp-stat-icon-wrap blue">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <iconify-icon icon="solar:users-group-rounded-bold" width="20" height="20"></iconify-icon>
                 </div>
                 <div>
                     <div class="lp-stat-num">342+</div>
@@ -470,7 +472,7 @@
 
             <div class="lp-stat-item reveal">
                 <div class="lp-stat-icon-wrap green">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                    <iconify-icon icon="solar:medal-ribbons-star-bold" width="20" height="20"></iconify-icon>
                 </div>
                 <div>
                     <div class="lp-stat-num">98+</div>
@@ -482,7 +484,7 @@
 
             <div class="lp-stat-item reveal">
                 <div class="lp-stat-icon-wrap orange">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <iconify-icon icon="solar:clipboard-check-bold" width="20" height="20"></iconify-icon>
                 </div>
                 <div>
                     <div class="lp-stat-num">95%</div>
@@ -511,38 +513,38 @@
 
             <div class="lp-feat-card reveal">
                 <div class="lp-feat-icon-wrap navy">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <iconify-icon icon="solar:calendar-bold" width="24" height="24"></iconify-icon>
                 </div>
                 <h3 class="lp-feat-title">Kelola Event</h3>
                 <p class="lp-feat-desc">Buat, kelola, dan pantau semua event sekolah dari satu dashboard admin yang mudah digunakan.</p>
-                <a href="/register" class="lp-feat-link">Mulai Kelola <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+                <a href="/register" class="lp-feat-link">Mulai Kelola <iconify-icon icon="solar:alt-arrow-right-linear" width="14" height="14"></iconify-icon></a>
             </div>
 
             <div class="lp-feat-card reveal">
                 <div class="lp-feat-icon-wrap blue">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="9 15 12 18 15 15"/></svg>
+                    <iconify-icon icon="solar:document-add-bold" width="24" height="24"></iconify-icon>
                 </div>
                 <h3 class="lp-feat-title">Pendaftaran Mudah</h3>
                 <p class="lp-feat-desc">Daftar event hanya dalam beberapa langkah. Sistem kuota per jurusan yang adil dan transparan.</p>
-                <a href="/register" class="lp-feat-link">Coba Daftar <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+                <a href="/register" class="lp-feat-link">Coba Daftar <iconify-icon icon="solar:alt-arrow-right-linear" width="14" height="14"></iconify-icon></a>
             </div>
 
             <div class="lp-feat-card reveal">
                 <div class="lp-feat-icon-wrap green">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <iconify-icon icon="solar:clipboard-check-bold" width="24" height="24"></iconify-icon>
                 </div>
                 <h3 class="lp-feat-title">Kehadiran Terdata</h3>
                 <p class="lp-feat-desc">Absensi digital yang akurat dan terorganisir. Admin bisa mengkonfirmasi kehadiran secara real-time.</p>
-                <a href="/register" class="lp-feat-link">Lihat Fitur <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+                <a href="/register" class="lp-feat-link">Lihat Fitur <iconify-icon icon="solar:alt-arrow-right-linear" width="14" height="14"></iconify-icon></a>
             </div>
 
             <div class="lp-feat-card reveal">
                 <div class="lp-feat-icon-wrap orange">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                    <iconify-icon icon="solar:medal-star-bold" width="24" height="24"></iconify-icon>
                 </div>
                 <h3 class="lp-feat-title">Sertifikat Digital</h3>
                 <p class="lp-feat-desc">Sertifikat otomatis diterbitkan bagi peserta yang memenuhi syarat kehadiran. Tersimpan di akunmu.</p>
-                <a href="/register" class="lp-feat-link">Lihat Contoh <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+                <a href="/register" class="lp-feat-link">Lihat Contoh <iconify-icon icon="solar:alt-arrow-right-linear" width="14" height="14"></iconify-icon></a>
             </div>
 
         </div>
@@ -568,46 +570,46 @@
             <div class="lp-step reveal">
                 <div class="lp-step-num">01</div>
                 <div class="lp-step-icon-wrap">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <iconify-icon icon="solar:magnifer-linear" width="24" height="24"></iconify-icon>
                 </div>
                 <h3 class="lp-step-title">Pilih Event</h3>
                 <p class="lp-step-desc">Temukan event yang menarik dari berbagai kategori.</p>
             </div>
 
             <div class="lp-step-arrow reveal">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <iconify-icon icon="solar:arrow-right-linear" width="28" height="28"></iconify-icon>
             </div>
 
             <div class="lp-step reveal">
                 <div class="lp-step-num">02</div>
                 <div class="lp-step-icon-wrap">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    <iconify-icon icon="solar:clipboard-add-linear" width="24" height="24"></iconify-icon>
                 </div>
                 <h3 class="lp-step-title">Daftar Event</h3>
                 <p class="lp-step-desc">Isi formulir pendaftaran dengan cepat dan mudah.</p>
             </div>
 
             <div class="lp-step-arrow reveal">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <iconify-icon icon="solar:arrow-right-linear" width="28" height="28"></iconify-icon>
             </div>
 
             <div class="lp-step reveal">
                 <div class="lp-step-num">03</div>
                 <div class="lp-step-icon-wrap">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <iconify-icon icon="solar:check-circle-linear" width="24" height="24"></iconify-icon>
                 </div>
                 <h3 class="lp-step-title">Hadir di Event</h3>
                 <p class="lp-step-desc">Ikuti kegiatan dan admin mencatat kehadiranmu.</p>
             </div>
 
             <div class="lp-step-arrow reveal">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <iconify-icon icon="solar:arrow-right-linear" width="28" height="28"></iconify-icon>
             </div>
 
             <div class="lp-step reveal">
                 <div class="lp-step-num">04</div>
-                <div class="lp-step-icon-wrap gold">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                <div class="lp-step-icon-wrap">
+                    <iconify-icon icon="solar:medal-ribbons-star-linear" width="24" height="24"></iconify-icon>
                 </div>
                 <h3 class="lp-step-title">Dapatkan Sertifikat</h3>
                 <p class="lp-step-desc">Sertifikat digital otomatis tersedia di akunmu.</p>
@@ -769,9 +771,9 @@
     <div class="lp-container lp-footer-top">
 
         <div class="lp-footer-brand">
-            <a href="/" class="lp-brand" style="margin-bottom:.875rem;display:inline-flex;">
-                <img src="{{ asset('images/logo.jpeg') }}" alt="Eventty" class="lp-brand-img" style="filter:brightness(0) invert(1);">
-                <span class="lp-brand-name" style="color:#ffffff;">Event<strong>ty</strong></span>
+            <a href="/" class="lp-brand" style="margin-bottom:.875rem;display:inline-flex;align-items:center;gap:9px;">
+                <img src="{{ asset('images/logo.jpeg') }}" alt="Eventty" class="lp-brand-img">
+                <span class="lp-brand-name" style="color:#ffffff;">Event<strong style="color:#ffffff;">ty</strong></span>
             </a>
             <p class="lp-footer-tagline">Platform manajemen event sekolah untuk pengalaman kegiatan yang lebih mudah, teratur, dan bermakna.</p>
         </div>
@@ -807,6 +809,11 @@
                 <a href="#">admin@eventty.sch.id</a>
                 <a href="#">SMKN 20 Jakarta</a>
                 <a href="#">Jl. Raya Sekolah No. 1</a>
+                <div class="lp-footer-socials" aria-label="Media sosial Eventty">
+                    <a href="#" aria-label="Instagram"><iconify-icon icon="lucide:instagram"></iconify-icon></a>
+                    <a href="#" aria-label="TikTok"><iconify-icon icon="lucide:music-2"></iconify-icon></a>
+                    <a href="#" aria-label="Email"><iconify-icon icon="lucide:mail"></iconify-icon></a>
+                </div>
             </div>
 
         </div>

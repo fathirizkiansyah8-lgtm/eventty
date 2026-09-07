@@ -233,18 +233,18 @@
     <div style="display:flex;gap:4px;background:var(--bg-tertiary);border-radius:.875rem;padding:4px;width:fit-content;margin-bottom:1.5rem;">
         <button id="tabNotif" onclick="switchTab('notif')"
                 style="padding:.5rem 1.25rem;border-radius:.625rem;font-size:.825rem;font-weight:700;border:none;cursor:pointer;background:var(--bg-secondary);color:var(--text-primary);box-shadow:0 1px 4px rgba(0,0,0,.08);transition:all .2s;font-family:inherit;">
-            🔔 Notifikasi Saya
+            <iconify-icon icon="lucide:bell" aria-hidden="true"></iconify-icon> Notifikasi Saya
             @if($unreadCount > 0)
                 <span style="background:#ef4444;color:#fff;font-size:.65rem;font-weight:800;padding:.1rem .45rem;border-radius:999px;margin-left:.35rem;">{{ $unreadCount }}</span>
             @endif
         </button>
         <button id="tabAnnounce" onclick="switchTab('announce')"
                 style="padding:.5rem 1.25rem;border-radius:.625rem;font-size:.825rem;font-weight:700;border:none;cursor:pointer;background:transparent;color:var(--text-muted);transition:all .2s;font-family:inherit;">
-            📢 Pengumuman
+            <iconify-icon icon="lucide:megaphone" aria-hidden="true"></iconify-icon> Pengumuman
         </button>
         <button id="tabEvents" onclick="switchTab('events')"
                 style="padding:.5rem 1.25rem;border-radius:.625rem;font-size:.825rem;font-weight:700;border:none;cursor:pointer;background:transparent;color:var(--text-muted);transition:all .2s;font-family:inherit;">
-            📅 Event Mendatang
+            <iconify-icon icon="lucide:calendar-days" aria-hidden="true"></iconify-icon> Event Mendatang
         </button>
     </div>
 
@@ -264,13 +264,13 @@
             @forelse($notifications as $notif)
             @php
                 $typeColors = ['success'=>'#10b981','warning'=>'#f59e0b','error'=>'#ef4444','info'=>'#3b82f6'];
-                $typeIcons  = ['success'=>'✅','warning'=>'⚠️','error'=>'❌','info'=>'ℹ️'];
+                $typeIcons  = ['success'=>'circle-check','warning'=>'triangle-alert','error'=>'circle-x','info'=>'info'];
                 $color = $typeColors[$notif->type] ?? '#3b82f6';
-                $icon  = $typeIcons[$notif->type] ?? 'ℹ️';
+                $icon  = $typeIcons[$notif->type] ?? 'info';
             @endphp
             <div style="background:var(--bg-secondary);border:1.5px solid {{ $notif->isRead() ? 'var(--border-color)' : $color . '40' }};border-left:3px solid {{ $color }};border-radius:.875rem;padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:.875rem;transition:all .2s;{{ $notif->isRead() ? 'opacity:.8;' : '' }}"
                  id="notif-{{ $notif->id }}">
-                <div style="font-size:1.2rem;flex-shrink:0;margin-top:.1rem;">{{ $icon }}</div>
+                <div style="font-size:1.2rem;flex-shrink:0;margin-top:.1rem;"><iconify-icon icon="lucide:{{ $icon }}"></iconify-icon></div>
                 <div style="flex:1;min-width:0;">
                     <div style="font-weight:700;color:var(--text-primary);font-size:.875rem;margin-bottom:.2rem;">
                         {{ $notif->title }}
@@ -296,7 +296,7 @@
             </div>
             @empty
             <div style="text-align:center;padding:3rem;color:var(--text-muted);">
-                <div style="font-size:2.5rem;margin-bottom:.75rem;">🔔</div>
+                <iconify-icon icon="lucide:bell-off" width="42" height="42" style="margin-bottom:.75rem;"></iconify-icon>
                 <div style="font-weight:600;margin-bottom:.25rem;">Belum ada notifikasi</div>
                 <div style="font-size:.82rem;">Notifikasi akan muncul saat Anda mendaftar atau ada update event.</div>
             </div>
@@ -313,7 +313,7 @@
             $priorityStyle = match($ann->priority ?? 'normal') {
                 'urgent' => ['border-left:3px solid #ef4444;', '#ef4444', '🚨'],
                 'high'   => ['border-left:3px solid #f59e0b;', '#f59e0b', '⚡'],
-                default  => ['border-left:3px solid #3b82f6;', '#3b82f6', '📢'],
+                default  => ['border-left:3px solid #3b82f6;', '#3b82f6', 'megaphone'],
             };
             $targetMap = ['all_students'=>'Semua Siswa','participants'=>'Peserta Event','all_users'=>'Semua Pengguna','specific_class'=>'Kelas Tertentu'];
         @endphp
@@ -338,7 +338,7 @@
         </div>
         @empty
         <div style="text-align:center;padding:3rem;color:var(--text-muted);">
-            <div style="font-size:2.5rem;margin-bottom:.75rem;">📢</div>
+            <iconify-icon icon="lucide:megaphone" width="42" height="42" style="margin-bottom:.75rem;"></iconify-icon>
             <div style="font-weight:600;margin-bottom:.25rem;">Belum ada pengumuman</div>
             <div style="font-size:.82rem;">Pengumuman dari admin akan tampil di sini.</div>
         </div>
@@ -354,17 +354,17 @@
             $pct = $ev->quota > 0 ? min(100, round($ev->registered_count / $ev->quota * 100)) : 0;
         @endphp
         <div style="background:var(--bg-secondary);border:1.5px solid var(--border-color);border-radius:.875rem;padding:1.25rem;margin-bottom:.875rem;display:flex;gap:1rem;align-items:flex-start;">
-            <div style="width:48px;height:48px;border-radius:.75rem;background:{{ $ev->category->color ?? '#3b82f6' }}20;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🎉</div>
+            <div style="width:48px;height:48px;border-radius:.75rem;background:{{ $ev->category->color ?? '#3b82f6' }}20;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;"><iconify-icon icon="lucide:calendar-days"></iconify-icon></div>
             <div style="flex:1;min-width:0;">
                 <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.35rem;">
                     <span style="font-weight:800;font-size:.925rem;color:var(--text-primary);">{{ $ev->name }}</span>
                     <span style="font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:999px;background:{{ $ev->category->color ?? '#3b82f6' }}20;color:{{ $ev->category->color ?? '#3b82f6' }};">{{ $ev->category->name }}</span>
                     @if($ev->has_certificate)
-                        <span style="font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:999px;background:#dcfce7;color:#15803d;">🏆 Sertifikat</span>
+                        <span style="font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:999px;background:#dcfce7;color:#15803d;"><iconify-icon icon="lucide:badge-check"></iconify-icon> Sertifikat</span>
                     @endif
                 </div>
                 <div style="display:flex;flex-wrap:wrap;gap:.375rem .875rem;margin-bottom:.625rem;">
-                    <span style="font-size:.78rem;color:var(--text-muted);">📅 {{ $ev->date->format('d F Y') }}</span>
+                    <span style="font-size:.78rem;color:var(--text-muted);"><iconify-icon icon="lucide:calendar-days"></iconify-icon> {{ $ev->date->format('d F Y') }}</span>
                     <span style="font-size:.78rem;color:var(--text-muted);">🕐 {{ $ev->start_time->format('H:i') }} – {{ $ev->end_time->format('H:i') }}</span>
                     <span style="font-size:.78rem;color:var(--text-muted);">📍 {{ $ev->location }}</span>
                 </div>
@@ -386,7 +386,7 @@
         </div>
         @empty
         <div style="text-align:center;padding:3rem;color:var(--text-muted);">
-            <div style="font-size:2.5rem;margin-bottom:.75rem;">📅</div>
+            <iconify-icon icon="lucide:calendar-x" width="42" height="42" style="margin-bottom:.75rem;"></iconify-icon>
             <div style="font-weight:600;margin-bottom:.25rem;">Belum ada event mendatang</div>
             <div style="font-size:.82rem;">Event yang tersedia akan tampil di sini.</div>
         </div>

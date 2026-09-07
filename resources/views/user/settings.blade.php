@@ -32,9 +32,12 @@
 }
 
 .stg-card-head {
-    padding: .75rem 1.25rem;
+    min-height: 38px;
+    padding: .65rem 1.25rem;
     background: var(--bg-tertiary);
     border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
 }
 .stg-card-head-title {
     font-size: .7rem;
@@ -50,7 +53,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: .95rem 1.25rem;
+    min-height: 72px;
+    padding: .8rem 1.25rem;
     border-bottom: 1px solid var(--border-color);
     transition: background .15s;
 }
@@ -67,7 +71,7 @@
 .stg-row-desc {
     font-size: .75rem;
     color: var(--text-muted);
-    line-height: 1.4;
+    line-height: 1.45;
 }
 
 /* Toggle */
@@ -132,7 +136,9 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    min-height: 122px;
     padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid var(--border-color);
 }
 .profile-avatar-big {
     width: 52px; height: 52px;
@@ -142,8 +148,8 @@
     color: #fff; font-size: 1.25rem; font-weight: 800;
     flex-shrink: 0;
 }
-.profile-name  { font-size: .95rem; font-weight: 800; color: var(--text-primary); }
-.profile-email { font-size: .75rem; color: var(--text-muted); margin-top: .1rem; }
+.profile-name  { font-size: .95rem; font-weight: 800; color: var(--text-primary); line-height: 1.25; }
+.profile-email { font-size: .75rem; color: var(--text-muted); margin-top: .2rem; line-height: 1.35; }
 .profile-class {
     display: inline-flex; align-items: center; gap: .3rem;
     background: #dbeafe; color: #1d4ed8;
@@ -186,7 +192,7 @@
                         <div class="profile-name">{{ Auth::user()->name }}</div>
                         <div class="profile-email">{{ Auth::user()->email }}</div>
                         <div class="profile-class">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                            <iconify-icon icon="lucide:graduation-cap" width="10" height="10"></iconify-icon>
                             {{ Auth::user()->class ?? 'Belum diisi' }}
                         </div>
                     </div>
@@ -218,13 +224,13 @@
                         <div class="stg-row-desc">Aktifkan tema gelap untuk kenyamanan mata</div>
                     </div>
                     <div class="theme-toggle-row">
-                        <span class="theme-emoji" id="themeStateLabel">☀️</span>
+                        <span class="theme-emoji" id="themeStateLabel"><iconify-icon icon="solar:sun-2-linear"></iconify-icon></span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="themeToggleSetting">
                             <div class="toggle-track"></div>
                             <div class="toggle-thumb"></div>
                         </label>
-                        <span class="theme-emoji">🌙</span>
+                        <span class="theme-emoji"><iconify-icon icon="solar:moon-linear"></iconify-icon></span>
                     </div>
                 </div>
             </div>

@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (events.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:3rem;">
-                        <div style="font-size:3rem;margin-bottom:1rem;">🎉</div>
+                        <iconify-icon icon="lucide:calendar-search" width="42" height="42" aria-hidden="true"></iconify-icon>
                         <h3>Tidak ada event ditemukan</h3>
                         <p>Coba ubah filter atau kata kunci pencarian Anda.</p>
                     </div>`;
@@ -75,15 +75,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         <span class="event-category-badge" style="background:${event.category_color}">
                             ${event.category}
                         </span>
-                        ${event.has_certificate ? '<span style="position:absolute;top:.5rem;right:.5rem;background:#10b981;color:#fff;padding:.2rem .55rem;border-radius:999px;font-size:.65rem;font-weight:700;">🏆 Sertifikat</span>' : ''}
+                        ${event.has_certificate ? '<span style="position:absolute;top:.5rem;right:.5rem;background:#10b981;color:#fff;padding:.2rem .55rem;border-radius:999px;font-size:.65rem;font-weight:700;"><iconify-icon icon="lucide:badge-check"></iconify-icon> Sertifikat</span>' : ''}
                         ${event.is_full ? '<span class="event-full-badge">Penuh</span>' : ''}
                     </div>
                     <div class="event-content">
                         <h4 class="event-title">${event.name}</h4>
                         <div class="event-info">
-                            <span><i class="fas fa-calendar-alt"></i> ${event.date}</span>
-                            <span><i class="fas fa-clock"></i> ${event.time}</span>
-                            <span><i class="fas fa-map-marker-alt"></i> ${event.location}</span>
+                            <span><iconify-icon icon="lucide:calendar-days"></iconify-icon> ${event.date}</span>
+                            <span><iconify-icon icon="lucide:clock-3"></iconify-icon> ${event.time}</span>
+                            <span><iconify-icon icon="lucide:map-pin"></iconify-icon> ${event.location}</span>
                         </div>
                         <div class="event-quota-bar">
                             <div class="quota-fill" style="width:${Math.min(100, Math.round(event.registered_count/event.quota*100))}%"></div>
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="event-footer">
                         <a href="/user/events/${event.id}" class="btn btn-outline">Detail</a>
                         ${event.is_registered
-                            ? '<button class="btn btn-success" disabled>✓ Terdaftar</button>'
+                            ? '<button class="btn btn-success" disabled><iconify-icon icon="lucide:check"></iconify-icon> Terdaftar</button>'
                             : event.is_full
                                 ? '<button class="btn btn-secondary" disabled>Penuh</button>'
                                 : `<button class="btn btn-primary register-btn" data-event-id="${event.id}" data-event-name="${event.name}">Daftar</button>`
@@ -138,13 +138,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="pagination-buttons">`;
 
         if (currentPage > 1) {
-            html += `<button class="btn btn-outline page-btn" data-page="${currentPage - 1}">‹ Prev</button>`;
+            html += `<button class="btn btn-outline page-btn" data-page="${currentPage - 1}"><iconify-icon icon="lucide:chevron-left"></iconify-icon> Sebelumnya</button>`;
         }
         for (let i = Math.max(1, currentPage - 2); i <= Math.min(lastPage, currentPage + 2); i++) {
             html += `<button class="btn ${i === currentPage ? 'btn-primary' : 'btn-outline'} page-btn" data-page="${i}">${i}</button>`;
         }
         if (currentPage < lastPage) {
-            html += `<button class="btn btn-outline page-btn" data-page="${currentPage + 1}">Next ›</button>`;
+            html += `<button class="btn btn-outline page-btn" data-page="${currentPage + 1}">Berikutnya <iconify-icon icon="lucide:chevron-right"></iconify-icon></button>`;
         }
         html += '</div>';
         paginationContainer.innerHTML = html;

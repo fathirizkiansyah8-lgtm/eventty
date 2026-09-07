@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifikasi — Eventty Admin</title>
+    <title>Notifikasi - Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -149,7 +149,7 @@
 
             <!-- Unread Notification 2 -->
             <div class="notification-item unread" data-type="event">
-                <div class="notification-icon event">⚠️</div>
+                <div class="notification-icon event"><iconify-icon icon="solar:danger-triangle-linear"></iconify-icon></div>
                 <div class="notification-content">
                     <div class="notification-title">Kuota Hampir Penuh <span class="abadge abadge-blue">Event</span></div>
                     <div class="notification-desc">Workshop Programming 28/30</div>
@@ -160,7 +160,7 @@
 
             <!-- Read Notification 1 -->
             <div class="notification-item" data-type="cert">
-                <div class="notification-icon cert">🏆</div>
+                <div class="notification-icon cert"><iconify-icon icon="solar:medal-ribbons-star-linear"></iconify-icon></div>
                 <div class="notification-content">
                     <div class="notification-title">Sertifikat Diterbitkan <span class="abadge abadge-green">Sertifikat</span></div>
                     <div class="notification-desc">12 sertifikat Workshop berhasil diterbitkan</div>
@@ -180,7 +180,7 @@
 
             <!-- Unread Notification 3 -->
             <div class="notification-item unread" data-type="event">
-                <div class="notification-icon pending">⏳</div>
+                <div class="notification-icon pending"><iconify-icon icon="solar:hourglass-linear"></iconify-icon></div>
                 <div class="notification-content">
                     <div class="notification-title">Absensi Menunggu <span class="abadge abadge-blue">Event</span></div>
                     <div class="notification-desc">Career Day belum dikunci</div>

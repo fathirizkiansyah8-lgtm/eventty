@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Pengumuman — Eventty Admin</title>
+    <title>Pengumuman - Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -36,7 +36,7 @@
 
         {{-- Flash messages --}}
         @if(session('success'))
-        <div style="background:#dcfce7;border:1.5px solid #86efac;color:#15803d;padding:.75rem 1rem;border-radius:.75rem;margin-bottom:1rem;font-size:.875rem;font-weight:600;">✅ {{ session('success') }}</div>
+        <div style="background:#dcfce7;border:1.5px solid #86efac;color:#15803d;padding:.75rem 1rem;border-radius:.75rem;margin-bottom:1rem;font-size:.875rem;font-weight:600;"><iconify-icon icon="solar:check-circle-linear"></iconify-icon> {{ session('success') }}</div>
         @endif
 
         {{-- Filter form --}}
@@ -76,7 +76,7 @@
                 <div style="flex:1;min-width:0;">
                     <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.35rem;">
                         <h3 class="admin-card-title" style="margin:0;">{{ $ann->title }}</h3>
-                        @if($ann->is_pinned) <span style="font-size:.7rem;">📌</span> @endif
+                        @if($ann->is_pinned) <iconify-icon icon="solar:pin-linear" width="13" height="13"></iconify-icon> @endif
                     </div>
                     <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
                         <span class="abadge {{ $ann->status === 'active' ? 'abadge-green' : ($ann->status === 'scheduled' ? 'abadge-blue' : 'abadge-gray') }}">
@@ -106,13 +106,13 @@
                 {{ Str::limit($ann->content, 200) }}
             </div>
             <div class="announcement-footer" style="padding:.75rem 1rem;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:#94a3b8;">
-                <span>📅 {{ $ann->publish_date->format('d F Y, H:i') }}</span>
+                <span><iconify-icon icon="solar:calendar-linear"></iconify-icon> {{ $ann->publish_date->format('d F Y, H:i') }}</span>
                 <span>Dibuat oleh: {{ $ann->creator->name ?? 'Admin' }}</span>
             </div>
         </div>
         @empty
         <div style="text-align:center;padding:3rem;color:#94a3b8;">
-            <div style="font-size:2.5rem;margin-bottom:.75rem;">📢</div>
+            <iconify-icon icon="solar:megaphone-linear" width="42" height="42" style="margin-bottom:.75rem;"></iconify-icon>
             <div style="font-weight:600;margin-bottom:.25rem;">Belum ada pengumuman</div>
             @if(request()->hasAny(['search','status']))
                 <a href="{{ url('/admin/announcements') }}" class="abtn abtn-outline abtn-sm" style="margin-top:.75rem;display:inline-block;">Reset Filter</a>

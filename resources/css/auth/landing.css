@@ -5,14 +5,19 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
+.lp-footer-socials { display:flex; gap:.5rem; margin-top:.8rem; }
+.lp-footer-socials a { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border:1px solid rgba(255,255,255,.22); border-radius:50%; color:#fff; transition:background .2s, border-color .2s; }
+.lp-footer-socials a:hover { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.5); }
+.lp-footer-socials iconify-icon { width:16px; height:16px; }
+
 /* ── Variables ── */
 :root {
-    --navy:      #10265C;
-    --navy-dark: #0b1c42;
-    --blue:      #2563EB;
-    --blue-dark: #1d4ed8;
-    --blue-soft: #EFF6FF;
-    --blue-mid:  #DBEAFE;
+    --navy:      #0b192c;
+    --navy-dark: #070f1e;
+    --blue:      #1d4ed8;
+    --blue-dark: #1e40af;
+    --blue-soft: #eff6ff;
+    --blue-mid:  #bfdbfe;
     --bg:        #F8FAFC;
     --white:     #FFFFFF;
     --text:      #0F172A;
@@ -36,14 +41,15 @@
 html {
     scroll-behavior: auto;
     font-size: 16px;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 body {
     font-family: var(--font-body);
     background: var(--bg);
     color: var(--text);
     line-height: 1.6;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
 }
@@ -264,6 +270,8 @@ button { font: inherit; cursor: pointer; }
     transition: all var(--trans);
 }
 .lp-btn-ghost-white:hover { background: rgba(255,255,255,.2); color: #fff; transform: translateY(-2px); }
+.lp-cta-section .lp-btn-ghost-white { background: #fff; color: var(--navy); border-color: var(--border); }
+.lp-cta-section .lp-btn-ghost-white:hover { background: var(--blue-soft); color: var(--navy); border-color: var(--blue-mid); }
 
 .lp-btn-lg { padding: 13px 26px; font-size: 15px; border-radius: 12px; }
 
@@ -291,9 +299,18 @@ button { font: inherit; cursor: pointer; }
     width: 100%;
     min-height: calc(100vh - 68px);
 }
+.lp-home-view .lp-landing-panel { display: block !important; min-height: 0 !important; }
+.lp-home-view .lp-landing-panel.active { animation: none; }
+body:not(.lp-home-view) .lp-cta-section,
+body:not(.lp-home-view) .lp-footer { display: none; }
+body:not(.lp-home-view) .lp-landing-panel.active { min-height: calc(100vh - 68px); display: flex; align-items: center; }
+body:not(.lp-home-view) .lp-landing-panel.active > .lp-container { width: min(calc(100% - 48px), var(--container)); }
 .lp-landing-panel.active {
     display: block;
     animation: lp-panel-in .32s ease both;
+}
+.lp-landing-panel.active > .lp-container {
+    animation: lp-content-in .4s ease .04s both;
 }
 .lp-page-leaving {
     opacity: .72;
@@ -302,6 +319,10 @@ button { font: inherit; cursor: pointer; }
 }
 @keyframes lp-panel-in {
     from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes lp-content-in {
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -373,7 +394,7 @@ button { font: inherit; cursor: pointer; }
 .lp-hero {
     padding-top: 90px;
     padding-bottom: 74px;
-    background: linear-gradient(180deg, #f8fafc 0%, #f3f7fb 100%);
+    background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
     overflow: hidden;
     position: relative;
 }
@@ -491,7 +512,7 @@ button { font: inherit; cursor: pointer; }
    ========================================================= */
 .lp-events-section {
     background: var(--white);
-    padding-top: 72px; padding-bottom: 80px;
+    padding-top: 54px; padding-bottom: 58px;
     position: relative;
 }
 
@@ -504,15 +525,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 .lp-events-section.active::before {
-    content: '';
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 58px;
-    background: var(--navy);
-    z-index: 0;
-    pointer-events: none;
+    display: none;
 }
 
 .lp-events-section .lp-container {
@@ -526,6 +539,9 @@ button { font: inherit; cursor: pointer; }
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
+.lp-events-empty { grid-column: 1 / -1; display:flex; flex-direction:column; align-items:center; gap:8px; padding:48px 20px; border:1px dashed var(--border); border-radius:16px; color:var(--text-muted); text-align:center; }
+.lp-events-empty strong { color:var(--text); font-size:16px; }
+.lp-events-empty span { font-size:13px; }
 
 /* Event card */
 .lp-ev-card {
@@ -544,13 +560,8 @@ button { font: inherit; cursor: pointer; }
     bottom: 0;
     left: 18px;
     height: 3px;
-    background: var(--blue);
-    border-radius: 4px 4px 0 0;
-    opacity: .9;
+    display: none;
 }
-.lp-ev-card:nth-child(1)::after { background: var(--navy); }
-.lp-ev-card:nth-child(3)::after { background: #ef4444; }
-.lp-ev-card:nth-child(4)::after { background: #1d4ed8; }
 .lp-ev-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 24px rgba(15,23,42,.06);
@@ -706,9 +717,9 @@ body[data-landing-panel]:not([data-landing-panel="events"]) .lp-stats-strip {
    FEATURES (KENAPA EVENTTY)
    ========================================================= */
 .lp-features-section {
-    background: var(--bg);
-    padding-top: 82px;
-    padding-bottom: 82px;
+    background: #f5faf9;
+    padding-top: 58px;
+    padding-bottom: 58px;
     position: relative;
     overflow: hidden;
 }
@@ -803,8 +814,8 @@ body[data-landing-panel]:not([data-landing-panel="events"]) .lp-stats-strip {
    ========================================================= */
 .lp-how-section {
     background: var(--white);
-    padding-top: 84px;
-    padding-bottom: 84px;
+    padding-top: 58px;
+    padding-bottom: 58px;
     position: relative;
     overflow: hidden;
 }
@@ -887,9 +898,9 @@ body[data-landing-panel]:not([data-landing-panel="events"]) .lp-stats-strip {
     transition: background var(--trans), transform var(--trans);
 }
 .lp-step-icon-wrap.gold {
-    background: #fef3c7;
-    border-color: #fde68a;
-    color: #b45309;
+    background: var(--blue-soft);
+    border-color: var(--blue-mid);
+    color: var(--navy);
 }
 .lp-step:hover .lp-step-icon-wrap {
     background: var(--navy);
@@ -924,6 +935,13 @@ body[data-landing-panel]:not([data-landing-panel="events"]) .lp-stats-strip {
     position: relative;
     overflow: hidden;
 }
+.lp-cert-visual { display: none !important; }
+.lp-cert-inner { display: block !important; max-width: 760px; margin-inline: auto; text-align: center; }
+.lp-cert-copy { max-width: none !important; text-align: center; }
+.lp-cert-copy .lp-section-h2 { max-width: 620px !important; margin-inline: auto; }
+.lp-cert-desc { max-width: 620px; margin-inline: auto; }
+.lp-cert-benefits { display: inline-flex !important; flex-direction: column; align-items: flex-start; text-align: left; margin: 0 auto 1rem; }
+.lp-cert-copy > .lp-btn-primary { display: inline-flex !important; margin: .25rem auto 0 !important; }
 .lp-cert-section::before {
     content: '';
     position: absolute;
@@ -1049,8 +1067,8 @@ body[data-landing-panel]:not([data-landing-panel="events"]) .lp-stats-strip {
    CTA
    ========================================================= */
 .lp-cta-section {
-    background: var(--navy);
-    padding: 80px 0;
+    background: #eef3f4;
+    padding: 58px 0;
     position: relative;
     overflow: hidden;
 }
@@ -1119,16 +1137,19 @@ body[data-landing-panel]:not([data-landing-panel="events"]) .lp-stats-strip {
     font-family: var(--font-head);
     font-size: clamp(26px, 3.5vw, 42px);
     font-weight: 800;
-    color: #fff;
+    color: var(--navy);
     letter-spacing: -.5px;
     margin-bottom: 14px;
     line-height: 1.2;
 }
 .lp-cta-sub {
-    font-size: 16px; color: rgba(255,255,255,.7);
+    font-size: 16px; color: var(--text-sec);
     line-height: 1.7; margin-bottom: 28px;
     max-width: 480px;
 }
+.lp-cta-circle { border-color: rgba(15,118,110,.14); }
+.lp-person-head, .lp-person-body { background: rgba(15,118,110,.16); }
+.lp-person.p2 .lp-person-head, .lp-person.p2 .lp-person-body { background: rgba(242,128,92,.22); }
 .lp-cta-btns { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
 

@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (events.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:2rem;">
-                    <div>📅</div><p>Tidak ada event ditemukan</p>
+                    <iconify-icon icon="solar:calendar-search-linear" width="34" height="34"></iconify-icon><p>Tidak ada event ditemukan</p>
                     <a href="/admin/events/create" class="btn btn-primary" style="margin-top:0.5rem;">Buat Event Pertama</a>
                 </td></tr>`;
                 updatePagination(response, page);

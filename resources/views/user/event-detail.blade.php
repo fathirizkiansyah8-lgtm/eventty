@@ -7,12 +7,19 @@
 @endpush
 
 @section('content')
+@php
+    $registrationStart = $event->registration_start ?? $event->registration_open_at ?? null;
+    $registrationEnd = $event->registration_end ?? $event->registration_close_at ?? null;
+    $registrationEndDate = $registrationEnd ? \Carbon\Carbon::parse($registrationEnd) : null;
+    $registrationClosed = $registrationEndDate ? now()->greaterThan($registrationEndDate) : false;
+@endphp
 <div class="dashboard-content" style="padding:1.5rem 1.75rem;">
 
     {{-- Back button --}}
     <div style="margin-bottom:1.25rem;">
         <a href="{{ url('/user/events') }}" class="btn btn-outline btn-sm">
-            â† Kembali ke Semua Event
+            <iconify-icon icon="lucide:arrow-left" aria-hidden="true"></iconify-icon>
+            Kembali ke Semua Event
         </a>
     </div>
 
@@ -64,22 +71,22 @@
             {{-- Detail grid --}}
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem;">
                 @foreach([
-                    ['ðŸ“…', 'Tanggal', $event->formatted_date],
-                    ['ðŸ•', 'Waktu', $event->formatted_time],
-                    ['ðŸ“', 'Lokasi', $event->location],
-                    ['ðŸ‘¥', 'Kuota', $event->registered_count . '/' . $event->quota . ' peserta'],
+                    ['calendar-days', 'Tanggal', $event->formatted_date],
+                    ['clock-3', 'Waktu', $event->formatted_time],
+                    ['map-pin', 'Lokasi', $event->location],
+                    ['users', 'Kuota', $event->registered_count . '/' . $event->quota . ' peserta'],
                 ] as [$icon, $label, $value])
                 <div style="background:var(--bg-secondary);border:1.5px solid var(--border-color);border-radius:.75rem;padding:.875rem 1rem;">
-                    <div style="font-size:.7rem;color:var(--text-muted);font-weight:600;margin-bottom:.25rem;">{{ $icon }} {{ $label }}</div>
+                    <div style="font-size:.7rem;color:var(--text-muted);font-weight:600;margin-bottom:.25rem;"><iconify-icon icon="lucide:{{ $icon }}"></iconify-icon> {{ $label }}</div>
                     <div style="font-size:.875rem;font-weight:700;color:var(--text-primary);">{{ $value }}</div>
                 </div>
                 @endforeach
 
                 {{-- Sertifikat dari DB --}}
                 <div style="background:{{ $event->has_certificate ? '#dcfce7' : 'var(--bg-secondary)' }};border:1.5px solid {{ $event->has_certificate ? '#86efac' : 'var(--border-color)' }};border-radius:.75rem;padding:.875rem 1rem;">
-                    <div style="font-size:.7rem;color:var(--text-muted);font-weight:600;margin-bottom:.25rem;">ðŸ† Sertifikat</div>
+                    <div style="font-size:.7rem;color:var(--text-muted);font-weight:600;margin-bottom:.25rem;"><iconify-icon icon="lucide:badge-check"></iconify-icon> Sertifikat</div>
                     <div style="font-size:.875rem;font-weight:700;color:{{ $event->has_certificate ? '#15803d' : 'var(--text-primary)' }};">
-                        {{ $event->has_certificate ? 'Tersedia âœ“' : 'Tidak tersedia' }}
+                        {{ $event->has_certificate ? 'Tersedia' : 'Tidak tersedia' }}
                     </div>
                 </div>
 
@@ -109,10 +116,21 @@
         <div style="background:var(--bg-secondary);border:1.5px solid var(--border-color);border-radius:1rem;padding:1.25rem;position:sticky;top:1rem;">
             <h3 style="font-size:1rem;font-weight:800;color:var(--text-primary);margin-bottom:1rem;">Pendaftaran</h3>
 
+            <div style="background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:.75rem;padding:.75rem;margin-bottom:1rem;font-size:.78rem;color:var(--text-secondary);">
+                <div style="display:flex;justify-content:space-between;gap:.75rem;margin-bottom:.35rem;">
+                    <span><iconify-icon icon="lucide:calendar-range"></iconify-icon> Periode daftar</span>
+                    <strong>{{ $registrationStart ? \Carbon\Carbon::parse($registrationStart)->format('d M Y') : 'Sesuai pengumuman' }} - {{ $registrationEndDate ? $registrationEndDate->format('d M Y') : 'sebelum acara' }}</strong>
+                </div>
+                <div style="display:flex;justify-content:space-between;gap:.75rem;">
+                    <span><iconify-icon icon="lucide:calendar-clock"></iconify-icon> Pelaksanaan</span>
+                    <strong>{{ $event->formatted_date }} · {{ $event->formatted_time }}</strong>
+                </div>
+            </div>
+
             {{-- Badge sertifikat di registration card --}}
             @if($event->has_certificate)
             <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:.75rem;padding:.625rem .875rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;font-size:.8rem;font-weight:600;color:#15803d;">
-                ðŸ† Event ini menyediakan <strong>sertifikat</strong> untuk peserta yang hadir
+                <iconify-icon icon="lucide:badge-check"></iconify-icon> Event ini menyediakan <strong>sertifikat</strong> untuk peserta yang hadir
             </div>
             @endif
 
@@ -125,16 +143,17 @@
                     Lihat di Event Saya
                 </a>
 
-            @elseif($event->status !== 'open')
+            @elseif($event->status !== 'open' || $registrationClosed)
                 <div style="background:var(--bg-tertiary);border-radius:.75rem;padding:.875rem;text-align:center;margin-bottom:1rem;">
-                    <div style="font-size:1.5rem;">ðŸš«</div>
-                    <div style="font-weight:600;color:var(--text-muted);margin-top:.25rem;">Pendaftaran tidak tersedia</div>
-                    <div style="font-size:.78rem;color:var(--text-muted);margin-top:.25rem;">Status: {{ $statusLabel }}</div>
+                    <div style="font-size:1.5rem;"><iconify-icon icon="lucide:lock-keyhole"></iconify-icon></div>
+                    <div style="font-weight:600;color:var(--text-muted);margin-top:.25rem;">Pendaftaran Ditutup</div>
+                    <div style="font-size:.78rem;color:var(--text-muted);margin-top:.25rem;">{{ $registrationClosed ? 'Batas waktu pendaftaran sudah lewat.' : 'Status: ' . $statusLabel }}</div>
+                    <button type="button" class="btn btn-secondary" style="width:100%;margin-top:.75rem;" disabled>Pendaftaran Ditutup</button>
                 </div>
 
             @elseif($event->isFull())
                 <div style="background:#fef3c7;border:1.5px solid #fcd34d;border-radius:.75rem;padding:.875rem;text-align:center;margin-bottom:1rem;">
-                    <div style="font-size:1.5rem;">ðŸ˜®</div>
+                    <div style="font-size:1.5rem;"><iconify-icon icon="lucide:circle-alert"></iconify-icon></div>
                     <div style="font-weight:700;color:#b45309;margin-top:.25rem;">Kuota sudah penuh</div>
                 </div>
 
@@ -147,7 +166,7 @@
                 @if($event->isCompetition())
                     {{-- Competition: tombol buka form tim --}}
                     <button type="button" id="openTeamFormBtn" class="btn btn-primary" style="width:100%;">
-                        ðŸ† Daftar Sebagai Tim
+                        <iconify-icon icon="lucide:users-round"></iconify-icon> Daftar Sebagai Tim
                     </button>
                     <p style="font-size:.72rem;color:var(--text-muted);text-align:center;margin-top:.5rem;">
                         Isi data tim setelah klik tombol di atas
@@ -158,15 +177,15 @@
                     <input type="hidden" id="regEventName" value="{{ addslashes($event->name) }}">
                     <input type="hidden" id="regIsCompetition" value="0">
                     <button type="button" id="registerBtn" class="btn btn-primary" style="width:100%;">
-                        Daftar Sekarang
+                        <iconify-icon icon="lucide:send"></iconify-icon> Daftar Sekarang
                     </button>
                 @endif
             @endif
 
             {{-- Event meta --}}
             <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border-color);font-size:.75rem;color:var(--text-muted);">
-                <div style="margin-bottom:.35rem;">ðŸ“Œ Dibuat oleh: {{ $event->creator->name }}</div>
-                <div>ðŸ—“ Terakhir diperbarui: {{ $event->updated_at->format('d M Y') }}</div>
+                <div style="margin-bottom:.35rem;"><iconify-icon icon="lucide:user-round"></iconify-icon> Dibuat oleh: {{ $event->creator->name }}</div>
+                <div><iconify-icon icon="lucide:clock-3"></iconify-icon> Terakhir diperbarui: {{ $event->updated_at->format('d M Y') }}</div>
             </div>
         </div>
 

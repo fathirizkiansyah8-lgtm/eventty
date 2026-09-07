@@ -1,20 +1,19 @@
 {{-- Admin Header — digunakan di semua halaman admin --}}
+<script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+@vite('resources/js/utils/iconify-migration.js')
 @php $adminUser = Auth::user(); @endphp
 <header class="admin-header" id="adminHeader">
 
     <div class="admin-header-left">
         <span class="admin-greeting">Selamat datang,</span>
-        <span class="admin-page-title">{{ $adminUser->name }} 👋</span>
+        <span class="admin-page-title">{{ $adminUser->name }}</span>
     </div>
 
     <div class="admin-header-right">
 
         {{-- Notification button --}}
         <button class="admin-icon-btn" id="notifBtn" aria-label="Notifikasi" title="Notifikasi">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-            </svg>
+            <iconify-icon icon="lucide:bell" width="17" height="17"></iconify-icon>
             {{-- Badge hanya tampil jika ada pendaftar baru --}}
             @php $newRegistrations = \App\Models\EventParticipant::where('created_at', '>=', now()->subHours(24))->count(); @endphp
             @if($newRegistrations > 0)
@@ -31,7 +30,7 @@
                 <span class="admin-profile-name" style="font-size:.8rem;font-weight:700;color:#0f172a;">{{ $adminUser->name }}</span>
                 <span class="admin-profile-role" style="font-size:.65rem;color:#64748b;">Admin OSIS</span>
             </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#94a3b8;margin-left:2px;"><polyline points="6 9 12 15 18 9"/></svg>
+            <iconify-icon icon="solar:alt-arrow-down-linear" width="14" height="14" style="color:#94a3b8;margin-left:2px;"></iconify-icon>
         </div>
 
         {{-- Notification Dropdown — ditampilkan dari DB --}}
@@ -51,7 +50,7 @@
                 @forelse($recentParticipants as $rp)
                 <div class="admin-dropdown-item {{ $rp->created_at->gt(now()->subHours(2)) ? 'unread' : '' }}">
                     <div class="admin-dropdown-icon">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                        <iconify-icon icon="solar:user-plus-linear" width="14" height="14"></iconify-icon>
                     </div>
                     <div class="admin-dropdown-text">
                         <div class="admin-dropdown-msg">{{ $rp->user->name }} mendaftar {{ $rp->event->name }}</div>
@@ -87,14 +86,14 @@
             <div class="admin-dropdown-list" style="padding:.45rem 0;">
                 <a href="{{ url('/admin/settings') }}" class="admin-dropdown-item" style="margin:0 .35rem;border-radius:10px;">
                     <div class="admin-dropdown-icon" style="width:28px;height:28px;border-radius:8px;background:#f1f5f9;color:#334155;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <iconify-icon icon="solar:settings-linear" width="14" height="14"></iconify-icon>
                     </div>
                     <div class="admin-dropdown-text"><div class="admin-dropdown-msg" style="font-weight:600;">Profil & Pengaturan</div></div>
                 </a>
                 <div class="admin-dropdown-divider" style="margin:.35rem 0;"></div>
                 <button type="button" id="headerLogoutBtn" class="admin-dropdown-item danger" style="margin:0 .35rem;border-radius:10px;">
                     <div class="admin-dropdown-icon" style="width:28px;height:28px;border-radius:8px;background:#fee2e2;color:#dc2626;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        <iconify-icon icon="solar:logout-2-linear" width="14" height="14"></iconify-icon>
                     </div>
                     <div class="admin-dropdown-text"><div class="admin-dropdown-msg" style="font-weight:600;">Keluar</div></div>
                 </button>

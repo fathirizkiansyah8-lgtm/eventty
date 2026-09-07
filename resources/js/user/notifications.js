@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (notifications.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state" style="text-align:center;padding:3rem;">
-                        <div style="font-size:3rem;margin-bottom:1rem;">🔔</div>
+                        <iconify-icon icon="lucide:bell-off" width="42" height="42" aria-hidden="true"></iconify-icon>
                         <h3>Tidak ada notifikasi</h3>
                         <p>${filter === 'unread' ? 'Semua notifikasi sudah dibaca.' : 'Belum ada notifikasi.'}</p>
                     </div>`;
@@ -49,12 +49,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="notif-actions">
                         ${!notif.is_read
                             ? `<button class="btn-icon mark-read-btn" data-notif-id="${notif.id}" title="Tandai sudah dibaca">
-                                   <i class="fas fa-check"></i>
+                                   <iconify-icon icon="lucide:check"></iconify-icon>
                                </button>`
                             : ''
                         }
                         <button class="btn-icon delete-notif-btn" data-notif-id="${notif.id}" title="Hapus">
-                            <i class="fas fa-trash"></i>
+                            <iconify-icon icon="lucide:trash-2"></iconify-icon>
                         </button>
                     </div>
                 </div>

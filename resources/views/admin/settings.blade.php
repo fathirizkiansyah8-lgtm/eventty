@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Pengaturan — Eventty Admin</title>
+    <title>Pengaturan - Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -30,7 +30,7 @@
 
         {{-- Flash messages --}}
         @if(session('success'))
-        <div style="background:#dcfce7;border:1.5px solid #86efac;color:#15803d;padding:.75rem 1rem;border-radius:.75rem;margin-bottom:1.25rem;font-size:.875rem;font-weight:600;">✅ {{ session('success') }}</div>
+        <div style="background:#dcfce7;border:1.5px solid #86efac;color:#15803d;padding:.75rem 1rem;border-radius:.75rem;margin-bottom:1.25rem;font-size:.875rem;font-weight:600;"><iconify-icon icon="solar:check-circle-linear"></iconify-icon> {{ session('success') }}</div>
         @endif
         @if($errors->any())
         <div style="background:#fee2e2;border:1.5px solid #fca5a5;color:#991b1b;padding:.75rem 1rem;border-radius:.75rem;margin-bottom:1.25rem;font-size:.875rem;">

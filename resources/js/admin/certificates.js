@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const emptyState = document.createElement('div');
             emptyState.className = 'empty-state';
             emptyState.innerHTML = `
-                <div class="empty-state-icon">🏆</div>
+                <iconify-icon class="empty-state-icon" icon="solar:medal-ribbons-star-linear" width="42" height="42"></iconify-icon>
                 <div class="empty-state-title">Tidak ada sertifikat ditemukan</div>
                 <div class="empty-state-description">Coba ubah filter atau cari sertifikat lain</div>
             `;

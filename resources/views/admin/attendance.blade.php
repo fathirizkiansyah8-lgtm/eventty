@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Kehadiran — Eventty Admin</title>
+    <title>Kehadiran - Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -16,9 +16,7 @@
 <script>(function(){ var t=localStorage.getItem('theme')||'light'; document.body.setAttribute('data-theme',t); })();</script>
 
 <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
-    </svg>
+    <iconify-icon icon="solar:hamburger-menu-linear" width="20" height="20"></iconify-icon>
 </button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -38,20 +36,20 @@
         {{-- Flash messages --}}
         @if(session('success'))
         <div style="background:#dcfce7;border:1.5px solid #86efac;color:#15803d;padding:.75rem 1rem;border-radius:.75rem;margin-bottom:1rem;font-size:.875rem;font-weight:600;">
-            ✅ {{ session('success') }}
+            <iconify-icon icon="solar:check-circle-linear"></iconify-icon> {{ session('success') }}
         </div>
         @endif
 
         {{-- Summary cards --}}
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem;margin-bottom:1.25rem;">
             @foreach([
-                ['Total Peserta',   $summary['total'],     '#3b82f6', '👥'],
-                ['Hadir',          $summary['present'],    '#10b981', '✅'],
-                ['Tidak Hadir',    $summary['absent'],     '#ef4444', '❌'],
-                ['Belum Dicek',    $summary['unchecked'],  '#f59e0b', '⏳'],
+                ['Total Peserta',   $summary['total'],     '#3b82f6', 'solar:users-group-rounded-linear'],
+                ['Hadir',          $summary['present'],    '#10b981', 'solar:check-circle-linear'],
+                ['Tidak Hadir',    $summary['absent'],     '#ef4444', 'solar:close-circle-linear'],
+                ['Belum Dicek',    $summary['unchecked'],  '#f59e0b', 'solar:hourglass-linear'],
             ] as [$lbl, $val, $color, $icon])
             <div style="background:var(--bg-secondary);border:1.5px solid var(--border-color);border-radius:.875rem;padding:.875rem 1rem;display:flex;align-items:center;gap:.75rem;">
-                <div style="font-size:1.4rem;">{{ $icon }}</div>
+                <div style="font-size:1.4rem;color:{{ $color }};"><iconify-icon icon="{{ $icon }}"></iconify-icon></div>
                 <div>
                     <div style="font-size:1.35rem;font-weight:800;color:{{ $color }};line-height:1;">{{ $val }}</div>
                     <div style="font-size:.72rem;color:#64748b;font-weight:500;margin-top:2px;">{{ $lbl }}</div>
@@ -64,7 +62,7 @@
         <form method="GET" action="{{ url('/admin/attendance') }}" id="filterForm">
             <div class="admin-table-hd" style="flex-wrap:wrap;gap:.5rem;">
                 <div class="admin-search-wrap">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <iconify-icon icon="solar:magnifer-linear" width="16" height="16"></iconify-icon>
                     <input type="text" class="admin-search-input" name="search"
                            placeholder="Cari nama, NIS, atau kelas..."
                            value="{{ request('search') }}"
@@ -138,12 +136,12 @@
                                     <button class="abtn abtn-sm {{ $p->attendance_status === 'present' ? 'abtn-success' : 'abtn-outline' }}"
                                             onclick="markAttendance({{ $p->id }}, 'present', this)"
                                             {{ $p->attendance_status === 'present' ? 'disabled' : '' }}>
-                                        ✓ Hadir
+                                        <iconify-icon icon="solar:check-linear"></iconify-icon> Hadir
                                     </button>
                                     <button class="abtn abtn-sm {{ $p->attendance_status === 'absent' ? 'abtn-danger' : 'abtn-outline' }}"
                                             onclick="markAttendance({{ $p->id }}, 'absent', this)"
                                             {{ $p->attendance_status === 'absent' ? 'disabled' : '' }}>
-                                        ✗ Absen
+                                        <iconify-icon icon="solar:close-linear"></iconify-icon> Absen
                                     </button>
                                 </div>
                             </td>
@@ -151,7 +149,7 @@
                         @empty
                         <tr>
                             <td colspan="7" style="text-align:center;padding:3rem;color:#94a3b8;">
-                                <div style="font-size:2rem;margin-bottom:.75rem;">📋</div>
+                                <iconify-icon icon="solar:clipboard-remove-linear" width="34" height="34" style="margin-bottom:.75rem;"></iconify-icon>
                                 <div style="font-weight:600;margin-bottom:.25rem;">Belum ada data kehadiran</div>
                                 @if(request()->hasAny(['search','event_id','status']))
                                     <div style="font-size:.82rem;">Tidak ada peserta yang cocok dengan filter.</div>

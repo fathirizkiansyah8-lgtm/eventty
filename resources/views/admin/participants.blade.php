@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Peserta — Eventty Admin</title>
+    <title>Peserta - Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -35,7 +35,7 @@
                     </span>
                     @if($isCompetition && $selectedEvent)
                         <span style="margin-left:.35rem;background:#fef3c7;color:#b45309;padding:.15rem .5rem;border-radius:999px;font-size:.72rem;font-weight:700;">
-                            🏆 Event Kompetisi — {{ $teamRegistrations->count() }} tim terdaftar
+                            <iconify-icon icon="solar:medal-ribbons-star-linear"></iconify-icon> Event Kompetisi — {{ $teamRegistrations->count() }} tim terdaftar
                         </span>
                     @endif
                 </p>
@@ -87,7 +87,7 @@
             </button>
             <button id="tabTim" onclick="switchParticipantTab('tim')"
                     style="padding:.45rem 1.1rem;border-radius:.5rem;font-size:.82rem;font-weight:700;border:none;cursor:pointer;background:transparent;color:#64748b;transition:all .2s;font-family:inherit;">
-                🏆 Data Tim ({{ $teamRegistrations->count() }})
+                <iconify-icon icon="solar:medal-ribbons-star-linear"></iconify-icon> Data Tim ({{ $teamRegistrations->count() }})
             </button>
         </div>
         @endif
@@ -314,7 +314,7 @@
             @else
             {{-- Empty state --}}
             <div style="text-align:center;padding:3rem;color:#94a3b8;background:var(--bg-secondary);border:1.5px solid var(--border-color);border-radius:1rem;">
-                <div style="font-size:2.5rem;margin-bottom:.75rem;">🏆</div>
+                <iconify-icon icon="solar:medal-ribbons-star-linear" width="42" height="42" style="margin-bottom:.75rem;"></iconify-icon>
                 <div style="font-weight:600;font-size:.975rem;color:#0f172a;margin-bottom:.35rem;">Belum ada tim yang mendaftar</div>
                 <div style="font-size:.82rem;">Tim akan muncul setelah peserta mendaftar melalui form kompetisi.</div>
             </div>

@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/js/utils/api.js',
+                'resources/js/utils/iconify-migration.js',
                 'resources/css/components/design-system.css',
                 'resources/css/components/sidebar.css',
                 'resources/css/components/header.css',

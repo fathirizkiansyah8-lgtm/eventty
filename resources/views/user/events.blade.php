@@ -15,12 +15,12 @@
             <h1 style="font-size:1.4rem;font-weight:800;color:var(--text-primary);margin:0;">Semua Event</h1>
             <p style="font-size:.82rem;color:var(--text-muted);margin:.25rem 0 0;">Temukan dan daftar event sekolah yang menarik</p>
         </div>
-        <a href="{{ url('/user/my-events') }}" class="btn btn-outline btn-sm">Event Saya â†’</a>
+        <a href="{{ url('/user/my-events') }}" class="btn btn-outline btn-sm">Event Saya <iconify-icon icon="lucide:arrow-right"></iconify-icon></a>
     </div>
 
     {{-- Filters --}}
     <div style="display:flex;gap:.65rem;flex-wrap:wrap;margin-bottom:1.25rem;align-items:center;">
-        <input type="text" id="searchInput" placeholder="ðŸ” Cari event..."
+        <input type="text" id="searchInput" placeholder="Cari event..."
                style="padding:.5rem .875rem;border:1.5px solid var(--border-color);border-radius:999px;font-size:.82rem;background:var(--bg-secondary);color:var(--text-primary);outline:none;min-width:220px;">
         <select id="categoryFilter"
                 style="padding:.5rem .875rem;border:1.5px solid var(--border-color);border-radius:999px;font-size:.82rem;background:var(--bg-secondary);color:var(--text-primary);">

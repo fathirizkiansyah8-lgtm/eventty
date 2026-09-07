@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard â€” Eventty Admin</title>
+    <title>Dashboard - Eventty Admin</title>
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -37,7 +37,7 @@
                 <p class="admin-page-hd-sub">Ringkasan aktivitas dan statistik Eventty</p>
             </div>
             <a href="{{ url('/admin/events/create') }}" class="abtn abtn-primary">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <iconify-icon icon="solar:add-circle-bold" width="18" height="18"></iconify-icon>
                 Buat Event Baru
             </a>
         </div>
@@ -46,7 +46,7 @@
         <div class="admin-stats">
             <div class="admin-stat">
                 <div class="admin-stat-icon asi-blue">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <iconify-icon icon="solar:calendar-bold-duotone" width="22" height="22"></iconify-icon>
                 </div>
                 <div class="admin-stat-body">
                     <div class="admin-stat-num">{{ $stats['total_events'] }}</div>
@@ -56,7 +56,7 @@
             </div>
             <div class="admin-stat">
                 <div class="admin-stat-icon asi-green">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <iconify-icon icon="solar:clock-circle-bold-duotone" width="22" height="22"></iconify-icon>
                 </div>
                 <div class="admin-stat-body">
                     <div class="admin-stat-num">{{ $stats['active_events'] }}</div>
@@ -66,7 +66,7 @@
             </div>
             <div class="admin-stat">
                 <div class="admin-stat-icon asi-orange">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <iconify-icon icon="solar:users-group-two-rounded-bold-duotone" width="22" height="22"></iconify-icon>
                 </div>
                 <div class="admin-stat-body">
                     <div class="admin-stat-num">{{ $stats['total_participants'] }}</div>
@@ -76,7 +76,7 @@
             </div>
             <div class="admin-stat">
                 <div class="admin-stat-icon asi-purple">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    <iconify-icon icon="solar:check-circle-bold-duotone" width="22" height="22"></iconify-icon>
                 </div>
                 <div class="admin-stat-body">
                     <div class="admin-stat-num">{{ $stats['completed_events'] }}</div>
@@ -118,7 +118,7 @@
                         </h2>
                         <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin-bottom:1rem;max-width:360px;">
                             {{ $featuredEvent->registered_count }}/{{ $featuredEvent->quota }} kuota terisi ·
-                            {{ $featuredEvent->date->format('d M Y') }}
+                            {{ \Carbon\Carbon::parse($featuredEvent->date)->format('d M Y') }}
                         </p>
                         <a href="{{ url('/admin/events/' . $featuredEvent->id) }}" style="display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:#1e40af;font-size:.8rem;font-weight:700;padding:.45rem 1.1rem;border-radius:999px;text-decoration:none;">
                             Kelola Event
@@ -132,7 +132,7 @@
                             <span style="opacity:.65;font-weight:400;">{{ $pct >= 90 ? 'Almost Full' : 'Tersedia' }}</span>
                         </div>
                         <div style="background:rgba(255,255,255,.15);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.2);border-radius:.625rem;padding:.4rem .875rem;font-size:.72rem;font-weight:700;color:#fff;white-space:nowrap;">
-                            {{ $featuredEvent->date->format('d M Y') }}
+                            {{ \Carbon\Carbon::parse($featuredEvent->date)->format('d M Y') }}
                             <span style="opacity:.65;font-weight:400;">{{ $featuredEvent->days_until_event }} hari lagi</span>
                         </div>
                     </div>
@@ -179,14 +179,14 @@
                                 <tr>
                                     <td>
                                         <div style="display:flex;align-items:center;gap:.75rem;">
-                                            <div style="width:38px;height:32px;border-radius:.375rem;background:{{ $ev->category->color ?? '#3b82f6' }}20;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;">🎉</div>
+                                            <div style="width:38px;height:32px;border-radius:.375rem;background:{{ $ev->category->color ?? '#3b82f6' }}20;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1rem;"><iconify-icon icon="solar:calendar-linear"></iconify-icon></div>
                                             <div>
                                                 <div style="font-weight:700;font-size:.825rem;color:#0f172a;">{{ $ev->name }}</div>
                                                 <div style="font-size:.7rem;color:#94a3b8;">{{ $ev->category->name ?? '-' }}</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td style="font-size:.8rem;color:#64748b;white-space:nowrap;">{{ $ev->date->format('d M Y') }}</td>
+                                    <td style="font-size:.8rem;color:#64748b;white-space:nowrap;">{{ \Carbon\Carbon::parse($ev->date)->format('d M Y') }}</td>
                                     <td><span class="abadge {{ $evCls }}">{{ $evLabel }}</span></td>
                                     <td>
                                         <div style="min-width:90px;">
@@ -206,7 +206,7 @@
                                 @empty
                                 <tr>
                                     <td colspan="5" style="text-align:center;padding:2rem;color:#94a3b8;">
-                                        <div style="font-size:1.5rem;margin-bottom:.5rem;">📅</div>
+                                        <iconify-icon icon="solar:calendar-search-linear" width="34" height="34" style="margin-bottom:.5rem;"></iconify-icon>
                                         <div>Belum ada event. <a href="{{ url('/admin/events/create') }}" style="color:#1d4ed8;font-weight:600;">Buat event pertama</a></div>
                                     </td>
                                 </tr>
@@ -338,18 +338,18 @@
                     </div>
                     <div class="admin-card-body" style="padding:.875rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem;">
                         @foreach([
-                            ['/admin/events/create', 'Buat Event',  '#dbeafe', '#1d4ed8', '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>'],
-                            ['/admin/participants',  'Peserta',     '#dcfce7', '#15803d', '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>'],
-                            ['/admin/attendance',    'Kehadiran',   '#fef3c7', '#b45309', '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'],
-                            ['/admin/announcements', 'Pengumuman',  '#ede9fe', '#6d28d9', '<path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3z"/>'],
-                            ['/admin/certificates',  'Sertifikat',  '#fee2e2', '#dc2626', '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>'],
-                            ['/admin/students',      'Data Siswa',  '#f0fdf4', '#15803d', '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/>'],
+                            ['/admin/events/create', 'Buat Event',  '#dbeafe', '#1d4ed8', 'solar:calendar-add-bold'],
+                            ['/admin/participants',  'Peserta',     '#dcfce7', '#15803d', 'solar:users-group-rounded-bold'],
+                            ['/admin/attendance',    'Kehadiran',   '#fef3c7', '#b45309', 'solar:clipboard-check-bold'],
+                            ['/admin/announcements', 'Pengumuman',  '#ede9fe', '#6d28d9', 'solar:bell-bing-bold'],
+                            ['/admin/certificates',  'Sertifikat',  '#fee2e2', '#dc2626', 'solar:medal-ribbons-star-bold'],
+                            ['/admin/students',      'Data Siswa',  '#f0fdf4', '#15803d', 'lucide:graduation-cap'],
                         ] as $qa)
                         <a href="{{ url($qa[0]) }}" style="display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.65rem .5rem;border:1.5px solid #e8edf5;background:#f8fafc;border-radius:.75rem;text-decoration:none;color:#0f172a;font-size:.68rem;font-weight:700;text-align:center;transition:all .15s;"
                            onmouseover="this.style.borderColor='#1d4ed8';this.style.background='#eff6ff';this.style.color='#1d4ed8'"
                            onmouseout="this.style.borderColor='#e8edf5';this.style.background='#f8fafc';this.style.color='#0f172a'">
-                            <div style="width:32px;height:32px;border-radius:.5rem;background:{{ $qa[2] }};display:flex;align-items:center;justify-content:center;">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{ $qa[3] }}" stroke-width="2">{!! $qa[4] !!}</svg>
+                            <div style="width:34px;height:34px;border-radius:.5rem;background:{{ $qa[2] }};color:{{ $qa[3] }};display:flex;align-items:center;justify-content:center;font-size:1.1rem;">
+                                <iconify-icon icon="{{ $qa[4] }}" width="20" height="20"></iconify-icon>
                             </div>
                             {{ $qa[1] }}
                         </a>
@@ -406,7 +406,7 @@
                     </div>
                     @empty
                     <div style="padding:1rem;text-align:center;color:#94a3b8;font-size:.8rem;">
-                        ✅ Semua berjalan baik
+                        <iconify-icon icon="solar:check-circle-linear"></iconify-icon> Semua berjalan baik
                     </div>
                     @endforelse
 
@@ -420,7 +420,7 @@
                     @endphp
                     @forelse($recentActivity as $act)
                     <div style="display:flex;align-items:flex-start;gap:.75rem;padding:.625rem 1rem;border-bottom:1px solid #f8fafc;">
-                        <div style="width:32px;height:32px;border-radius:.5rem;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;">👤</div>
+                        <div style="width:32px;height:32px;border-radius:.5rem;background:#dcfce7;color:#15803d;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.9rem;"><iconify-icon icon="solar:user-plus-bold" width="16" height="16"></iconify-icon></div>
                         <div>
                             <div style="font-size:.775rem;font-weight:600;color:#0f172a;line-height:1.4;">
                                 {{ $act->user->name }} mendaftar <em>{{ $act->event->name }}</em>

@@ -102,6 +102,11 @@
     stroke: currentColor;
 }
 
+.admin-sidebar .sidebar-link-icon iconify-icon {
+    width: 18px;
+    height: 18px;
+}
+
 .admin-sidebar .sidebar-link.active .sidebar-link-icon {
     color: #ffffff !important;
 }
@@ -814,16 +819,17 @@
 .admin-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.45);
+    background: rgba(15, 23, 42, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     padding: 1rem;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
 }
 
 .admin-modal-overlay.active {
@@ -831,18 +837,182 @@
     visibility: visible;
 }
 
-.admin-modal {
-    background: #ffffff;
-    border-radius: 1.125rem;
+.logout-modal {
+    position: relative;
     width: 100%;
     max-width: 440px;
-    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
-    transform: scale(0.96);
-    transition: transform 0.2s;
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    box-shadow: 
+        0 20px 45px -10px rgba(15, 23, 42, 0.18), 
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+    transform: scale(0.95) translateY(8px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+    text-align: left !important;
     overflow: hidden;
 }
 
-.admin-modal-overlay.active .admin-modal { transform: scale(1); }
+.logout-modal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ef4444 0%, #f97316 100%);
+    border-radius: 1.25rem 1.25rem 0 0;
+}
+
+.admin-modal-overlay.active .logout-modal {
+    transform: scale(1) translateY(0);
+}
+
+.logout-modal-close {
+    position: absolute;
+    top: 1.125rem;
+    right: 1.125rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.logout-modal-close:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    border-color: #e2e8f0;
+}
+
+.logout-modal-body-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.125rem;
+}
+
+.logout-modal-icon-badge {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.08);
+}
+
+.logout-modal-content {
+    flex: 1;
+    padding-top: 0.125rem;
+}
+
+.logout-modal-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.35rem 0;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+}
+
+.logout-modal-desc {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.55;
+    margin: 0;
+}
+
+.logout-modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(226, 232, 240, 0.7);
+}
+
+.logout-form-inline {
+    flex: 1;
+    margin: 0;
+}
+
+.btn-logout-cancel {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.125rem;
+    border-radius: 0.75rem;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    color: #334155;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+}
+
+.btn-logout-cancel:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+.btn-logout-confirm {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.125rem;
+    border-radius: 0.75rem;
+    border: 1px solid #dc2626;
+    background: #ef4444;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
+}
+
+.btn-logout-confirm:hover {
+    background: #dc2626;
+    border-color: #b91c1c;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-logout-confirm:active {
+    transform: translateY(0);
+}
+
+.admin-modal {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.2);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    transform: scale(0.95) translateY(8px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+.admin-modal-overlay.active .admin-modal { transform: scale(1) translateY(0); }
 
 .admin-modal-hd {
     padding: 1.5rem 1.5rem 1rem;
@@ -856,20 +1026,21 @@
 .admin-modal-icon {
     width: 52px;
     height: 52px;
-    border-radius: 50%;
-    background: #fee2e2;
+    border-radius: 14px;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #dc2626;
+    color: #ef4444;
 }
 
-.admin-modal-icon.blue { background: #dbeafe; color: #1e40af; }
-.admin-modal-icon.green { background: #dcfce7; color: #15803d; }
+.admin-modal-icon.blue { background: #dbeafe; border-color: #bfdbfe; color: #1e40af; }
+.admin-modal-icon.green { background: #dcfce7; border-color: #bbf7d0; color: #15803d; }
 
-.admin-modal-title { font-size: 1rem; font-weight: 800; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; }
-.admin-modal-body  { padding: 0 1.5rem 1.5rem; text-align: center; font-size: 0.85rem; color: #64748b; line-height: 1.6; }
-.admin-modal-ft    { padding: 1rem 1.5rem 1.5rem; display: flex; gap: 0.75rem; justify-content: center; }
+.admin-modal-title { font-size: 1.125rem; font-weight: 700; color: #0f172a; font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: -0.02em; }
+.admin-modal-body  { padding: 0 1.5rem 1.5rem; text-align: center; font-size: 0.875rem; color: #64748b; line-height: 1.55; }
+.admin-modal-ft    { padding: 1.25rem 1.5rem 1.5rem; display: flex; gap: 0.75rem; justify-content: center; border-top: 1px solid rgba(226, 232, 240, 0.7); }
 
 /* =========================================================
    ADMIN EMPTY STATE

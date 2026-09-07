@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(function(err) {
             console.error('My events error:', err);
             container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);">'
-                + '<div style="font-size:2rem;margin-bottom:.75rem;">⚠️</div>'
+                + '<iconify-icon icon="solar:danger-triangle-linear" width="34" height="34" style="margin-bottom:.75rem;"></iconify-icon>'
                 + '<div style="font-weight:600;margin-bottom:.5rem;">Gagal memuat event</div>'
                 + '<button onclick="location.reload()" style="padding:.45rem 1rem;border-radius:.625rem;border:1.5px solid var(--border-color);background:var(--bg-secondary);cursor:pointer;font-size:.82rem;">Coba Lagi</button>'
                 + '</div>';
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderEvents(events, container, filter) {
         if (!events || events.length === 0) {
             container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);">'
-                + '<div style="font-size:2.5rem;margin-bottom:.75rem;">📅</div>'
+                + '<iconify-icon icon="solar:calendar-search-linear" width="42" height="42" style="margin-bottom:.75rem;"></iconify-icon>'
                 + '<div style="font-weight:700;font-size:.975rem;color:var(--text-primary);margin-bottom:.35rem;">Belum ada event</div>'
                 + '<div style="font-size:.82rem;margin-bottom:1rem;">'
                 + (filter !== 'all' ? 'Tidak ada event dengan status yang dipilih.' : 'Anda belum mendaftar ke event apapun.')
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }) || 'seminar';
 
             var certBadge = event.has_certificate
-                ? '<span style="margin-left:.35rem;font-size:.62rem;background:#dcfce7;color:#15803d;padding:.1rem .45rem;border-radius:999px;font-weight:700;">🏆 Sertifikat</span>'
+                ? '<span style="margin-left:.35rem;font-size:.62rem;background:#dcfce7;color:#15803d;padding:.1rem .45rem;border-radius:999px;font-weight:700;"><iconify-icon icon="solar:medal-ribbons-star-linear"></iconify-icon> Sertifikat</span>'
                 : '';
 
             var cancelBtn = (event.attendance_status === 'registered' && event.is_upcoming)
@@ -84,12 +84,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 : '';
 
             var certBtn = event.can_get_certificate
-                ? '<a href="/user/certificates" class="myev-btn-detail" style="background:#dcfce7;border-color:#86efac;color:#15803d;">🏆 Sertifikat</a>'
+                ? '<a href="/user/certificates" class="myev-btn-detail" style="background:#dcfce7;border-color:#86efac;color:#15803d;"><iconify-icon icon="solar:medal-ribbons-star-linear"></iconify-icon> Sertifikat</a>'
                 : '';
 
             var thumb = event.banner_url
-                ? '<img src="' + esc(event.banner_url) + '" alt="' + esc(event.name) + '" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentElement.innerHTML=\'🎉\';this.parentElement.style.display=\'flex\';this.parentElement.style.alignItems=\'center\';this.parentElement.style.justifyContent=\'center\';this.parentElement.style.fontSize=\'2rem\';">'
-                : '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:2rem;">🎉</div>';
+                ? '<img src="' + esc(event.banner_url) + '" alt="' + esc(event.name) + '" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentElement.innerHTML=\'<iconify-icon icon=\"solar:gallery-remove-linear\" width=\"32\" height=\"32\"></iconify-icon>\';this.parentElement.style.display=\'flex\';this.parentElement.style.alignItems=\'center\';this.parentElement.style.justifyContent=\'center\';">'
+                : '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;"><iconify-icon icon="solar:gallery-linear" width="32" height="32"></iconify-icon></div>';
 
             return '<div class="myev-item" data-event-id="' + event.id + '">'
                 + '<div class="myev-item-img">' + thumb + '</div>'
@@ -98,9 +98,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 + '<span class="myev-item-cat ' + catCls + '">' + esc(event.category) + '</span>'
                 + '<div class="myev-item-title">' + esc(event.name) + certBadge + '</div>'
                 + '<div class="myev-item-meta">'
-                + '<span class="myev-item-meta-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ' + esc(event.date) + '</span>'
-                + '<span class="myev-item-meta-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ' + esc(event.time) + '</span>'
-                + '<span class="myev-item-meta-i"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ' + esc(event.location) + '</span>'
+                + '<span class="myev-item-meta-i"><iconify-icon icon="solar:calendar-linear"></iconify-icon> ' + esc(event.date) + '</span>'
+                + '<span class="myev-item-meta-i"><iconify-icon icon="solar:clock-circle-linear"></iconify-icon> ' + esc(event.time) + '</span>'
+                + '<span class="myev-item-meta-i"><iconify-icon icon="solar:map-point-linear"></iconify-icon> ' + esc(event.location) + '</span>'
                 + '</div>'
                 + '<div style="font-size:.7rem;color:var(--text-muted);margin-top:.35rem;">Didaftarkan: ' + esc(event.registration_date) + '</div>'
                 + '</div>'
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
         toast.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:' + bg
             + ';color:#fff;padding:.875rem 1.25rem;border-radius:.75rem;font-weight:600;'
             + 'font-size:.875rem;box-shadow:0 4px 12px rgba(0,0,0,.15);z-index:9999;max-width:320px;';
-        toast.textContent = (type === 'error' ? '❌ ' : '✅ ') + msg;
+        toast.innerHTML = '<iconify-icon icon="solar:' + (type === 'error' ? 'close-circle' : 'check-circle') + '-linear"></iconify-icon> ' + esc(msg);
         document.body.appendChild(toast);
         setTimeout(function() { if (toast.parentNode) toast.remove(); }, 3000);
     }

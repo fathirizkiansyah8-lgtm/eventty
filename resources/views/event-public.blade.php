@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
     <title id="pageTitle">Detail Event — Eventty</title>
     <script>
         (function () {
@@ -17,6 +18,7 @@
     </script>
     @vite([
         'resources/css/auth/event-public.css',
+        'resources/js/utils/iconify-migration.js',
     ])
 </head>
 <body>

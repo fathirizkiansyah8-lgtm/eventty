@@ -11,8 +11,9 @@
     >
 
     <title>Lupa Password - Eventty</title>
+    <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
-    @vite(['resources/css/auth/forgot-password.css'])
+    @vite(['resources/css/auth/forgot-password.css', 'resources/js/utils/iconify-migration.js'])
 
 </head>
 

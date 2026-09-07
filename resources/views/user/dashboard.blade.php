@@ -1,4 +1,4 @@
-﻿@extends('user.layout')
+@extends('user.layout')
 
 @section('title', 'Dashboard')
 
@@ -539,7 +539,7 @@
             <div class="hero-content">
                 @if($nearestEvent)
                     <div class="hero-eyebrow">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                        <iconify-icon icon="solar:circle-linear" width="10" height="10"></iconify-icon>
                         {{ $nearestEvent->category->name ?? 'Event' }} · {{ $nearestEvent->date->format('F Y') }}
                     </div>
                     <h1 class="hero-title">{{ $nearestEvent->name }}</h1>
@@ -548,30 +548,30 @@
                     </p>
                     <a href="{{ url('/user/events/' . $nearestEvent->id) }}" class="hero-btn">
                         Lihat Event
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        <iconify-icon icon="solar:arrow-right-linear" width="14" height="14"></iconify-icon>
                     </a>
                 @elseif($upcomingEvents->isNotEmpty())
                     @php $featured = $upcomingEvents->first(); @endphp
                     <div class="hero-eyebrow">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                        <iconify-icon icon="solar:circle-linear" width="10" height="10"></iconify-icon>
                         {{ $featured->category->name ?? 'Event' }} · {{ $featured->date->format('F Y') }}
                     </div>
                     <h1 class="hero-title">{{ $featured->name }}</h1>
                     <p class="hero-subtitle">{{ Str::limit($featured->description, 100) }}</p>
                     <a href="{{ url('/user/events/' . $featured->id) }}" class="hero-btn">
                         Lihat Event
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        <iconify-icon icon="solar:arrow-right-linear" width="14" height="14"></iconify-icon>
                     </a>
                 @else
                     <div class="hero-eyebrow">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                        <iconify-icon icon="solar:circle-linear" width="10" height="10"></iconify-icon>
                         Selamat Datang di Eventty
                     </div>
                     <h1 class="hero-title">Belum ada event <span>mendatang</span></h1>
                     <p class="hero-subtitle">Pantau terus halaman events untuk event terbaru dari sekolah.</p>
                     <a href="{{ url('/user/events') }}" class="hero-btn">
                         Lihat Semua Event
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        <iconify-icon icon="solar:arrow-right-linear" width="14" height="14"></iconify-icon>
                     </a>
                 @endif
             </div>
@@ -584,7 +584,7 @@
                     @if($pol->banner_path)
                         <img src="{{ $pol->banner_url }}" alt="{{ $pol->name }}">
                     @else
-                        <div style="width:100%;height:80px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">🎉</div>
+                        <div style="width:100%;height:80px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1.5rem;"><iconify-icon icon="lucide:image"></iconify-icon></div>
                     @endif
                     <div class="polaroid-label">{{ Str::limit($pol->name, 14) }}</div>
                 </div>
@@ -599,7 +599,7 @@
                 <div class="events-topbar-left">
                     <span class="eventy-section-title">Events Tersedia</span>
                     <div class="eventy-search">
-                        <svg class="eventy-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <iconify-icon class="eventy-search-icon" icon="solar:magnifer-linear" width="14" height="14"></iconify-icon>
                         <input type="text" id="eventSearch" placeholder="Cari event...">
                     </div>
                 </div>
@@ -632,26 +632,26 @@
                     @if($event->banner_path)
                         <img class="event-row-thumb" src="{{ $event->banner_url }}" alt="{{ $event->name }}">
                     @else
-                        <div class="event-row-thumb" style="background:{{ $event->category->color ?? '#3b82f6' }};display:flex;align-items:center;justify-content:center;font-size:1.4rem;">🎉</div>
+                        <div class="event-row-thumb" style="background:{{ $event->category->color ?? '#3b82f6' }};display:flex;align-items:center;justify-content:center;font-size:1.4rem;"><iconify-icon icon="lucide:image"></iconify-icon></div>
                     @endif
                     <div class="event-row-info">
                         <div class="event-row-title">
                             {{ $event->name }}
                             @if($event->has_certificate)
-                                <span style="margin-left:.35rem;font-size:.62rem;background:#dcfce7;color:#15803d;padding:.1rem .4rem;border-radius:999px;font-weight:700;vertical-align:middle;">🏆 Sertifikat</span>
+                                <span style="margin-left:.35rem;font-size:.62rem;background:#dcfce7;color:#15803d;padding:.1rem .4rem;border-radius:999px;font-weight:700;vertical-align:middle;"><iconify-icon icon="lucide:badge-check"></iconify-icon> Sertifikat</span>
                             @endif
                         </div>
                         <div class="event-row-meta">
                             <span>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                <iconify-icon icon="solar:calendar-linear" width="12" height="12"></iconify-icon>
                                 {{ $event->date->format('d M Y') }}
                             </span>
                             <span>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                <iconify-icon icon="solar:clock-circle-linear" width="12" height="12"></iconify-icon>
                                 {{ $event->start_time->format('H:i') }} – {{ $event->end_time->format('H:i') }}
                             </span>
                             <span>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                <iconify-icon icon="solar:map-point-linear" width="12" height="12"></iconify-icon>
                                 {{ Str::limit($event->location, 20) }}
                             </span>
                         </div>
@@ -671,7 +671,7 @@
                 </div>
                 @empty
                 <div style="text-align:center;padding:2rem;color:var(--text-muted);">
-                    <div style="font-size:2rem;margin-bottom:.5rem;">📅</div>
+                    <iconify-icon icon="lucide:calendar-x" width="32" height="32" style="margin-bottom:.5rem;"></iconify-icon>
                     <p style="font-size:.875rem;">Belum ada event yang tersedia saat ini.</p>
                     <p style="font-size:.78rem;margin-top:.25rem;">Pantau terus untuk event terbaru!</p>
                 </div>
@@ -693,7 +693,7 @@
                         <div class="user-name">{{ Auth::user()->name }}</div>
                         <div class="user-email">NIS: {{ Auth::user()->nis ?? '-' }}</div>
                         <div class="user-class-badge">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                            <iconify-icon icon="lucide:graduation-cap" width="10" height="10"></iconify-icon>
                             {{ Auth::user()->class ?? 'Belum diisi' }}
                         </div>
                     </div>
@@ -702,22 +702,22 @@
                 {{-- Stats real dari DB ── --}}
                 <div class="stats-grid-2x2">
                     <div class="mini-stat">
-                        <div class="mini-stat-icon">🎯</div>
+                        <div class="mini-stat-icon"><iconify-icon icon="solar:target-linear"></iconify-icon></div>
                         <div class="mini-stat-num">{{ $stats['events_joined'] }}</div>
                         <div class="mini-stat-label">Events Joined</div>
                     </div>
                     <div class="mini-stat">
-                        <div class="mini-stat-icon">🏆</div>
+                        <div class="mini-stat-icon"><iconify-icon icon="lucide:badge-check"></iconify-icon></div>
                         <div class="mini-stat-num">{{ $stats['certificates'] }}</div>
                         <div class="mini-stat-label">Certificates</div>
                     </div>
                     <div class="mini-stat">
-                        <div class="mini-stat-icon">✅</div>
+                        <div class="mini-stat-icon"><iconify-icon icon="solar:check-circle-linear"></iconify-icon></div>
                         <div class="mini-stat-num">{{ $stats['completed_events'] }}</div>
                         <div class="mini-stat-label">Completed</div>
                     </div>
                     <div class="mini-stat">
-                        <div class="mini-stat-icon">📅</div>
+                        <div class="mini-stat-icon"><iconify-icon icon="lucide:calendar-days"></iconify-icon></div>
                         <div class="mini-stat-num">{{ $stats['upcoming_events'] }}</div>
                         <div class="mini-stat-label">Upcoming</div>
                     </div>
@@ -730,19 +730,19 @@
             <div class="qa-title">Quick Actions</div>
             <div class="qa-grid">
                 <a href="{{ url('/user/events') }}" class="qa-btn">
-                    <div class="qa-btn-icon qa-blue">📋</div>
+                    <div class="qa-btn-icon qa-blue"><iconify-icon icon="solar:clipboard-list-linear"></iconify-icon></div>
                     Cari Event
                 </a>
                 <a href="{{ url('/user/my-events') }}" class="qa-btn">
-                    <div class="qa-btn-icon qa-green">📌</div>
+                    <div class="qa-btn-icon qa-green"><iconify-icon icon="solar:pin-linear"></iconify-icon></div>
                     Event Saya
                 </a>
                 <a href="{{ url('/user/certificates') }}" class="qa-btn">
-                    <div class="qa-btn-icon qa-purple">🏅</div>
+                    <div class="qa-btn-icon qa-purple"><iconify-icon icon="solar:medal-ribbons-star-linear"></iconify-icon></div>
                     Sertifikat
                 </a>
                 <a href="{{ url('/user/profile') }}" class="qa-btn">
-                    <div class="qa-btn-icon qa-orange">👤</div>
+                    <div class="qa-btn-icon qa-orange"><iconify-icon icon="solar:user-circle-linear"></iconify-icon></div>
                     Profil
                 </a>
             </div>

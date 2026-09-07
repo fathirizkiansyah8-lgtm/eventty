@@ -106,8 +106,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    const closeLogoutModalBtn = document.getElementById('closeLogoutModalBtn');
+
     if (cancelLogoutBtn) {
         cancelLogoutBtn.addEventListener('click', function () {
+            const modal = document.getElementById('logoutModal') || logoutModal;
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        });
+    }
+
+    if (closeLogoutModalBtn) {
+        closeLogoutModalBtn.addEventListener('click', function () {
             const modal = document.getElementById('logoutModal') || logoutModal;
             if (modal) {
                 modal.classList.remove('active');

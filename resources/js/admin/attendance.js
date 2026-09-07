@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (list.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;">
-                    <div>📋</div><p>Tidak ada data kehadiran${currentFilters.event_id ? ' untuk event ini' : ''}.</p>
+                    <iconify-icon icon="solar:clipboard-remove-linear" width="34" height="34"></iconify-icon><p>Tidak ada data kehadiran${currentFilters.event_id ? ' untuk event ini' : ''}.</p>
                 </td></tr>`;
                 return;
             }
@@ -70,11 +70,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div style="display:flex;gap:.35rem;">
                             <button class="abtn abtn-sm ${item.attendance_status === 'present' ? 'abtn-primary' : 'abtn-outline'} mark-present-btn"
                                     data-participant-id="${item.id}" ${item.attendance_status === 'present' ? 'disabled' : ''}>
-                                ✓ Hadir
+                                <iconify-icon icon="solar:check-linear"></iconify-icon> Hadir
                             </button>
                             <button class="abtn abtn-sm ${item.attendance_status === 'absent' ? 'abtn-danger' : 'abtn-outline'} mark-absent-btn"
                                     data-participant-id="${item.id}" ${item.attendance_status === 'absent' ? 'disabled' : ''}>
-                                ✗ Absen
+                                <iconify-icon icon="solar:close-linear"></iconify-icon> Absen
                             </button>
                         </div>
                     </td>

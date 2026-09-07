@@ -1,6 +1,7 @@
 <title>Login - Eventty</title>
+<script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
-@vite(['resources/css/auth/login.css'])
+@vite(['resources/css/auth/login.css', 'resources/js/utils/iconify-migration.js'])
 
 
 <main class="login-page">
