@@ -7,7 +7,6 @@ use App\Models\Event;
 use App\Models\EventCategory;
 use App\Services\FileUploadService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -66,9 +65,9 @@ class EventController extends Controller
     /**
      * Store a newly created event.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): JsonResponse
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name'        => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:event_categories,id',
@@ -98,18 +97,27 @@ class EventController extends Controller
             'banner.max'           => 'Ukuran banner maksimal 2MB.',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal.',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
         $bannerPath = null;
         if ($request->hasFile('banner')) {
             try {
                 $bannerPath = $this->fileUploadService->uploadEventBanner($request->file('banner'));
             } catch (\Exception $e) {
-                return redirect()->back()
-                    ->withErrors(['banner' => 'Gagal mengupload banner: ' . $e->getMessage()])
-                    ->withInput();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengupload banner: ' . $e->getMessage()
+                ], 422);
             }
         }
 
-        Event::create([
+        $event = Event::create([
             'name'            => $request->name,
             'description'     => $request->description,
             'category_id'     => $request->category_id,
@@ -125,8 +133,11 @@ class EventController extends Controller
             'created_by'      => Auth::id(),
         ]);
 
-        return redirect()->route('admin.events.index')
-            ->with('success', 'Event berhasil dibuat!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Event berhasil dibuat!',
+            'event'   => ['id' => $event->id, 'name' => $event->name],
+        ]);
     }
 
     /**
@@ -216,17 +227,18 @@ class EventController extends Controller
         }
 
         $event->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-            'date' => $request->date,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
-            'location' => $request->location,
-            'organizer' => $request->organizer,
-            'quota' => $request->quota,
-            'banner_path' => $bannerPath,
-            'status' => $request->status,
+            'name'            => $request->name,
+            'description'     => $request->description,
+            'category_id'     => $request->category_id,
+            'date'            => $request->date,
+            'start_time'      => $request->start_time,
+            'end_time'        => $request->end_time,
+            'location'        => $request->location,
+            'organizer'       => $request->organizer,
+            'quota'           => $request->quota,
+            'banner_path'     => $bannerPath,
+            'has_certificate' => $request->boolean('has_certificate'),
+            'status'          => $request->status,
         ]);
 
         return response()->json([

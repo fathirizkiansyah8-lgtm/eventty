@@ -65,7 +65,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Event::class, 'event_participants')
             ->withPivot(['registration_date', 'attendance_status', 'attendance_checked_at', 'attendance_checked_by', 'notes'])
-            ->withTimestamps();
+            ->withTimestamps()
+            ->using(\App\Models\EventParticipant::class); // pakai model agar casts berlaku
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Http\Controllers\User\EventController as UserEventController;
 use App\Http\Controllers\User\CertificateController as UserCertificateController;
 use App\Http\Controllers\User\NotificationController as UserNotificationController;
 use App\Http\Controllers\User\ProfileController as UserProfileController;
+use App\Http\Controllers\User\MessageController as UserMessageController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Admin\StudentsController as AdminStudentsController;
 use App\Http\Controllers\Admin\AnnouncementsController as AdminAnnouncementsController;
 use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Admin\FileController as AdminFileController;
+use App\Http\Controllers\Admin\MessageController as AdminMessageController;
 
 // Public routes
 Route::get('/events/public', function () {
@@ -80,9 +82,8 @@ Route::prefix('user')->middleware(['auth', 'role:student'])->group(function () {
         return view('user.settings');
     })->name('user.settings');
 
-    Route::get('/messages', function () {
-        return view('user.messages');
-    })->name('user.messages');
+    // Messages — real CS chat dengan admin
+    Route::get('/messages', [UserMessageController::class, 'index'])->name('user.messages');
 });
 
 // Admin Dashboard Routes - Protected by auth and role:admin middleware
@@ -125,6 +126,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.notifications');
     })->name('admin.notifications');
 
+    // Messages
+    Route::get('/messages', [AdminMessageController::class, 'index'])->name('admin.messages');
+
     Route::get('/settings', [AdminSettingsController::class, 'index'])->name('admin.settings');
     Route::post('/settings/profile', [AdminSettingsController::class, 'updateProfile'])->name('admin.settings.profile');
     Route::post('/settings/password', [AdminSettingsController::class, 'changePassword'])->name('admin.settings.password');
@@ -156,6 +160,11 @@ Route::prefix('api')->middleware(['auth'])->group(function () {
         Route::get('/user/notifications/unread-count', [UserNotificationController::class, 'getUnreadCount']);
 
         Route::get('/user/profile', [UserProfileController::class, 'getProfile']);
+
+        // Messages API
+        Route::get('/user/messages',        [UserMessageController::class, 'getMessages']);
+        Route::post('/user/messages',       [UserMessageController::class, 'send']);
+        Route::get('/user/messages/unread', [UserMessageController::class, 'unreadCount']);
     });
 
     // Admin API routes
@@ -169,6 +178,12 @@ Route::prefix('api')->middleware(['auth'])->group(function () {
 
         Route::get('/admin/events', [AdminEventController::class, 'getEvents']);
         Route::get('/admin/categories', [AdminEventController::class, 'getCategories']);
+
+        // Admin Messages API
+        Route::get('/admin/messages/conversations',  [AdminMessageController::class, 'conversations']);
+        Route::get('/admin/messages/unread-total',   [AdminMessageController::class, 'unreadTotal']);
+        Route::get('/admin/messages/{studentId}',    [AdminMessageController::class, 'getMessages']);
+        Route::post('/admin/messages/{studentId}',   [AdminMessageController::class, 'send']);
 
         // Attendance API
         Route::get('/admin/attendance', [AdminAttendanceController::class, 'getAttendance']);

@@ -155,5 +155,5 @@ body[data-theme="dark"] .cert-preview { background:linear-gradient(145deg,#0a153
 @endsection
 
 @push('js')
-@vite(['resources/js/utils/api.js', 'resources/js/user/certificates.js'])
+@vite(['resources/js/user/certificates.js'])
 @endpush

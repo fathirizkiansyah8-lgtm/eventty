@@ -269,6 +269,13 @@ class EventController extends Controller
         $events = $query->orderBy('events.date', 'desc')
                        ->get()
                        ->map(function ($event) {
+            // registration_date bisa string atau Carbon — handle keduanya
+            $regDate = $event->pivot->registration_date;
+            if (is_string($regDate)) {
+                $regDate = \Carbon\Carbon::parse($regDate);
+            }
+            $formattedRegDate = $regDate ? $regDate->format('d F Y') : '-';
+
             return [
                 'id'               => $event->id,
                 'name'             => $event->name,
@@ -278,7 +285,7 @@ class EventController extends Controller
                 'category'         => $event->category->name,
                 'category_color'   => $event->category->color,
                 'attendance_status'=> $event->pivot->attendance_status,
-                'registration_date'=> $event->pivot->registration_date->format('d F Y'),
+                'registration_date'=> $formattedRegDate,
                 'banner_url'       => $event->banner_url,
                 'is_upcoming'      => $event->isUpcoming(),
                 'has_certificate'  => (bool) $event->has_certificate,

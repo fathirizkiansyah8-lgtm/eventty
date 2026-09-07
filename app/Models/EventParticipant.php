@@ -4,19 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Carbon\Carbon;
 
 #[Fillable([
     'event_id', 'user_id', 'registration_date', 'attendance_status',
     'attendance_checked_at', 'attendance_checked_by', 'notes'
 ])]
-class EventParticipant extends Model
+class EventParticipant extends Pivot
 {
     use HasFactory;
 
     protected $table = 'event_participants';
+
+    /**
+     * Pivot perlu ini agar auto-increment ID bekerja
+     */
+    public $incrementing = true;
 
     /**
      * The attributes that should be cast.
@@ -24,8 +29,8 @@ class EventParticipant extends Model
     protected function casts(): array
     {
         return [
-            'registration_date' => 'datetime',
-            'attendance_checked_at' => 'datetime',
+            'registration_date'    => 'datetime',
+            'attendance_checked_at'=> 'datetime',
         ];
     }
 

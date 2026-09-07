@@ -667,6 +667,25 @@
                                 <div class="capacity-fill {{ $pct >= 90 ? 'full' : '' }}" style="width:{{ $pct }}%"></div>
                             </div>
                         </div>
+                        {{-- Tombol daftar/detail --}}
+                        @if($event->isUserRegistered(Auth::user()))
+                            <a href="{{ url('/user/events/' . $event->id) }}"
+                               style="font-size:.7rem;font-weight:700;color:#10b981;text-decoration:none;white-space:nowrap;">
+                                ✓ Terdaftar
+                            </a>
+                        @elseif($event->status === 'open' && !$event->isFull())
+                            <button class="dashboard-register-btn"
+                                    data-event-id="{{ $event->id }}"
+                                    data-event-name="{{ addslashes($event->name) }}"
+                                    style="font-size:.7rem;font-weight:700;padding:.25rem .65rem;border-radius:.375rem;border:1.5px solid #1d4ed8;background:#eff6ff;color:#1d4ed8;cursor:pointer;white-space:nowrap;transition:all .15s;">
+                                Daftar
+                            </button>
+                        @else
+                            <a href="{{ url('/user/events/' . $event->id) }}"
+                               style="font-size:.7rem;font-weight:700;color:#64748b;text-decoration:none;white-space:nowrap;">
+                                Detail →
+                            </a>
+                        @endif
                     </div>
                 </div>
                 @empty

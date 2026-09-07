@@ -191,5 +191,5 @@
 @endsection
 
 @push('js')
-@vite(['resources/js/utils/api.js', 'resources/js/user/my-events.js'])
+@vite(['resources/js/user/my-events.js'])
 @endpush

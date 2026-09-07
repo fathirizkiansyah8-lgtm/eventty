@@ -692,173 +692,121 @@
 @section('content')
 <div class="msg-page">
     <div class="msg-layout" id="msgLayout">
+
+        {{-- ── Conversation list (kiri) ── --}}
         <aside class="msg-conv-panel">
             <div class="msg-conv-hd">
                 <h2>Messages</h2>
-                <a href="{{ url('/user/dashboard') }}" class="msg-exit-link" aria-label="Kembali ke Dashboard">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    Keluar
-                </a>
+                <span class="msg-online-badge" id="adminOnlineBadge">
+                    {{ $admin ? 'Admin Online' : 'Offline' }}
+                </span>
             </div>
-            <div class="msg-conv-list" id="conversationList"></div>
+
+            {{-- Satu conversation: admin --}}
+            <div class="msg-conv-list" id="conversationList">
+                @if($admin)
+                <div class="msg-conv-item active" id="convAdmin">
+                    <div class="msg-av" style="background:linear-gradient(135deg,#f59e0b,#ea580c);">
+                        {{ strtoupper(substr($admin->name, 0, 1)) }}
+                        <span class="msg-av-dot"></span>
+                    </div>
+                    <div class="msg-conv-info">
+                        <div class="msg-conv-row1">
+                            <span class="msg-conv-name">{{ $admin->name }}</span>
+                            <span class="msg-conv-time" id="convLastTime">—</span>
+                        </div>
+                        <div class="msg-conv-row2">
+                            <span class="msg-conv-preview" id="convLastMsg">Admin CS Eventty</span>
+                            <span class="msg-unread-pill" id="convUnreadBadge" style="display:none;"></span>
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div class="msg-empty-state">
+                    <div class="msg-empty-icon">💬</div>
+                    <div class="msg-empty-title">Admin tidak tersedia</div>
+                    <div class="msg-empty-description">Belum ada admin terdaftar.</div>
+                </div>
+                @endif
+            </div>
+
             <div class="msg-conv-ft">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                Chat langsung dengan Admin EVENTTY
+                <iconify-icon icon="lucide:info" width="13" height="13"></iconify-icon>
+                Chat langsung dengan Admin CS Eventty
             </div>
         </aside>
 
+        {{-- ── Chat area (kanan) ── --}}
         <section class="msg-chat">
             <div class="msg-chat-hd">
-                <button class="msg-back-btn" type="button" onclick="window.closeChat && closeChat()" aria-label="Kembali">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <button class="msg-back-btn" type="button" id="msgBackBtn" aria-label="Kembali">
+                    <iconify-icon icon="lucide:arrow-left" width="17" height="17"></iconify-icon>
                 </button>
-                <div class="msg-chat-av" id="chatAvatar">E</div>
+                <div class="msg-chat-av" style="background:linear-gradient(135deg,#f59e0b,#ea580c);">
+                    {{ $admin ? strtoupper(substr($admin->name, 0, 1)) : 'A' }}
+                </div>
                 <div class="msg-chat-hd-info">
-                    <span class="msg-chat-hd-name" id="chatName">EVENTTY Bot</span>
-                    <span class="msg-chat-hd-status"><span class="msg-status-dot"></span><span id="chatStatus">Online</span></span>
+                    <span class="msg-chat-hd-name">{{ $admin?->name ?? 'Admin CS' }}</span>
+                    <span class="msg-chat-hd-status">
+                        <span class="msg-status-dot"></span>
+                        <span>Admin CS Eventty</span>
+                    </span>
                 </div>
             </div>
 
-            <div class="msg-feed" id="msgFeed"></div>
+            {{-- Feed --}}
+            <div class="msg-feed" id="msgFeed">
+                <div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.82rem;">
+                    Memuat percakapan...
+                </div>
+            </div>
 
+            {{-- Input area --}}
             <div class="msg-input-area">
-                <div class="msg-quick-actions" id="quickActions"></div>
+                {{-- Quick replies --}}
+                <div class="msg-quick-actions" id="quickActions">
+                    <button class="msg-quick-btn" data-text="Halo, saya ingin bertanya.">👋 Halo Admin</button>
+                    <button class="msg-quick-btn" data-text="Bagaimana cara mendaftar event?">❓ Cara daftar event</button>
+                    <button class="msg-quick-btn" data-text="Kapan sertifikat bisa didownload?">🏆 Info sertifikat</button>
+                    <button class="msg-quick-btn" data-text="Ada event apa yang tersedia?">📅 Info event</button>
+                </div>
+
                 <div class="msg-send-status" id="sendStatus"></div>
+
+                @if($admin)
                 <div class="msg-input-wrap">
-                    <textarea class="msg-input" id="msgInput" placeholder="Tulis pesan..." rows="1" aria-label="Tulis pesan"></textarea>
-                    <button class="msg-send-btn" id="msgSendBtn" type="button" aria-label="Kirim" disabled>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    <textarea class="msg-input" id="msgInput"
+                              placeholder="Tulis pesan ke Admin..."
+                              rows="1"
+                              aria-label="Tulis pesan"
+                              {{ $admin ? '' : 'disabled' }}></textarea>
+                    <button class="msg-send-btn" id="msgSendBtn"
+                            type="button" aria-label="Kirim" disabled>
+                        <iconify-icon icon="lucide:send" width="16" height="16"></iconify-icon>
                     </button>
                 </div>
-                <p class="msg-input-hint">Enter kirim Â· Shift + Enter baris baru</p>
+                <p class="msg-input-hint">Enter kirim · Shift + Enter baris baru</p>
+                @else
+                <div style="text-align:center;padding:1rem;font-size:.82rem;color:var(--text-muted);">
+                    Tidak ada admin yang tersedia saat ini.
+                </div>
+                @endif
             </div>
         </section>
+
     </div>
 </div>
+
+{{-- Pass data ke JS --}}
+<script>
+window.MSG_ADMIN_NAME = @json($admin?->name ?? 'Admin CS');
+window.MSG_ADMIN_INIT = @json($admin ? strtoupper(substr($admin->name, 0, 1)) : 'A');
+window.MSG_USER_NAME  = @json(Auth::user()->name);
+window.MSG_USER_INIT  = @json(strtoupper(substr(Auth::user()->name, 0, 1)));
+window.CSRF_TOKEN     = @json(csrf_token());
+</script>
 @endsection
 
 @push('js')
-<script>
-(function(){
-    var feed    = document.getElementById('msgFeed');
-    var input   = document.getElementById('msgInput');
-    var sendBtn = document.getElementById('msgSendBtn');
-    var layout  = document.getElementById('msgLayout');
-    var convBadge = document.getElementById('convBadge');
-    var sbarBadge = document.getElementById('sidebarMsgBadge');
-    var typing  = document.getElementById('msgTyping');
-    if (!feed || !input) return;
-
-    function scrollBottom(smooth) {
-        feed.scrollTo({ top: feed.scrollHeight, behavior: smooth ? 'smooth' : 'instant' });
-    }
-
-    // Auto-resize textarea
-    input.addEventListener('input', function(){
-        this.style.height = 'auto';
-        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-    });
-
-    // Clear unread when scrolled to bottom
-    function clearUnread(){
-        if(convBadge) convBadge.style.display = 'none';
-        if(sbarBadge) sbarBadge.style.display = 'none';
-        var div = feed.querySelector('.msg-unread-div');
-        if(div) div.style.opacity = '.4';
-    }
-    feed.addEventListener('scroll', function(){
-        if(feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 60) clearUnread();
-    });
-    setTimeout(clearUnread, 2400);
-
-    var replies = [
-        'Terima kasih sudah menghubungi kami! 😊 Ada lagi yang bisa dibantu?',
-        'Baik, informasi sudah kami catat. Ada pertanyaan lain?',
-        'Untuk info lebih lanjut silakan kunjungi halaman Events ya.',
-        'Akan kami sampaikan ke panitia terkait. Ditunggu!',
-        'Pertanyaan bagus! Kami akan update info terbaru di platform ini.',
-    ];
-    var replyIdx = 0;
-
-    function createBubble(text, dir) {
-        var row = document.createElement('div');
-        row.className = 'msg-row ' + dir;
-        if (dir === 'in') {
-            var av = document.createElement('div');
-            av.className = 'msg-row-av'; av.textContent = 'E';
-            row.appendChild(av);
-        }
-        var col = document.createElement('div');
-        col.className = 'msg-col';
-        var bbl = document.createElement('div');
-        bbl.className = 'msg-bubble ' + dir;
-        bbl.textContent = text;
-        var now = new Date();
-        var t = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-        if (dir === 'out') {
-            var meta = document.createElement('div');
-            meta.className = 'msg-bbl-meta';
-            meta.innerHTML = '<span class="msg-bbl-time">' + t + '</span><span class="msg-tick"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>';
-            col.appendChild(bbl); col.appendChild(meta);
-            setTimeout(function(){ var tk = meta.querySelector('.msg-tick'); if(tk) tk.classList.add('read'); }, 900);
-        } else {
-            var tm = document.createElement('span');
-            tm.className = 'msg-bbl-time'; tm.textContent = t;
-            col.appendChild(bbl); col.appendChild(tm);
-        }
-        row.appendChild(col);
-        return row;
-    }
-
-    function sendMessage() {
-        var text = input.value.trim();
-        if (!text) return;
-        feed.insertBefore(createBubble(text, 'out'), typing);
-        scrollBottom(true);
-        input.value = ''; input.style.height = 'auto';
-
-        // ── Simpan pesan ke localStorage agar muncul di admin ──
-        var stored = JSON.parse(localStorage.getItem('eventty_pending_msgs') || '[]');
-        var now = new Date();
-        stored.push({
-            id:      Date.now(),
-            sender:  'Fathi Rizkiansyah',
-            senderKey: 'fathi',
-            initial: 'F',
-            color:   'linear-gradient(135deg,#3b82f6,#2563eb)',
-            sub:     'XI RPL 1 · NIS 12345',
-            text:    text,
-            time:    String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0'),
-            read:    false,
-            timestamp: now.getTime()
-        });
-        localStorage.setItem('eventty_pending_msgs', JSON.stringify(stored));
-
-        // Show typing then reply
-        typing.style.display = 'flex';
-        scrollBottom(true);
-        setTimeout(function(){
-            typing.style.display = 'none';
-            feed.insertBefore(createBubble(replies[replyIdx++ % replies.length], 'in'), typing);
-            scrollBottom(true);
-        }, 1500);
-    }
-
-    sendBtn.addEventListener('click', sendMessage);
-    input.addEventListener('keydown', function(e){
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-    });
-
-    // Mobile
-    window.openChat = function(el){
-        document.querySelectorAll('.msg-conv-item').forEach(function(i){ i.classList.remove('active'); });
-        el.classList.add('active');
-        layout.classList.add('chat-open');
-        scrollBottom(false);
-    };
-    window.closeChat = function(){ layout.classList.remove('chat-open'); };
-
-    scrollBottom(false);
-})();
-</script>
+@vite(['resources/js/user/messages.js'])
 @endpush

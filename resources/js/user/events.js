@@ -58,8 +58,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (events.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state" style="grid-column:1/-1;text-align:center;padding:3rem;">
-                        <iconify-icon icon="lucide:calendar-search" width="42" height="42" aria-hidden="true"></iconify-icon>
+                    <div class="ev-empty-state">
+                        <iconify-icon icon="lucide:calendar-search" width="48" height="48"></iconify-icon>
                         <h3>Tidak ada event ditemukan</h3>
                         <p>Coba ubah filter atau kata kunci pencarian Anda.</p>
                     </div>`;
@@ -67,40 +67,81 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            container.innerHTML = events.map(event => `
-                <div class="event-card" data-event-id="${event.id}">
-                    <div class="event-image">
-                        <img src="${event.banner_url}" alt="${event.name}" loading="lazy"
-                             onerror="this.src='${window.location.origin}/images/seminar.png'">
-                        <span class="event-category-badge" style="background:${event.category_color}">
-                            ${event.category}
-                        </span>
-                        ${event.has_certificate ? '<span style="position:absolute;top:.5rem;right:.5rem;background:#10b981;color:#fff;padding:.2rem .55rem;border-radius:999px;font-size:.65rem;font-weight:700;"><iconify-icon icon="lucide:badge-check"></iconify-icon> Sertifikat</span>' : ''}
-                        ${event.is_full ? '<span class="event-full-badge">Penuh</span>' : ''}
+            container.innerHTML = events.map(event => {
+                const pct = event.quota > 0
+                    ? Math.min(100, Math.round(event.registered_count / event.quota * 100))
+                    : 0;
+                const fillClass = pct >= 90 ? 'danger' : pct >= 70 ? 'warn' : '';
+
+                const imgHtml = `<img src="${event.banner_url}" alt="${event.name}" loading="lazy"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                     <div class="ev-card-img-placeholder" style="display:none;">
+                         <iconify-icon icon="lucide:image-off" width="40" height="40"></iconify-icon>
+                     </div>`;
+
+                const certBadge = event.has_certificate
+                    ? `<span class="ev-card-cert"><iconify-icon icon="lucide:badge-check"></iconify-icon> Sertifikat</span>` : '';
+
+                const fullBadge = event.is_full
+                    ? `<span class="ev-card-full">Penuh</span>` : '';
+
+                let actionBtn = '';
+                if (event.is_registered) {
+                    actionBtn = `<button class="ev-btn-registered" disabled>
+                        <iconify-icon icon="lucide:check"></iconify-icon> Terdaftar
+                    </button>`;
+                } else if (event.is_full || event.status !== 'open') {
+                    actionBtn = `<button class="ev-btn-full" disabled>Tidak Tersedia</button>`;
+                } else {
+                    actionBtn = `<button class="ev-btn-register register-btn"
+                        data-event-id="${event.id}"
+                        data-event-name="${event.name.replace(/"/g,'&quot;')}">
+                        Daftar
+                    </button>`;
+                }
+
+                return `
+                <div class="ev-card" onclick="if(!event.target.closest('button'))window.location='/user/events/${event.id}'" data-event-id="${event.id}">
+                    <div class="ev-card-img">
+                        ${imgHtml}
+                        <span class="ev-card-cat" style="background:${event.category_color}">${event.category}</span>
+                        ${certBadge}
+                        ${fullBadge}
                     </div>
-                    <div class="event-content">
-                        <h4 class="event-title">${event.name}</h4>
-                        <div class="event-info">
-                            <span><iconify-icon icon="lucide:calendar-days"></iconify-icon> ${event.date}</span>
-                            <span><iconify-icon icon="lucide:clock-3"></iconify-icon> ${event.time}</span>
-                            <span><iconify-icon icon="lucide:map-pin"></iconify-icon> ${event.location}</span>
+                    <div class="ev-card-body">
+                        <div class="ev-card-name">${event.name}</div>
+                        <div class="ev-card-meta">
+                            <div class="ev-card-meta-item">
+                                <iconify-icon icon="lucide:calendar-days"></iconify-icon>
+                                <span>${event.date}</span>
+                            </div>
+                            <div class="ev-card-meta-item">
+                                <iconify-icon icon="lucide:clock-3"></iconify-icon>
+                                <span>${event.time}</span>
+                            </div>
+                            <div class="ev-card-meta-item">
+                                <iconify-icon icon="lucide:map-pin"></iconify-icon>
+                                <span>${event.location}</span>
+                            </div>
                         </div>
-                        <div class="event-quota-bar">
-                            <div class="quota-fill" style="width:${Math.min(100, Math.round(event.registered_count/event.quota*100))}%"></div>
+                        <div class="ev-card-quota-wrap">
+                            <div class="ev-card-quota-row">
+                                <span>${event.registered_count}/${event.quota} peserta</span>
+                                <span>${pct}%</span>
+                            </div>
+                            <div class="ev-card-quota-bar">
+                                <div class="ev-card-quota-fill ${fillClass}" style="width:${pct}%"></div>
+                            </div>
                         </div>
-                        <div class="event-quota-text">${event.registered_count}/${event.quota} peserta</div>
                     </div>
-                    <div class="event-footer">
-                        <a href="/user/events/${event.id}" class="btn btn-outline">Detail</a>
-                        ${event.is_registered
-                            ? '<button class="btn btn-success" disabled><iconify-icon icon="lucide:check"></iconify-icon> Terdaftar</button>'
-                            : event.is_full
-                                ? '<button class="btn btn-secondary" disabled>Penuh</button>'
-                                : `<button class="btn btn-primary register-btn" data-event-id="${event.id}" data-event-name="${event.name}">Daftar</button>`
-                        }
+                    <div class="ev-card-footer">
+                        <a href="/user/events/${event.id}" class="ev-btn-detail" onclick="event.stopPropagation()">
+                            Detail
+                        </a>
+                        ${actionBtn}
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
             updatePagination(response, page);
             currentPage = page;
@@ -123,31 +164,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ── Update pagination UI ──
     function updatePagination(response, currentPage) {
-        const paginationContainer = document.getElementById('pagination') || document.querySelector('.pagination');
+        const paginationContainer = document.getElementById('pagination');
         if (!paginationContainer) return;
 
         const lastPage = response.last_page || 1;
-        const total = response.total || 0;
+        const total    = response.total    || 0;
+        const from     = response.from     || 0;
+        const to       = response.to       || 0;
 
         if (lastPage <= 1) {
-            paginationContainer.innerHTML = '';
+            paginationContainer.innerHTML = total > 0
+                ? `<div class="ev-pagination-info">Menampilkan ${total} event</div>` : '';
             return;
         }
 
-        let html = `<div class="pagination-info">Menampilkan ${response.from}–${response.to} dari ${total} event</div>
-                    <div class="pagination-buttons">`;
-
+        let btns = '';
         if (currentPage > 1) {
-            html += `<button class="btn btn-outline page-btn" data-page="${currentPage - 1}"><iconify-icon icon="lucide:chevron-left"></iconify-icon> Sebelumnya</button>`;
+            btns += `<button class="ev-page-btn" data-page="${currentPage - 1}">
+                <iconify-icon icon="lucide:chevron-left"></iconify-icon>
+            </button>`;
         }
         for (let i = Math.max(1, currentPage - 2); i <= Math.min(lastPage, currentPage + 2); i++) {
-            html += `<button class="btn ${i === currentPage ? 'btn-primary' : 'btn-outline'} page-btn" data-page="${i}">${i}</button>`;
+            btns += `<button class="ev-page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
         }
         if (currentPage < lastPage) {
-            html += `<button class="btn btn-outline page-btn" data-page="${currentPage + 1}">Berikutnya <iconify-icon icon="lucide:chevron-right"></iconify-icon></button>`;
+            btns += `<button class="ev-page-btn" data-page="${currentPage + 1}">
+                <iconify-icon icon="lucide:chevron-right"></iconify-icon>
+            </button>`;
         }
-        html += '</div>';
-        paginationContainer.innerHTML = html;
+
+        paginationContainer.innerHTML = `
+            <div class="ev-pagination-info">Menampilkan ${from}–${to} dari ${total} event</div>
+            <div class="ev-pagination-btns">${btns}</div>`;
     }
 
     // ── Initialize filter event listeners ──
@@ -194,8 +242,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Pagination (delegated)
         document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('page-btn')) {
-                const page = parseInt(e.target.dataset.page);
+            if (e.target.closest('.ev-page-btn')) {
+                const btn = e.target.closest('.ev-page-btn');
+                const page = parseInt(btn.dataset.page);
                 if (page && page !== currentPage) loadEvents(page);
             }
 

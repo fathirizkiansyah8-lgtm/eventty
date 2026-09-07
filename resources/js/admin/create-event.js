@@ -102,47 +102,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const submitBtn = form.querySelector('button[type="submit"]');
 
         try {
-            setLoadingState(submitBtn, true, 'Creating...');
+            setLoadingState(submitBtn, true, 'Menyimpan...');
 
-            // Prepare form data
-            const formData = new FormData(form);
+            // Kirim seluruh form sebagai FormData (termasuk banner file dan has_certificate)
+            const uploadData = new FormData(form);
 
-            // Convert form data for API
-            const eventData = {
-                name: formData.get('name'),
-                description: formData.get('description'),
-                category_id: formData.get('category_id'),
-                date: formData.get('date'),
-                start_time: formData.get('start_time'),
-                end_time: formData.get('end_time'),
-                location: formData.get('location'),
-                organizer: formData.get('organizer'),
-                quota: parseInt(formData.get('quota')),
-                status: formData.get('status'),
-            };
-
-            // Create FormData for file upload
-            const uploadData = new FormData();
-            Object.keys(eventData).forEach(key => {
-                uploadData.append(key, eventData[key]);
-            });
-
-            // Add banner file if selected
-            const bannerFile = formData.get('banner');
-            if (bannerFile && bannerFile.size > 0) {
-                uploadData.append('banner', bannerFile);
-            }
-
-            // Submit to API
+            // Submit to API (controller store() sudah return JSON)
             const response = await api.post('/admin/events', uploadData);
 
             if (response.success) {
-                showNotification(response.message, 'success');
-
-                // Redirect to events list after short delay
+                showNotification(response.message || 'Event berhasil dibuat!', 'success');
                 setTimeout(() => {
                     window.location.href = '/admin/events';
-                }, 1500);
+                }, 1200);
             }
 
         } catch (error) {

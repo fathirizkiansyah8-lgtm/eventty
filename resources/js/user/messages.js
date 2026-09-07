@@ -1,320 +1,289 @@
+/**
+ * User Messages — real CS chat dengan Admin via database.
+ * Tidak ada dummy data. Semua pesan dari /api/user/messages.
+ */
 document.addEventListener('DOMContentLoaded', function () {
-    const feed = document.getElementById('msgFeed');
-    const list = document.getElementById('conversationList');
-    const input = document.getElementById('msgInput');
-    const sendBtn = document.getElementById('msgSendBtn');
-    const statusBox = document.getElementById('sendStatus');
-    const quickActions = document.getElementById('quickActions');
-    const chatName = document.getElementById('chatName');
-    const chatAvatar = document.getElementById('chatAvatar');
-    const chatStatus = document.getElementById('chatStatus');
-    const layout = document.getElementById('msgLayout');
 
-    if (!feed || !list || !input || !sendBtn || !statusBox) {
-        return;
-    }
+    var feed       = document.getElementById('msgFeed');
+    var input      = document.getElementById('msgInput');
+    var sendBtn    = document.getElementById('msgSendBtn');
+    var statusBox  = document.getElementById('sendStatus');
+    var backBtn    = document.getElementById('msgBackBtn');
+    var layout     = document.getElementById('msgLayout');
+    var quickArea  = document.getElementById('quickActions');
 
-    const now = () => new Date();
-    const formatTime = (date = new Date()) => {
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return `${hours}:${minutes}`;
-    };
+    if (!feed) return;
 
-    const conversationData = [{
-            id: 'admin',
-            type: 'admin',
-            name: 'Admin EVENTTY',
-            status: 'Online',
-            avatar: 'A',
-            color: 'linear-gradient(135deg, #f59e0b, #ea580c)',
-            lastMessage: 'Format file yang diterima adalah PNG, JPG, atau PDF.',
-            lastTime: '12 menit lalu',
-            unread: 1,
-            messages: [
-                { sender: 'admin', text: 'Halo, ada yang bisa kami bantu?', time: '09:00' },
-                { sender: 'user', text: 'Saya ingin memastikan format file desain yang diterima.', time: '09:03' },
-                { sender: 'admin', text: 'Format file yang diterima adalah PNG, JPG, atau PDF dengan maksimal ukuran 10MB.', time: '09:04' },
-            ],
-            suggestions: ['Format file yang diterima?', 'Batas deadline?', 'Apakah boleh pakai Canva?'],
-        }];
+    var CSRF = window.CSRF_TOKEN || '';
+    var isSending = false;
+    var pollInterval = null;
+    var lastMessageId = 0;
 
-    let activeConversationId = 'admin';
-    let isTyping = false;
-
-    function getConversationById(id) {
-        return conversationData.find((item) => item.id === id) || conversationData[0];
-    }
-
-    function renderConversationList() {
-        list.innerHTML = '';
-
-        const sorted = [...conversationData].sort((a, b) => {
-            const aTime = a.messages[a.messages.length - 1]?.time || '00:00';
-            const bTime = b.messages[b.messages.length - 1]?.time || '00:00';
-            return bTime.localeCompare(aTime);
+    // ── Auto-resize textarea ──
+    if (input) {
+        input.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            sendBtn && (sendBtn.disabled = this.value.trim() === '');
         });
 
-        if (!sorted.length) {
-            list.innerHTML = `
-                <div class="msg-empty-state">
-                    <div class="msg-empty-icon">💬</div>
-                    <div class="msg-empty-title">Belum ada percakapan</div>
-                    <div class="msg-empty-description">Mulai chat dengan EVENTTY Bot atau Admin untuk mendapatkan bantuan cepat.</div>
-                </div>
-            `;
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!sendBtn.disabled) sendMessage();
+            }
+        });
+    }
+
+    // ── Send button ──
+    if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+
+    // ── Back button (mobile) ──
+    if (backBtn) {
+        backBtn.addEventListener('click', function () {
+            layout && layout.classList.remove('chat-open');
+        });
+    }
+
+    // ── Quick replies ──
+    if (quickArea) {
+        quickArea.querySelectorAll('.msg-quick-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var text = this.dataset.text;
+                if (input && text) {
+                    input.value = text;
+                    input.dispatchEvent(new Event('input'));
+                    input.focus();
+                }
+            });
+        });
+    }
+
+    // ── Load messages on boot ──
+    loadMessages(true);
+
+    // ── Poll setiap 5 detik untuk pesan baru ──
+    pollInterval = setInterval(function () { loadMessages(false); }, 5000);
+
+    // ── Cleanup on page leave ──
+    window.addEventListener('beforeunload', function () {
+        clearInterval(pollInterval);
+    });
+
+
+    // =========================================
+    // LOAD MESSAGES
+    // =========================================
+    function loadMessages(initialLoad) {
+        fetch('/api/user/messages', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': CSRF
+            }
+        })
+        .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
+        .then(function (messages) {
+            renderFeed(messages, initialLoad);
+            updateConversationPreview(messages);
+        })
+        .catch(function (err) {
+            console.error('Load messages error:', err);
+            if (initialLoad) {
+                feed.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:.82rem;">'
+                    + '<iconify-icon icon="lucide:wifi-off" width="28" height="28" style="display:block;margin:0 auto .5rem;"></iconify-icon>'
+                    + 'Gagal memuat percakapan. Coba refresh halaman.'
+                    + '</div>';
+            }
+        });
+    }
+
+
+    // =========================================
+    // RENDER FEED
+    // =========================================
+    function renderFeed(messages, scrollToBottom) {
+        if (!messages || messages.length === 0) {
+            feed.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-muted);">'
+                + '<iconify-icon icon="lucide:message-circle" width="40" height="40" style="display:block;margin:0 auto 1rem;opacity:.3;"></iconify-icon>'
+                + '<p style="font-size:.875rem;font-weight:600;">Belum ada pesan</p>'
+                + '<p style="font-size:.78rem;margin-top:.25rem;">Mulai percakapan dengan Admin CS Eventty.</p>'
+                + '</div>';
+            lastMessageId = 0;
             return;
         }
 
-        sorted.forEach((conversation) => {
-            const lastMessage = conversation.messages[conversation.messages.length - 1];
-            const item = document.createElement('div');
-            item.className = `msg-conv-item ${activeConversationId === conversation.id ? 'active' : ''}`;
-            item.dataset.id = conversation.id;
-            item.innerHTML = `
-                <div class="msg-av" style="background: ${conversation.color};">
-                    ${conversation.avatar}
-                    <span class="msg-av-dot"></span>
-                </div>
-                <div class="msg-conv-info">
-                    <div class="msg-conv-row1">
-                        <span class="msg-conv-name">${conversation.name}</span>
-                        <span class="msg-conv-time">${conversation.lastTime}</span>
-                    </div>
-                    <div class="msg-conv-row2">
-                        <span class="msg-conv-preview">${lastMessage ? lastMessage.text : 'Belum ada pesan'}</span>
-                        ${conversation.unread > 0 ? `<span class="msg-unread-pill">${conversation.unread}</span>` : ''}
-                    </div>
-                </div>
-            `;
+        // Cek apakah ada pesan baru sejak render terakhir
+        var latestId = messages[messages.length - 1].id;
+        if (!scrollToBottom && latestId === lastMessageId) return; // tidak ada yang baru
 
-            item.addEventListener('click', function () {
-                openConversation(conversation.id);
-                if (window.innerWidth <= 768) {
-                    layout.classList.add('chat-open');
-                }
+        // Group pesan by date
+        var grouped = groupByDate(messages);
+        var html = '';
+
+        grouped.forEach(function (group) {
+            html += '<div class="msg-date-div"><span>' + group.date + '</span></div>';
+            group.msgs.forEach(function (msg) {
+                html += buildBubble(msg);
             });
-
-            list.appendChild(item);
-        });
-    }
-
-    function renderSuggestions(conversation) {
-        if (!quickActions) return;
-        quickActions.innerHTML = '';
-        const suggestions = conversation.suggestions || [];
-        suggestions.forEach((question) => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'msg-quick-btn';
-            btn.textContent = question;
-            btn.addEventListener('click', function () {
-                input.value = question;
-                sendMessage();
-            });
-            quickActions.appendChild(btn);
-        });
-    }
-
-    function renderMessages(conversation) {
-        feed.innerHTML = '';
-
-        const today = new Date();
-        const dateLabel = today.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        const dateDivider = document.createElement('div');
-        dateDivider.className = 'msg-date-div';
-        dateDivider.innerHTML = `<span>${dateLabel}</span>`;
-        feed.appendChild(dateDivider);
-
-        conversation.messages.forEach((message) => {
-            const row = document.createElement('div');
-            row.className = `msg-row ${message.sender === 'user' ? 'out' : 'in'}`;
-
-            if (message.sender !== 'user') {
-                const avatar = document.createElement('div');
-                avatar.className = 'msg-row-av';
-                avatar.textContent = conversation.avatar;
-                row.appendChild(avatar);
-            }
-
-            const col = document.createElement('div');
-            col.className = 'msg-col';
-
-            const bubble = document.createElement('div');
-            bubble.className = `msg-bubble ${message.sender === 'user' ? 'out' : 'in'}`;
-            bubble.textContent = message.text;
-            col.appendChild(bubble);
-
-            const time = document.createElement('span');
-            time.className = 'msg-bbl-time';
-            time.textContent = message.time;
-
-            if (message.sender === 'user') {
-                const meta = document.createElement('div');
-                meta.className = 'msg-bbl-meta';
-                meta.appendChild(time);
-                const tick = document.createElement('span');
-                tick.className = 'msg-tick read';
-                tick.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-                meta.appendChild(tick);
-                col.appendChild(meta);
-            } else {
-                col.appendChild(time);
-            }
-
-            row.appendChild(col);
-            feed.appendChild(row);
         });
 
-        const typing = document.createElement('div');
-        typing.className = 'msg-typing';
-        typing.id = 'adminTypingIndicator';
-        typing.innerHTML = `
-            <div class="msg-row-av">${conversation.avatar}</div>
-            <div class="msg-typing-bbl"><span></span><span></span><span></span></div>
-        `;
-        feed.appendChild(typing);
+        // Preserve scroll jika user sedang scroll ke atas
+        var atBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80;
 
-        scrollToBottom();
-    }
+        feed.innerHTML = html;
+        lastMessageId = latestId;
 
-    function openConversation(id) {
-        const conversation = getConversationById(id);
-        activeConversationId = id;
-
-        chatName.textContent = conversation.name;
-        chatAvatar.textContent = conversation.avatar;
-        chatAvatar.style.background = conversation.color;
-        chatStatus.textContent = conversation.status;
-
-        renderSuggestions(conversation);
-        renderMessages(conversation);
-        renderConversationList();
-
-    }
-
-    function updateSendButton() {
-        sendBtn.disabled = input.value.trim().length === 0 || isTyping;
-    }
-
-    function scrollToBottom() {
-        feed.scrollTo({ top: feed.scrollHeight, behavior: 'smooth' });
-    }
-
-    function showStatus(type, message) {
-        statusBox.className = `msg-send-status ${type}`;
-        statusBox.textContent = message;
-    }
-
-    function hideStatus() {
-        statusBox.className = 'msg-send-status';
-        statusBox.textContent = '';
-    }
-
-    function addLocalUserMessage(text) {
-        const conversation = getConversationById(activeConversationId);
-        conversation.messages.push({
-            sender: 'user',
-            text,
-            time: formatTime(now()),
-        });
-        conversation.lastMessage = text;
-        conversation.lastTime = 'baru saja';
-        conversation.unread = 0;
-        renderConversationList();
-        renderMessages(conversation);
-    }
-
-    function simulateAdminReply(text) {
-        const conversation = getConversationById(activeConversationId);
-        const typingIndicator = document.getElementById('adminTypingIndicator');
-        if (typingIndicator) {
-            typingIndicator.style.display = 'flex';
+        if (scrollToBottom || atBottom) {
+            feed.scrollTo({ top: feed.scrollHeight, behavior: scrollToBottom ? 'instant' : 'smooth' });
         }
-        isTyping = true;
-        updateSendButton();
 
-        const normalizedText = text.toLowerCase();
-        const isOnTopic = /(event|acara|daftar|registrasi|sertifikat|hadir|absen|kehadiran|jadwal|workshop|classmeeting|career day|file|deadline|canva)/i.test(normalizedText);
-        const replies = isOnTopic
-            ? ['Pesanmu sudah diterima. Admin EVENTTY akan menindaklanjuti informasinya.']
-            : ['Pertanyaanmu sudah kami catat. Mohon tunggu, admin EVENTTY akan membalas secara manual.'];
-
-        window.setTimeout(() => {
-            const replyText = replies[Math.floor(Math.random() * replies.length)];
-            conversation.messages.push({
-                sender: 'admin',
-                text: replyText,
-                time: formatTime(now()),
-            });
-            conversation.lastMessage = replyText;
-            conversation.lastTime = 'baru saja';
-            if (typingIndicator) {
-                typingIndicator.style.display = 'none';
-            }
-            isTyping = false;
-            updateSendButton();
-            renderConversationList();
-            renderMessages(conversation);
-        }, 1400);
+        // Sembunyikan quick replies jika sudah ada percakapan
+        if (messages.length > 0 && quickArea) {
+            quickArea.style.display = 'none';
+        }
     }
 
+
+    // =========================================
+    // BUILD BUBBLE HTML
+    // =========================================
+    function buildBubble(msg) {
+        var isMine = msg.is_mine;
+        var avatar = isMine
+            ? '<div class="msg-row-av" style="background:linear-gradient(135deg,#1e40af,#3b82f6);">'
+              + (window.MSG_USER_INIT || 'U') + '</div>'
+            : '<div class="msg-row-av" style="background:linear-gradient(135deg,#f59e0b,#ea580c);">'
+              + (window.MSG_ADMIN_INIT || 'A') + '</div>';
+
+        var readTick = isMine
+            ? '<span class="msg-tick' + (msg.read_at ? ' read' : '') + '">'
+              + '<iconify-icon icon="lucide:check-check" width="12" height="12"></iconify-icon>'
+              + '</span>'
+            : '';
+
+        return '<div class="msg-row ' + (isMine ? 'out' : 'in') + '">'
+            + (!isMine ? avatar : '')
+            + '<div class="msg-col">'
+            + '<div class="msg-bubble ' + (isMine ? 'out' : 'in') + '">' + escHtml(msg.body) + '</div>'
+            + '<div class="msg-bbl-meta">'
+            + '<span class="msg-bbl-time">' + msg.time + '</span>'
+            + readTick
+            + '</div>'
+            + '</div>'
+            + (isMine ? avatar : '')
+            + '</div>';
+    }
+
+
+    // =========================================
+    // GROUP MESSAGES BY DATE
+    // =========================================
+    function groupByDate(messages) {
+        var groups = [];
+        var currentDate = null;
+        var currentGroup = null;
+
+        messages.forEach(function (msg) {
+            var date = msg.date;
+            if (date !== currentDate) {
+                if (currentGroup) groups.push(currentGroup);
+                currentDate  = date;
+                currentGroup = { date: date, msgs: [] };
+            }
+            currentGroup.msgs.push(msg);
+        });
+        if (currentGroup) groups.push(currentGroup);
+
+        return groups;
+    }
+
+
+    // =========================================
+    // UPDATE CONVERSATION LIST PREVIEW
+    // =========================================
+    function updateConversationPreview(messages) {
+        if (!messages || messages.length === 0) return;
+
+        var last = messages[messages.length - 1];
+        var prevEl = document.getElementById('convLastMsg');
+        var timeEl = document.getElementById('convLastTime');
+
+        if (prevEl) {
+            var preview = (last.is_mine ? 'Anda: ' : '') + last.body;
+            prevEl.textContent = preview.length > 40 ? preview.substring(0, 40) + '...' : preview;
+        }
+        if (timeEl) timeEl.textContent = last.time;
+    }
+
+
+    // =========================================
+    // SEND MESSAGE
+    // =========================================
     function sendMessage() {
-        const text = input.value.trim();
-        if (!text || isTyping) return;
+        if (!input || isSending) return;
 
-        isTyping = true;
-        hideStatus();
-        showStatus('loading', 'Mengirim pesan...');
+        var text = input.value.trim();
+        if (!text) return;
 
-        window.setTimeout(() => {
-            const conversation = getConversationById(activeConversationId);
-            const shouldFail = Math.random() < 0.12;
+        isSending = true;
+        sendBtn && (sendBtn.disabled = true);
+        setStatus('loading', 'Mengirim...');
 
-            if (shouldFail) {
-                isTyping = false;
-                showStatus('error', 'Pesan gagal dikirim. Silakan coba lagi.');
-                updateSendButton();
-                return;
+        fetch('/api/user/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': CSRF,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ body: text })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.success) {
+                input.value = '';
+                input.style.height = 'auto';
+                setStatus('', '');
+                loadMessages(false); // reload feed
+            } else {
+                setStatus('error', data.message || 'Gagal mengirim pesan.');
             }
-
-            addLocalUserMessage(text);
-            input.value = '';
-            input.style.height = 'auto';
-            hideStatus();
-            isTyping = false;
-            updateSendButton();
-            simulateAdminReply(text);
-        }, 550);
+        })
+        .catch(function () {
+            setStatus('error', 'Tidak dapat terhubung ke server.');
+        })
+        .finally(function () {
+            isSending = false;
+            if (input) sendBtn && (sendBtn.disabled = input.value.trim() === '');
+        });
     }
 
-    input.addEventListener('input', function () {
-        this.style.height = 'auto';
-        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
-        updateSendButton();
-    });
 
-    input.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            sendMessage();
-        }
-    });
-
-    sendBtn.addEventListener('click', sendMessage);
-
-    if (window.innerWidth <= 768) {
-        window.openChat = function (element) {
-            const conversationId = element.dataset.id || activeConversationId;
-            openConversation(conversationId);
-            layout.classList.add('chat-open');
-        };
-        window.closeChat = function () {
-            layout.classList.remove('chat-open');
-        };
+    // =========================================
+    // STATUS BOX
+    // =========================================
+    function setStatus(type, msg) {
+        if (!statusBox) return;
+        statusBox.className = 'msg-send-status' + (type ? ' ' + type : '');
+        statusBox.textContent = msg;
     }
 
-    renderConversationList();
-    openConversation(activeConversationId);
-    updateSendButton();
+
+    // =========================================
+    // HTML ESCAPE
+    // =========================================
+    function escHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/\n/g, '<br>');
+    }
+
 });

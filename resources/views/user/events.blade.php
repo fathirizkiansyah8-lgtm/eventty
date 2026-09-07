@@ -3,7 +3,7 @@
 @section('title', 'Event')
 
 @push('css')
-    @vite('resources/css/user/dashboard.css')
+    @vite(['resources/css/user/dashboard.css', 'resources/css/user/events.css'])
 @endpush
 
 @section('content')
