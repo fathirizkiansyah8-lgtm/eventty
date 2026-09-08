@@ -106,7 +106,8 @@
                         {{-- Input Section --}}
                         <div class="adm-input-section">
                             <div class="adm-input-container" id="admInputWrap">
-                                <textarea id="admInput" rows="1" placeholder="Tulis balasan pesan untuk siswa..."></textarea>
+                                <textarea id="admInput" rows="1" placeholder="Tulis balasan pesan untuk siswa..."
+                                          style="border:none!important;outline:none!important;background:transparent!important;resize:none!important;box-shadow:none!important;padding:0!important;margin:0!important;width:100%!important;flex:1!important;font-family:inherit!important;font-size:.875rem!important;color:#0f172a!important;-webkit-text-fill-color:#0f172a!important;line-height:1.5!important;appearance:none!important;-webkit-appearance:none!important;"></textarea>
                                 <button id="admSendBtn" disabled class="adm-send-button" title="Kirim Pesan">
                                     <iconify-icon icon="lucide:send" width="17" height="17"></iconify-icon>
                                 </button>
@@ -284,18 +285,18 @@ function buildAdminBubble(msg) {
     var nameChar = (document.getElementById('admChatName').textContent.charAt(0).toUpperCase() || 'S');
 
     return '<div style="display:flex;align-items:flex-end;gap:.55rem;margin-bottom:.35rem;justify-content:' + (isMine ? 'flex-end' : 'flex-start') + ';">'
-        + (!isMine ? '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#1e40af,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;font-weight:800;flex-shrink:0;box-shadow:0 2px 6px rgba(30,64,175,0.15);">'
+        + (!isMine ? '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;font-weight:800;flex-shrink:0;box-shadow:0 2px 6px rgba(30,64,175,0.15);">'
             + nameChar + '</div>' : '')
         + '<div style="max-width:68%;">'
         + '<div style="padding:.75rem .95rem;border-radius:1.1rem;line-height:1.55;font-size:.875rem;word-break:break-word;white-space:pre-wrap;'
-        + (isMine ? 'background:linear-gradient(135deg,#0b192c,#1d4ed8);color:#ffffff;border-bottom-right-radius:.2rem;box-shadow:0 4px 12px rgba(29,78,216,0.18);'
+        + (isMine ? 'background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#ffffff;border-bottom-right-radius:.2rem;box-shadow:0 4px 12px rgba(29,78,216,0.18);'
                   : 'background:#ffffff;color:#0f172a;border-bottom-left-radius:.2rem;border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,0.03);')
         + '">' + escHtml(msg.body) + '</div>'
         + '<div style="font-size:.625rem;color:#94a3b8;margin-top:.2rem;display:flex;align-items:center;gap:.3rem;justify-content:' + (isMine ? 'flex-end' : 'flex-start') + ';">'
         + msg.time
         + (isMine ? ' <iconify-icon icon="lucide:check-check" width="13" height="13" style="color:' + (msg.read_at ? '#22c55e' : '#94a3b8') + ';vertical-align:middle;"></iconify-icon>' : '')
         + '</div></div>'
-        + (isMine ? '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#0b192c,#1d4ed8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;font-weight:800;flex-shrink:0;box-shadow:0 2px 6px rgba(15,23,42,0.2);">A</div>' : '')
+        + (isMine ? '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;font-weight:800;flex-shrink:0;box-shadow:0 2px 6px rgba(29,78,216,0.2);">A</div>' : '')
         + '</div>';
 }
 
