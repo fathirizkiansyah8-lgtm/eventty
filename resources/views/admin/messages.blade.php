@@ -1,9 +1,19 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messages - Eventty Admin</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Pesan - Eventty Admin</title>
+
+    {{-- Favicon --}}
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpeg') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo.jpeg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.jpeg') }}">
+
+    {{-- Iconify --}}
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
     @vite([
         'resources/css/components/design-system.css',
         'resources/css/components/sidebar.css',
@@ -24,89 +34,100 @@
 @include('admin.partials.sidebar', ['activePage' => 'messages'])
 
 <div class="admin-main">
-
-@include('admin.partials.sidebar', ['activePage' => 'messages'])
-
-<div class="admin-main">
     @include('admin.partials.header')
 
-    <div class="adm-msg-page">
-        <div class="adm-msg-layout" id="admMsgLayout">
+    <div class="admin-content-messages">
+        <div class="adm-msg-card">
+            <div class="adm-msg-layout" id="admMsgLayout">
 
-            {{-- ════ CONVERSATION LIST ════ --}}
-            <aside class="adm-msg-left">
-                <div class="adm-msg-left-hd">
-                    <span style="font-size:1rem;font-weight:800;color:#0f172a;">Messages</span>
-                    <span id="admUnreadTotal" style="display:none;background:#ef4444;color:#fff;font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:999px;"></span>
-                </div>
-                <div style="padding:.5rem;">
-                    <div style="display:flex;align-items:center;gap:.5rem;background:#f8fafc;border:1.5px solid #e8edf5;border-radius:.625rem;padding:.45rem .75rem;">
-                        <iconify-icon icon="lucide:search" width="14" height="14" style="color:#94a3b8;flex-shrink:0;"></iconify-icon>
-                        <input type="text" id="admSearchConv" placeholder="Cari siswa..."
-                               style="flex:1;border:none;background:transparent;font-size:.82rem;outline:none;color:#0f172a;">
-                    </div>
-                </div>
-                <div id="admConvList" style="flex:1;overflow-y:auto;padding:.25rem .5rem;">
-                    <div style="text-align:center;padding:2rem;color:#94a3b8;font-size:.82rem;">Memuat percakapan...</div>
-                </div>
-            </aside>
-
-            {{-- ════ CHAT PANEL ════ --}}
-            <section class="adm-msg-right" id="admChatPanel">
-
-                {{-- Empty state --}}
-                <div id="admChatEmpty" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#94a3b8;gap:.75rem;text-align:center;padding:2rem;">
-                    <iconify-icon icon="lucide:message-circle-more" width="56" height="56" style="opacity:.2;"></iconify-icon>
-                    <div style="font-size:1rem;font-weight:700;color:#64748b;">Pilih percakapan</div>
-                    <div style="font-size:.82rem;">Klik nama siswa di kiri untuk membuka percakapan.</div>
-                </div>
-
-                {{-- Active chat --}}
-                <div id="admActiveChat" style="display:none;flex-direction:column;height:100%;">
-
-                    {{-- Chat header --}}
-                    <div class="adm-chat-hd">
-                        <div class="adm-chat-av" id="admChatAv"
-                             style="background:linear-gradient(135deg,#1e40af,#3b82f6);">S</div>
-                        <div style="flex:1;">
-                            <div style="font-size:.9rem;font-weight:800;color:#0f172a;" id="admChatName">Siswa</div>
-                            <div style="font-size:.7rem;color:#94a3b8;" id="admChatSub">NIS · Kelas</div>
+                {{-- ════ CONVERSATION LIST (LEFT) ════ --}}
+                <aside class="adm-msg-left">
+                    <div class="adm-msg-left-hd">
+                        <div class="adm-msg-left-title">
+                            <iconify-icon icon="lucide:messages-square" width="20" height="20" style="color:#2563eb;"></iconify-icon>
+                            <span>Pesan Masuk</span>
                         </div>
-                        <button onclick="clearActiveChat()"
-                                style="width:32px;height:32px;border-radius:50%;border:1.5px solid #e8edf5;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#64748b;">
-                            <iconify-icon icon="lucide:x" width="14" height="14"></iconify-icon>
-                        </button>
+                        <span id="admUnreadTotal" class="adm-unread-badge" style="display:none;">0</span>
                     </div>
 
-                    {{-- Feed --}}
-                    <div id="admChatFeed" style="flex:1;overflow-y:auto;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.25rem;">
-                        <div style="text-align:center;color:#94a3b8;font-size:.82rem;">Memuat pesan...</div>
+                    <div class="adm-search-container">
+                        <div class="adm-search-inner">
+                            <iconify-icon icon="lucide:search" width="16" height="16" style="color:#94a3b8;flex-shrink:0;"></iconify-icon>
+                            <input type="text" id="admSearchConv" placeholder="Cari nama atau NIS siswa...">
+                        </div>
                     </div>
 
-                    {{-- Input area --}}
-                    <div style="background:#fff;border-top:1.5px solid #e8edf5;padding:.875rem 1.25rem;">
-                        <div style="display:flex;align-items:flex-end;gap:.625rem;background:#f8fafc;border:1.5px solid #e8edf5;border-radius:1rem;padding:.5rem .5rem .5rem .875rem;transition:border-color .2s;"
-                             id="admInputWrap">
-                            <textarea id="admInput" rows="1"
-                                      placeholder="Balas pesan siswa..."
-                                      style="flex:1;border:none;background:transparent;resize:none;font-size:.875rem;color:#0f172a;line-height:1.5;outline:none;max-height:110px;min-height:24px;font-family:inherit;"></textarea>
-                            <button id="admSendBtn" disabled
-                                    style="width:38px;height:38px;border-radius:50%;border:none;background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.5;transition:opacity .2s;flex-shrink:0;">
-                                <iconify-icon icon="lucide:send" width="16" height="16"></iconify-icon>
+                    <div id="admConvList" class="adm-conv-list">
+                        <div style="text-align:center;padding:2.5rem 1rem;color:#94a3b8;font-size:.825rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;">
+                            <iconify-icon icon="lucide:loader-2" width="24" height="24" style="animation:spin 1s linear infinite;color:#3b82f6;"></iconify-icon>
+                            <span>Memuat percakapan...</span>
+                        </div>
+                    </div>
+                </aside>
+
+                {{-- ════ CHAT PANEL (RIGHT) ════ --}}
+                <section class="adm-msg-right" id="admChatPanel">
+
+                    {{-- Empty State --}}
+                    <div id="admChatEmpty" class="adm-empty-wrapper">
+                        <div class="adm-empty-icon-box">
+                            <iconify-icon icon="solar:chat-round-line-bold" width="38" height="38"></iconify-icon>
+                        </div>
+                        <div class="adm-empty-title">Pilih Percakapan Siswa</div>
+                        <div class="adm-empty-desc">Klik salah satu nama siswa di daftar sebelah kiri untuk melihat percakapan atau mengunduh & membalas pesan.</div>
+                    </div>
+
+                    {{-- Active Chat View --}}
+                    <div id="admActiveChat" class="adm-active-chat-wrap" style="display:none;">
+
+                        {{-- Chat Header --}}
+                        <div class="adm-chat-header">
+                            <button class="adm-close-chat-btn" onclick="clearActiveChat()" style="display:none;margin-right:.25rem;" id="admBackBtnMobile">
+                                <iconify-icon icon="lucide:arrow-left" width="16" height="16"></iconify-icon>
+                            </button>
+
+                            <div class="adm-chat-header-av" id="admChatAv">S</div>
+
+                            <div class="adm-chat-header-info">
+                                <div class="adm-chat-header-name" id="admChatName">Siswa</div>
+                                <div class="adm-chat-header-sub" id="admChatSub">NIS · Kelas</div>
+                            </div>
+
+                            <button class="adm-close-chat-btn" onclick="clearActiveChat()" title="Tutup Percakapan">
+                                <iconify-icon icon="lucide:x" width="16" height="16"></iconify-icon>
                             </button>
                         </div>
-                        <p style="font-size:.64rem;color:#94a3b8;text-align:center;margin-top:.4rem;">Enter kirim · Shift+Enter baris baru</p>
+
+                        {{-- Chat Feed --}}
+                        <div id="admChatFeed" class="adm-chat-feed">
+                            <div style="text-align:center;padding:3rem 1rem;color:#94a3b8;font-size:.825rem;">Memuat pesan...</div>
+                        </div>
+
+                        {{-- Input Section --}}
+                        <div class="adm-input-section">
+                            <div class="adm-input-container" id="admInputWrap">
+                                <textarea id="admInput" rows="1" placeholder="Tulis balasan pesan untuk siswa..."></textarea>
+                                <button id="admSendBtn" disabled class="adm-send-button" title="Kirim Pesan">
+                                    <iconify-icon icon="lucide:send" width="17" height="17"></iconify-icon>
+                                </button>
+                            </div>
+                            <div class="adm-input-hint-text">Tekan Enter untuk mengirim · Shift + Enter untuk baris baru</div>
+                        </div>
+
                     </div>
+                </section>
 
-                </div>
-            </section>
-
+            </div>
         </div>
     </div>
 </div>
 
 @include('admin.partials.logout-modal')
 @vite(['resources/js/components/sidebar.js', 'resources/js/admin/admin-shared.js'])
+
+<style>
+@keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
 
 <script>
 var CSRF = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
@@ -124,7 +145,7 @@ function loadConversations(search) {
         renderConvList(convs, search || '');
         updateUnreadTotal(convs);
     })
-    .catch(function(e) { console.error('conv error', e); });
+    .catch(function(e) { console.error('Error fetching conversations:', e); });
 }
 
 function renderConvList(convs, search) {
@@ -136,25 +157,26 @@ function renderConvList(convs, search) {
     }) : convs;
 
     if (!filtered.length) {
-        list.innerHTML = '<div style="text-align:center;padding:2rem;color:#94a3b8;font-size:.82rem;">'
-            + (convs.length ? 'Tidak ditemukan.' : 'Belum ada percakapan.') + '</div>';
+        list.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:#94a3b8;font-size:.825rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;">'
+            + '<iconify-icon icon="lucide:message-square-off" width="32" height="32" style="color:#cbd5e1;"></iconify-icon>'
+            + '<span>' + (convs.length ? 'Tidak ditemukan hasil pencarian.' : 'Belum ada percakapan dari siswa.') + '</span></div>';
         return;
     }
 
     list.innerHTML = filtered.map(function(c) {
         var isActive = c.id === activeStudentId;
-        return '<div class="adm-conv-item' + (isActive ? ' active' : '') + '" data-id="' + c.id + '" data-name="' + escHtml(c.name) + '" data-nis="' + escHtml(c.nis) + '" data-class="' + escHtml(c.class) + '" onclick="openConv(this)"'
-            + ' style="display:flex;align-items:center;gap:.75rem;padding:.75rem;border-radius:.75rem;cursor:pointer;transition:background .15s;' + (isActive ? 'background:#eff6ff;' : '') + '">'
-            + '<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1e40af,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:800;flex-shrink:0;position:relative;">'
-            + c.name.charAt(0).toUpperCase()
-            + (c.unread > 0 ? '<span style="position:absolute;top:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:#ef4444;border:2px solid #fff;font-size:.55rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;">' + c.unread + '</span>' : '')
+        var initial = c.name.charAt(0).toUpperCase();
+        return '<div class="adm-conv-item' + (isActive ? ' active' : '') + '" data-id="' + c.id + '" data-name="' + escHtml(c.name) + '" data-nis="' + escHtml(c.nis) + '" data-class="' + escHtml(c.class) + '" onclick="openConv(this)">'
+            + '<div class="adm-avatar-wrapper">'
+            + '<div class="adm-avatar">' + initial + '</div>'
+            + (c.unread > 0 ? '<span class="adm-unread-dot">' + (c.unread > 9 ? '9+' : c.unread) + '</span>' : '')
             + '</div>'
-            + '<div style="flex:1;min-width:0;">'
-            + '<div style="display:flex;justify-content:space-between;margin-bottom:2px;">'
-            + '<span style="font-size:.82rem;font-weight:700;color:#0f172a;">' + escHtml(c.name) + '</span>'
-            + '<span style="font-size:.66rem;color:#94a3b8;">' + escHtml(c.last_time) + '</span>'
+            + '<div class="adm-conv-details">'
+            + '<div class="adm-conv-top-row">'
+            + '<span class="adm-conv-name">' + escHtml(c.name) + '</span>'
+            + '<span class="adm-conv-time">' + escHtml(c.last_time || '') + '</span>'
             + '</div>'
-            + '<div style="font-size:.75rem;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(c.last_message) + '</div>'
+            + '<div class="adm-conv-preview">' + escHtml(c.last_message || 'Belum ada pesan') + '</div>'
             + '</div></div>';
     }).join('');
 }
@@ -163,8 +185,8 @@ function updateUnreadTotal(convs) {
     var total = convs.reduce(function(s, c) { return s + (c.unread || 0); }, 0);
     var badge = document.getElementById('admUnreadTotal');
     if (badge) {
-        badge.textContent = total > 9 ? '9+' : total;
-        badge.style.display = total > 0 ? '' : 'none';
+        badge.textContent = total > 99 ? '99+' : total;
+        badge.style.display = total > 0 ? 'inline-block' : 'none';
     }
 }
 
@@ -176,29 +198,33 @@ function openConv(el) {
     var cls   = el.dataset.class;
     activeStudentId = id;
 
-    // Update header
+    // Update header info
     document.getElementById('admChatAv').textContent   = name.charAt(0).toUpperCase();
     document.getElementById('admChatName').textContent  = name;
-    document.getElementById('admChatSub').textContent   = 'NIS ' + nis + ' · ' + cls;
+    document.getElementById('admChatSub').textContent   = 'NIS ' + (nis || '-') + ' · ' + (cls || 'Siswa');
 
-    // Show chat panel
-    document.getElementById('admChatEmpty').style.display  = 'none';
+    // Show active chat panel
+    document.getElementById('admChatEmpty').style.display = 'none';
     var activeChat = document.getElementById('admActiveChat');
     activeChat.style.display = 'flex';
 
-    // Mark active in list
+    // Highlight selected conversation
     document.querySelectorAll('.adm-conv-item').forEach(function(item) {
-        item.style.background = item.dataset.id == id ? '#eff6ff' : '';
+        if (parseInt(item.dataset.id) === id) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
     });
 
-    // Load messages
+    // Load message feed
     loadChatMessages(true);
 
-    // Start polling
+    // Setup message polling (every 4 seconds)
     clearInterval(pollTimer);
     pollTimer = setInterval(function() { loadChatMessages(false); }, 4000);
 
-    // Mobile: show chat
+    // Mobile layout toggle
     var layout = document.getElementById('admMsgLayout');
     if (layout) layout.classList.add('chat-open');
 }
@@ -212,7 +238,7 @@ function clearActiveChat() {
     if (layout) layout.classList.remove('chat-open');
 }
 
-// ── Load messages for active conversation ──
+// ── Load chat messages ──
 function loadChatMessages(scrollDown) {
     if (!activeStudentId) return;
 
@@ -225,8 +251,9 @@ function loadChatMessages(scrollDown) {
         if (!scrollDown && latestId === lastMsgId) return;
         lastMsgId = latestId;
         renderChatFeed(msgs, scrollDown);
-        loadConversations(); // refresh unread counts
-    });
+        loadConversations();
+    })
+    .catch(function(e) { console.error('Error fetching chat messages:', e); });
 }
 
 function renderChatFeed(msgs, scrollDown) {
@@ -234,36 +261,41 @@ function renderChatFeed(msgs, scrollDown) {
     if (!feed) return;
 
     if (!msgs.length) {
-        feed.innerHTML = '<div style="text-align:center;padding:3rem;color:#94a3b8;font-size:.82rem;">Belum ada pesan dari siswa ini.</div>';
+        feed.innerHTML = '<div style="text-align:center;padding:4rem 1rem;color:#94a3b8;font-size:.85rem;display:flex;flex-direction:column;align-items:center;gap:.6rem;">'
+            + '<iconify-icon icon="lucide:message-circle" width="36" height="36" style="color:#cbd5e1;"></iconify-icon>'
+            + '<span>Belum ada riwayat pesan dengan siswa ini.</span></div>';
         return;
     }
 
     var groups = groupByDate(msgs);
     var html = '';
     groups.forEach(function(g) {
-        html += '<div style="text-align:center;font-size:.68rem;color:#94a3b8;margin:.75rem 0;font-weight:700;">'
-            + '<span style="background:#f1f5f9;padding:.2rem .75rem;border-radius:999px;">' + escHtml(g.date) + '</span></div>';
+        html += '<div class="adm-date-separator"><span>' + escHtml(g.date) + '</span></div>';
         g.msgs.forEach(function(m) { html += buildAdminBubble(m); });
     });
     feed.innerHTML = html;
-    if (scrollDown) feed.scrollTop = feed.scrollHeight;
+    if (scrollDown) {
+        setTimeout(function() { feed.scrollTop = feed.scrollHeight; }, 50);
+    }
 }
 
 function buildAdminBubble(msg) {
     var isMine = msg.is_mine;
-    return '<div style="display:flex;align-items:flex-end;gap:.5rem;margin-bottom:.25rem;justify-content:' + (isMine ? 'flex-end' : 'flex-start') + ';">'
-        + (!isMine ? '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#1e40af,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;font-weight:800;flex-shrink:0;">'
-            + (document.getElementById('admChatName').textContent.charAt(0).toUpperCase() || 'S') + '</div>' : '')
+    var nameChar = (document.getElementById('admChatName').textContent.charAt(0).toUpperCase() || 'S');
+
+    return '<div style="display:flex;align-items:flex-end;gap:.55rem;margin-bottom:.35rem;justify-content:' + (isMine ? 'flex-end' : 'flex-start') + ';">'
+        + (!isMine ? '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#1e40af,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;font-weight:800;flex-shrink:0;box-shadow:0 2px 6px rgba(30,64,175,0.15);">'
+            + nameChar + '</div>' : '')
         + '<div style="max-width:68%;">'
-        + '<div style="padding:.75rem .9rem;border-radius:1rem;line-height:1.55;font-size:.875rem;word-break:break-word;white-space:pre-wrap;'
-        + (isMine ? 'background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;border-bottom-right-radius:.25rem;'
-                  : 'background:#f1f5f9;color:#0f172a;border-bottom-left-radius:.25rem;border:1px solid #e8edf5;')
+        + '<div style="padding:.75rem .95rem;border-radius:1.1rem;line-height:1.55;font-size:.875rem;word-break:break-word;white-space:pre-wrap;'
+        + (isMine ? 'background:linear-gradient(135deg,#0b192c,#1d4ed8);color:#ffffff;border-bottom-right-radius:.2rem;box-shadow:0 4px 12px rgba(29,78,216,0.18);'
+                  : 'background:#ffffff;color:#0f172a;border-bottom-left-radius:.2rem;border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,0.03);')
         + '">' + escHtml(msg.body) + '</div>'
-        + '<div style="font-size:.62rem;color:#94a3b8;margin-top:.15rem;text-align:' + (isMine ? 'right' : 'left') + ';">'
+        + '<div style="font-size:.625rem;color:#94a3b8;margin-top:.2rem;display:flex;align-items:center;gap:.3rem;justify-content:' + (isMine ? 'flex-end' : 'flex-start') + ';">'
         + msg.time
-        + (isMine ? ' <iconify-icon icon="lucide:check-check" width="12" height="12" style="color:' + (msg.read_at ? '#22c55e' : '#94a3b8') + ';vertical-align:middle;"></iconify-icon>' : '')
+        + (isMine ? ' <iconify-icon icon="lucide:check-check" width="13" height="13" style="color:' + (msg.read_at ? '#22c55e' : '#94a3b8') + ';vertical-align:middle;"></iconify-icon>' : '')
         + '</div></div>'
-        + (isMine ? '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ea580c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;font-weight:800;flex-shrink:0;">A</div>' : '')
+        + (isMine ? '<div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#0b192c,#1d4ed8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.7rem;font-weight:800;flex-shrink:0;box-shadow:0 2px 6px rgba(15,23,42,0.2);">A</div>' : '')
         + '</div>';
 }
 
@@ -281,7 +313,7 @@ function groupByDate(msgs) {
     return groups;
 }
 
-// ── Send (admin) ──
+// ── Send Message ──
 var admInput = document.getElementById('admInput');
 var admSendBtn = document.getElementById('admSendBtn');
 
@@ -290,11 +322,13 @@ if (admInput && admSendBtn) {
         this.style.height = 'auto';
         this.style.height = Math.min(this.scrollHeight, 110) + 'px';
         admSendBtn.disabled = this.value.trim() === '' || !activeStudentId;
-        admSendBtn.style.opacity = admSendBtn.disabled ? '.5' : '1';
     });
 
     admInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); admSendBtn.click(); }
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (!admSendBtn.disabled) admSendBtn.click();
+        }
     });
 
     admSendBtn.addEventListener('click', function() {
@@ -302,7 +336,6 @@ if (admInput && admSendBtn) {
         if (!text || !activeStudentId) return;
 
         admSendBtn.disabled = true;
-        admSendBtn.style.opacity = '.5';
 
         fetch('/api/admin/messages/' + activeStudentId, {
             method: 'POST',
@@ -317,21 +350,21 @@ if (admInput && admSendBtn) {
                 loadChatMessages(true);
             }
         })
+        .catch(function(e) { console.error('Error sending message:', e); })
         .finally(function() {
             admSendBtn.disabled = admInput.value.trim() === '' || !activeStudentId;
-            admSendBtn.style.opacity = admSendBtn.disabled ? '.5' : '1';
         });
     });
 }
 
-// ── Search conversations ──
+// ── Search Filter ──
 var searchInput = document.getElementById('admSearchConv');
 if (searchInput) {
     var searchDebounce;
     searchInput.addEventListener('input', function() {
         clearTimeout(searchDebounce);
         var q = this.value.trim();
-        searchDebounce = setTimeout(function() { loadConversations(q); }, 300);
+        searchDebounce = setTimeout(function() { loadConversations(q); }, 250);
     });
 }
 
@@ -342,8 +375,6 @@ function escHtml(str) {
 // ── Init ──
 loadConversations();
 setInterval(function() { loadConversations(); }, 10000);
-
 </script>
-
 </body>
 </html>
