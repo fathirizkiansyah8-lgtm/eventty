@@ -1,4 +1,4 @@
-﻿@extends('user.layout')
+@extends('user.layout')
 
 @section('title', 'Messages')
 
@@ -697,7 +697,12 @@
         {{-- ── Conversation list (kiri) — semua admin ── --}}
         <aside class="msg-conv-panel">
             <div class="msg-conv-hd">
-                <h2>Messages</h2>
+                <div style="display:flex;align-items:center;gap:.6rem;">
+                    <a href="{{ url('/user/dashboard') }}" title="Kembali ke Dashboard" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border-color);background:var(--bg-primary);color:var(--text-secondary);text-decoration:none;transition:all .18s ease;">
+                        <iconify-icon icon="lucide:arrow-left" width="16" height="16"></iconify-icon>
+                    </a>
+                    <h2 style="margin:0;font-size:1.05rem;font-weight:800;">Messages</h2>
+                </div>
                 <span class="msg-online-badge">CS Eventty</span>
             </div>
 

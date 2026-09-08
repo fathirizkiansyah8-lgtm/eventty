@@ -28,7 +28,7 @@
         <section class="reset-visual">
 
             <img
-                src="{{ asset('images/ilustrasi-logo.png') }}"
+                src="{{ asset('images/background.png') }}"
                 alt="Ilustrasi Sekolah"
             >
 

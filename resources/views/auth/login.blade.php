@@ -12,34 +12,13 @@
 
     <div class="school-background">
         <img
-            src="{{ asset('images/ilustrasi-logo.png') }}"
+            src="{{ asset('images/background.png') }}"
             alt=""
         >
     </div>
 
     <div class="background-overlay"></div>
 
-
-    <!-- =========================================
-         THEME TOGGLE
-    ========================================== -->
-
-    <div class="theme-switch-wrapper">
-
-        <span class="theme-icon">☀️</span>
-
-        <label class="theme-switch">
-            <input
-                type="checkbox"
-                id="themeToggleCheckbox"
-            >
-
-            <span class="slider"></span>
-        </label>
-
-        <span class="theme-icon">🌙</span>
-
-    </div>
 
 
     <!-- =========================================

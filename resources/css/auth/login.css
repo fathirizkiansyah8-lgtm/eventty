@@ -221,15 +221,15 @@ body {
 
     border-radius: 22px;
 
-    background: rgba(8, 17, 38, 0.90);
+    background: rgba(255, 255, 255, 0.96);
 
-    border: 1px solid rgba(255, 255, 255, 0.20);
+    border: 1px solid #e2e8f0;
 
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
 
     box-shadow:
-        0 25px 60px rgba(0, 0, 0, 0.45);
+        0 25px 60px rgba(15, 23, 42, 0.18);
 
     animation: loginAppear 0.55s ease both;
 }
@@ -259,7 +259,7 @@ body {
     background: #ffffff;
 
     box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.25);
+        0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -280,7 +280,7 @@ body {
 
     line-height: 1.2;
 
-    color: #f8fafc;
+    color: #0f172a;
 }
 
 
@@ -291,7 +291,7 @@ body {
 
     text-align: center;
 
-    color: rgba(248, 250, 252, 0.68);
+    color: #64748b;
 
     font-size: 13px;
 
@@ -313,7 +313,7 @@ body {
 
     margin-bottom: 7px;
 
-    color: #f8fafc;
+    color: #0f172a;
 
     font-size: 13px;
 
@@ -334,13 +334,13 @@ body {
 
     border-radius: 12px;
 
-    border: 1px solid rgba(255, 255, 255, 0.17);
+    border: 1.5px solid #e2e8f0;
 
     outline: none;
 
-    background: rgba(255, 255, 255, 0.065);
+    background: #f8fafc;
 
-    color: #f8fafc;
+    color: #0f172a;
 
     font-family: "Inter", sans-serif;
 
@@ -354,17 +354,17 @@ body {
 
 
 .form-group input::placeholder {
-    color: rgba(248, 250, 252, 0.45);
+    color: #94a3b8;
 }
 
 
 .form-group input:focus {
-    border-color: rgba(96, 165, 250, 0.75);
+    border-color: #2563eb;
 
-    background: rgba(59, 130, 246, 0.06);
+    background: #ffffff;
 
     box-shadow:
-        0 0 0 3px rgba(59, 130, 246, 0.11);
+        0 0 0 3.5px rgba(37, 99, 235, 0.12);
 }
 
 
@@ -403,7 +403,7 @@ body {
 
     background: transparent;
 
-    color: rgba(248, 250, 252, 0.72);
+    color: #64748b;
 
     font-size: 16px;
 
@@ -415,7 +415,7 @@ body {
 
 
 .toggle-password:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: #f1f5f9;
 }
 
 
@@ -459,7 +459,7 @@ body {
 
 
 .forgot-password a {
-    color: #60a5fa;
+    color: #2563eb;
 
     font-size: 13px;
 
@@ -472,7 +472,7 @@ body {
 
 
 .forgot-password a:hover {
-    color: #93c5fd;
+    color: #1d4ed8;
 
     text-decoration: underline;
 }
@@ -501,7 +501,7 @@ body {
 
     background:
         linear-gradient(135deg,
-            #3b82f6,
+            #1d4ed8,
             #2563eb);
 
     color: #ffffff;
@@ -515,7 +515,7 @@ body {
     cursor: pointer;
 
     box-shadow:
-        0 13px 30px rgba(37, 99, 235, 0.28);
+        0 10px 25px rgba(37, 99, 235, 0.25);
 
     transition:
         transform 0.2s ease,
@@ -527,7 +527,7 @@ body {
     transform: translateY(-2px);
 
     box-shadow:
-        0 17px 35px rgba(37, 99, 235, 0.38);
+        0 14px 30px rgba(37, 99, 235, 0.35);
 }
 
 
@@ -550,14 +550,14 @@ body {
 
     text-align: center;
 
-    color: rgba(248, 250, 252, 0.65);
+    color: #64748b;
 
     font-size: 13px;
 }
 
 
 .register-text a {
-    color: #60a5fa;
+    color: #2563eb;
 
     font-weight: 600;
 
@@ -566,7 +566,7 @@ body {
 
 
 .register-text a:hover {
-    color: #93c5fd;
+    color: #1d4ed8;
 
     text-decoration: underline;
 }

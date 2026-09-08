@@ -482,16 +482,33 @@
     box-shadow: 0 4px 12px rgba(15,31,78,0.1);
 }
 .qa-btn-icon {
-    width: 36px; height: 36px;
-    border-radius: 0.625rem;
+    width: 38px; height: 38px;
+    border-radius: 0.65rem;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     flex-shrink: 0;
+    transition: all 0.2s ease;
 }
-.qa-blue   { background: #dbeafe; }
-.qa-green  { background: #dcfce7; }
-.qa-purple { background: #ede9fe; }
-.qa-orange { background: #fef3c7; }
+.qa-blue   { background: #dbeafe; color: #1d4ed8; }
+.qa-green  { background: #dcfce7; color: #15803d; }
+.qa-purple { background: #ede9fe; color: #7c3aed; }
+.qa-orange { background: #fef3c7; color: #d97706; }
+
+body[data-theme="dark"] .qa-btn {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+body[data-theme="dark"] .qa-btn:hover {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: #3b82f6;
+    color: #ffffff;
+}
+
+body[data-theme="dark"] .qa-blue   { background: rgba(59, 130, 246, 0.25); color: #60a5fa; }
+body[data-theme="dark"] .qa-green  { background: rgba(34, 197, 94, 0.25); color: #4ade80; }
+body[data-theme="dark"] .qa-purple { background: rgba(168, 85, 247, 0.25); color: #c084fc; }
+body[data-theme="dark"] .qa-orange { background: rgba(245, 158, 11, 0.25); color: #fbbf24; }
 
 /* Scrapbook note card */
 .scrapbook-note {
@@ -749,20 +766,20 @@
             <div class="qa-title">Quick Actions</div>
             <div class="qa-grid">
                 <a href="{{ url('/user/events') }}" class="qa-btn">
-                    <div class="qa-btn-icon qa-blue"><iconify-icon icon="solar:clipboard-list-linear"></iconify-icon></div>
-                    Cari Event
+                    <div class="qa-btn-icon qa-blue"><iconify-icon icon="solar:magnifer-linear" width="20" height="20"></iconify-icon></div>
+                    <span>Cari Event</span>
                 </a>
                 <a href="{{ url('/user/my-events') }}" class="qa-btn">
-                    <div class="qa-btn-icon qa-green"><iconify-icon icon="solar:pin-linear"></iconify-icon></div>
-                    Event Saya
+                    <div class="qa-btn-icon qa-green"><iconify-icon icon="solar:calendar-add-bold" width="20" height="20"></iconify-icon></div>
+                    <span>Event Saya</span>
                 </a>
                 <a href="{{ url('/user/certificates') }}" class="qa-btn">
-                    <div class="qa-btn-icon qa-purple"><iconify-icon icon="solar:medal-ribbons-star-linear"></iconify-icon></div>
-                    Sertifikat
+                    <div class="qa-btn-icon qa-purple"><iconify-icon icon="solar:medal-ribbons-star-bold" width="20" height="20"></iconify-icon></div>
+                    <span>Sertifikat</span>
                 </a>
                 <a href="{{ url('/user/profile') }}" class="qa-btn">
-                    <div class="qa-btn-icon qa-orange"><iconify-icon icon="solar:user-circle-linear"></iconify-icon></div>
-                    Profil
+                    <div class="qa-btn-icon qa-orange"><iconify-icon icon="solar:user-bold" width="20" height="20"></iconify-icon></div>
+                    <span>Profil</span>
                 </a>
             </div>
         </div>

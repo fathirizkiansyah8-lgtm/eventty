@@ -56,11 +56,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // ── Render certificate grid ──
     function renderCertificates(certs, container) {
         if (!certs || certs.length === 0) {
-            container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:4rem;color:var(--text-muted);">'
-                + '<iconify-icon icon="solar:medal-ribbons-star-linear" width="48" height="48" style="margin-bottom:1rem;display:block;margin-left:auto;margin-right:auto;opacity:.4;"></iconify-icon>'
-                + '<h3 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:.35rem;">Belum ada sertifikat</h3>'
-                + '<p style="font-size:.82rem;margin-bottom:1rem;">Ikuti event dan hadir untuk mendapatkan sertifikat.</p>'
-                + '<a href="/user/events" style="display:inline-block;padding:.5rem 1.25rem;background:#0f1f4e;color:#fff;border-radius:.625rem;font-size:.82rem;font-weight:700;text-decoration:none;">Lihat Event</a>'
+            container.innerHTML = '<div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;color:var(--text-muted);width:100%;">'
+                + '<div style="width:72px;height:72px;border-radius:50%;background:var(--bg-tertiary);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;color:var(--text-muted);">'
+                + '<iconify-icon icon="solar:medal-ribbons-star-linear" width="36" height="36"></iconify-icon>'
+                + '</div>'
+                + '<h3 style="font-size:1.05rem;font-weight:800;color:var(--text-primary);margin-bottom:.35rem;">Belum Ada Sertifikat</h3>'
+                + '<p style="font-size:.85rem;color:var(--text-muted);max-width:360px;margin:0 auto 1.25rem;line-height:1.5;">Ikuti event dan hadir dalam kegiatan sekolah untuk mendapatkan sertifikat.</p>'
+                + '<a href="/user/events" style="display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.35rem;background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;border-radius:999px;font-size:.825rem;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(29,78,216,0.2);">Lihat Event</a>'
                 + '</div>';
             return;
         }
