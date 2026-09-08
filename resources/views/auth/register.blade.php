@@ -11,6 +11,9 @@
     >
 
     <title>Daftar - Eventty</title>
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo.jpeg') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo.jpeg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo.jpeg') }}">
     <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
 
     @vite(['resources/css/auth/register.css', 'resources/js/utils/iconify-migration.js'])
