@@ -15,7 +15,7 @@
 
 .sidebar-header {
     padding: var(--spacing-lg);
-    border-bottom: 1px solid var(--border-color);
+    /* border-bottom: 1px solid var(--border-color); */
     display: flex;
     align-items: center;
     gap: var(--spacing-md);

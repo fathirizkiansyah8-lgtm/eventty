@@ -641,10 +641,10 @@
                     <span class="lp-benefit-check">✓</span>
                     Tersimpan permanen di akun Eventty
                 </li>
-                <li>
+                {{-- <li>
                     <span class="lp-benefit-check">✓</span>
                     Dilengkapi QR Code verifikasi
-                </li>
+                </li> --}}
                 <li>
                     <span class="lp-benefit-check">✓</span>
                     Bisa diunduh kapan saja dalam format PDF
